@@ -27,8 +27,9 @@ const normalKey = assets.queue({
 
 // preload the environment map
 const hdrKey = assets.queue({
-  url: 'assets/ouside-afternoon-hdr.jpg',
+  url: 'assets/ouside-afternoon-blurred-hdr.jpg',
   type: 'env-map',
+  // equirectangular means it's just one image, projected
   equirectangular: true,
 })
 
@@ -57,12 +58,13 @@ export default class Suzanne extends THREE.Group {
       }
     })
 
+    // make it a little bigger
+    suzanne.scale.multiplyScalar(1.2)
+
     this.add(suzanne)
 
     // set the background as the hdr
     webgl.scene.background = assets.get(hdrKey).renderTarget
-
-    // this.add(new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), material))
   }
 
   update(dt = 0, time = 0) {
@@ -71,7 +73,7 @@ export default class Suzanne extends THREE.Group {
 }
 
 // natural hemisphere light from
-// https://threejs.org/examples/?q=hemi#webgl_lights_hemisphere
+// https://threejs.org/examples/#webgl_lights_hemisphere
 export function addNaturalLight(webgl) {
   const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.6)
   hemiLight.color.setHSL(0.6, 1, 0.6)
