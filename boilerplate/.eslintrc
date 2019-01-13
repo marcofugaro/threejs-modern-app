@@ -1,0 +1,6 @@
+{
+  "extends": "eslint-config-accurapp",
+  "env": {
+    "browser": true
+  }
+}
