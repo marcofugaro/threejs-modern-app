@@ -7,6 +7,8 @@ import createTouches from 'touches'
 import dataURIToBlob from 'datauritoblob'
 import Stats from 'stats.js'
 import controlPanel from 'control-panel'
+import { EffectComposer } from './three/EffectComposer'
+import { RenderPass } from './three/RenderPass'
 
 export default class WebGLApp {
   tmpTarget = new THREE.Vector3()
@@ -51,6 +53,13 @@ export default class WebGLApp {
     // setup a basic camera
     this.camera = new THREE.PerspectiveCamera(fov, 1, near, far)
 
+    this.scene = new THREE.Scene()
+
+    if (options.postprocessing) {
+      this.composer = new EffectComposer(this.renderer)
+      this.composer.addPass(new RenderPass(this.scene, this.camera))
+    }
+
     if (options.orbitControls) {
       // set up a simple orbit controller
       this.orbitControls = createOrbitControls({
@@ -71,8 +80,6 @@ export default class WebGLApp {
     this.isRunning = false
     this._lastTime = performance.now()
     this._rafID = null
-
-    this.scene = new THREE.Scene()
 
     // handle resize events
     window.addEventListener('resize', this.resize)
@@ -118,6 +125,11 @@ export default class WebGLApp {
       this.camera.aspect = width / height
     }
     this.camera.updateProjectionMatrix()
+
+    // resize also the composer
+    if (this.composer) {
+      this.composer.setSize(pixelRatio * width, pixelRatio * height)
+    }
 
     // draw a frame to ensure the new size has been registered visually
     this.draw()
@@ -179,7 +191,22 @@ export default class WebGLApp {
   }
 
   draw = () => {
-    this.renderer.render(this.scene, this.camera)
+    if (this.composer) {
+      // make sure to always render the last pass
+      this.composer.passes.forEach((pass, i, passes) => {
+        const isLastElement = i === passes.length - 1
+
+        if (isLastElement) {
+          pass.renderToScreen = true
+        } else {
+          pass.renderToScreen = false
+        }
+      })
+
+      this.composer.render()
+    } else {
+      this.renderer.render(this.scene, this.camera)
+    }
     return this
   }
 

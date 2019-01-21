@@ -1,6 +1,10 @@
+import * as THREE from 'three'
 import WebGLApp from './lib/WebGLApp'
 import assets from './lib/AssetManager'
 import Suzanne, { addNaturalLight } from './scene/Suzanne'
+import { ShaderPass } from './lib/three/ShaderPass'
+import passVert from './scene/shaders/pass.vert'
+import vignetteFrag from './scene/shaders/vignette.frag'
 
 window.DEBUG = window.location.search.includes('debug')
 
@@ -12,6 +16,7 @@ const webgl = new WebGLApp({
   canvas,
   backgroundAlpha: 0,
   alpha: true,
+  postprocessing: true,
   showFps: window.DEBUG,
   orbitControls: window.DEBUG && { distance: 5 },
   // panelInputs: window.DEBUG && [],
@@ -43,6 +48,16 @@ assets.load({ renderer: webgl.renderer }).then(() => {
 
   // lights and other scene related stuff
   addNaturalLight(webgl)
+
+  // postprocessing
+  const vignette = new ShaderPass({
+    vertexShader: passVert,
+    fragmentShader: vignetteFrag,
+    uniforms: {
+      tDiffuse: { type: 't', value: new THREE.Texture() },
+    },
+  })
+  webgl.composer.addPass(vignette)
 
   // start animation loop
   webgl.start()

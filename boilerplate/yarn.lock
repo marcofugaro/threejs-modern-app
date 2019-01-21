@@ -3265,6 +3265,11 @@ glsl-tokenizer@^2.0.0, glsl-tokenizer@^2.0.2:
   dependencies:
     through2 "^0.6.3"
 
+glsl-vignette@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/glsl-vignette/-/glsl-vignette-1.1.0.tgz#14ad424b3990c4bf1feb372408a0f1ea5665989e"
+  integrity sha512-WF5iR+z6R89w/svt9OdxWCXbTUFCFUB6q4ei83E9WAERjb8UGKyH8jDU4riuaP9w9pQvadAfMmwiSDpWZm6j+g==
+
 glslify-bundle@^5.0.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/glslify-bundle/-/glslify-bundle-5.1.1.tgz#30d2ddf2e6b935bf44d1299321e3b729782c409a"
