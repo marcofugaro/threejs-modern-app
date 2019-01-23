@@ -34,15 +34,6 @@ export default class WebGLApp {
     this.renderer.sortObjects = false
     this.canvas = this.renderer.domElement
 
-    // really basic touch handler that propagates through the scene
-    this.touchHandler = createTouches(this.canvas, {
-      target: this.canvas,
-      filtered: true,
-    })
-    this.touchHandler.on('start', (ev, pos) => this.traverse('onTouchStart', ev, pos))
-    this.touchHandler.on('end', (ev, pos) => this.traverse('onTouchEnd', ev, pos))
-    this.touchHandler.on('move', (ev, pos) => this.traverse('onTouchMove', ev, pos))
-
     this.renderer.setClearColor(background, backgroundAlpha)
 
     // clamp pixel ratio for performance
@@ -55,13 +46,37 @@ export default class WebGLApp {
 
     this.scene = new THREE.Scene()
 
+    this.time = 0
+    this.isRunning = false
+    this._lastTime = performance.now()
+    this._rafID = null
+
+    // handle resize events
+    window.addEventListener('resize', this.resize)
+    window.addEventListener('orientationchange', this.resize)
+
+    // force an initial resize event
+    this.resize()
+
+    // __________________________ADDONS__________________________
+
+    // really basic touch handler that propagates through the scene
+    this.touchHandler = createTouches(this.canvas, {
+      target: this.canvas,
+      filtered: true,
+    })
+    this.touchHandler.on('start', (ev, pos) => this.traverse('onTouchStart', ev, pos))
+    this.touchHandler.on('end', (ev, pos) => this.traverse('onTouchEnd', ev, pos))
+    this.touchHandler.on('move', (ev, pos) => this.traverse('onTouchMove', ev, pos))
+
+    // expose a composer for postprocessing passes
     if (options.postprocessing) {
       this.composer = new EffectComposer(this.renderer)
       this.composer.addPass(new RenderPass(this.scene, this.camera))
     }
 
+    // set up a simple orbit controller
     if (options.orbitControls) {
-      // set up a simple orbit controller
       this.orbitControls = createOrbitControls({
         element: this.canvas,
         parent: window,
@@ -75,18 +90,6 @@ export default class WebGLApp {
 
     // Attach Tween.js
     if (options.tween) this.tween = options.tween
-
-    this.time = 0
-    this.isRunning = false
-    this._lastTime = performance.now()
-    this._rafID = null
-
-    // handle resize events
-    window.addEventListener('resize', this.resize)
-    window.addEventListener('orientationchange', this.resize)
-
-    // force an initial resize event
-    this.resize()
 
     // show the fps meter
     if (options.showFps) {
@@ -258,10 +261,8 @@ function saveDataURI(name, dataURI) {
   link.download = name
   link.href = window.URL.createObjectURL(blob)
   link.onclick = () => {
-    setTimeout(() => {
-      window.URL.revokeObjectURL(blob)
-      link.removeAttribute('href')
-    }, 0)
+    window.URL.revokeObjectURL(blob)
+    link.removeAttribute('href')
   }
   link.click()
 }

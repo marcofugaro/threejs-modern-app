@@ -1,6 +1,13 @@
 import * as THREE from 'three'
 import assets from 'lib/AssetManager'
 
+// elaborated three.js component example
+// containing example usage of
+//   - asset manager
+//   - control panel
+//   - touch events
+//   - postprocessing
+
 // preload the suzanne head
 const suzanneKey = assets.queue({
   url: 'assets/suzanne.gltf',
@@ -33,7 +40,11 @@ const hdrKey = assets.queue({
   equirectangular: true,
 })
 
+export const DEFAULT_ANGULAR_VELOCITY = 0.5
+
 export default class Suzanne extends THREE.Group {
+  angularVelocity = DEFAULT_ANGULAR_VELOCITY
+
   constructor({ webgl, ...options }) {
     super(options)
     this.webgl = webgl
@@ -46,7 +57,7 @@ export default class Suzanne extends THREE.Group {
       metalnessMap: assets.get(metalnessKey),
       roughnessMap: assets.get(roughnessKey),
       normalMap: assets.get(normalKey),
-      normalScale: new THREE.Vector2(3, 3),
+      normalScale: new THREE.Vector2(1.5, 1.5),
       envMap: assets.get(hdrKey),
       envMapIntensity: 1,
     })
@@ -64,11 +75,35 @@ export default class Suzanne extends THREE.Group {
     this.add(suzanne)
 
     // set the background as the hdr
-    webgl.scene.background = assets.get(hdrKey).renderTarget
+    this.webgl.scene.background = assets.get(hdrKey).renderTarget
+
+    // update the angularVelocity from the control-panel
+    this.webgl.panel.on('input', inputs => {
+      this.angularVelocity = inputs['Angular Velocity']
+    })
   }
 
+  onTouchStart(event, pos) {
+    const [x, y] = pos
+
+    // for example, check of we clicked on an
+    // object with raycasting
+    const coords = new THREE.Vector2().set(
+      (x / this.webgl.width) * 2 - 1,
+      (-y / this.webgl.height) * 2 + 1,
+    )
+    const raycaster = new THREE.Raycaster()
+    raycaster.setFromCamera(coords, this.webgl.camera)
+    const hits = raycaster.intersectObject(this, true)
+    console.log(hits.length > 0 ? `Hit ${hits[0].object.name}!` : 'No hit')
+  }
+
+  onTouchMove(event, pos) {}
+
+  onTouchEnd(event, pos) {}
+
   update(dt = 0, time = 0) {
-    this.rotation.y += dt * 0.5
+    this.rotation.y += dt * this.angularVelocity
   }
 }
 

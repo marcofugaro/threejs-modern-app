@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import WebGLApp from './lib/WebGLApp'
 import assets from './lib/AssetManager'
-import Suzanne, { addNaturalLight } from './scene/Suzanne'
+import Suzanne, { addNaturalLight, DEFAULT_ANGULAR_VELOCITY } from './scene/Suzanne'
 import { ShaderPass } from './lib/three/ShaderPass'
 import passVert from './scene/shaders/pass.vert'
 import vignetteFrag from './scene/shaders/vignette.frag'
@@ -19,7 +19,16 @@ const webgl = new WebGLApp({
   postprocessing: true,
   showFps: window.DEBUG,
   orbitControls: window.DEBUG && { distance: 5 },
-  // panelInputs: window.DEBUG && [],
+  panelInputs: window.DEBUG && [
+    {
+      type: 'range',
+      label: 'Angular Velocity',
+      min: 0.1,
+      max: 30,
+      initial: DEFAULT_ANGULAR_VELOCITY,
+      scale: 'log',
+    },
+  ],
   // world: new CANNON.World(),
   // tween: TWEEN,
 })
