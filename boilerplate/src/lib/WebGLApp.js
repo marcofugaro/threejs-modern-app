@@ -11,7 +11,8 @@ import { EffectComposer } from './three/EffectComposer'
 import { RenderPass } from './three/RenderPass'
 
 export default class WebGLApp {
-  tmpTarget = new THREE.Vector3()
+  #tmpTarget = new THREE.Vector3()
+  #updateListeners = []
 
   constructor({
     background = '#000',
@@ -134,13 +135,24 @@ export default class WebGLApp {
       this.composer.setSize(pixelRatio * width, pixelRatio * height)
     }
 
+    // recursively tell all child objects to resize
+    this.scene.traverse(obj => {
+      if (typeof obj.resize === 'function') {
+        obj.resize({
+          width,
+          height,
+          pixelRatio,
+        })
+      }
+    })
+
     // draw a frame to ensure the new size has been registered visually
     this.draw()
     return this
   }
 
   // convenience function to trigger a PNG download of the canvas
-  saveScreenshot = ({ width = 2560, height = 1440, fileName = 'image.png' }) => {
+  saveScreenshot = ({ width = 2560, height = 1440, fileName = 'image.png' } = {}) => {
     // force a specific output size
     this.resize({ width, height, pixelRatio: 1 })
     this.draw()
@@ -162,8 +174,8 @@ export default class WebGLApp {
       // reposition to orbit controls
       this.camera.up.fromArray(this.orbitControls.up)
       this.camera.position.fromArray(this.orbitControls.position)
-      this.tmpTarget.fromArray(this.orbitControls.target)
-      this.camera.lookAt(this.tmpTarget)
+      this.#tmpTarget.fromArray(this.orbitControls.target)
+      this.camera.lookAt(this.#tmpTarget)
     }
 
     // recursively tell all child objects to update
@@ -190,7 +202,14 @@ export default class WebGLApp {
       this.tween.update()
     }
 
+    // call the update listeners
+    this.#updateListeners.forEach(fn => fn(dt, time))
+
     return this
+  }
+
+  onUpdate(fn) {
+    this.#updateListeners.push(fn)
   }
 
   draw = () => {
@@ -260,9 +279,10 @@ function saveDataURI(name, dataURI) {
   const link = document.createElement('a')
   link.download = name
   link.href = window.URL.createObjectURL(blob)
-  link.onclick = () => {
+  link.onclick = setTimeout(() => {
     window.URL.revokeObjectURL(blob)
     link.removeAttribute('href')
-  }
+  }, 0)
+
   link.click()
 }

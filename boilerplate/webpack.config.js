@@ -14,8 +14,9 @@ const chalk = require('chalk')
 const indentString = require('indent-string')
 const _ = require('lodash')
 
+const HOST = '0.0.0.0'
 const PORT = 8080
-const urls = prepareUrls('http', '0.0.0.0', PORT)
+const urls = prepareUrls('http', HOST, PORT)
 
 // make the console >tree command look pretty
 function beautifyTree(tree) {
@@ -91,11 +92,17 @@ module.exports = merge.smart(
     // a good compromise betwee fast and readable sourcemaps
     devtool: 'cheap-module-source-map',
     devServer: {
+      host: HOST,
       port: PORT,
+      public: urls.lanUrlForConfig,
       publicPath: '/',
       contentBase: './public/',
       // trigger reload when files in contentBase folder change
       watchContentBase: true,
+      // but don't watch node_modules
+      watchOptions: {
+        ignored: /node_modules/,
+      },
       // serve everything in gzip
       compress: true,
       // Sssh...

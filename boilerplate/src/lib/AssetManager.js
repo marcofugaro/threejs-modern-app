@@ -15,6 +15,7 @@ class AssetManager {
   #cache = {}
   #onProgressListeners = []
   #asyncConcurrency = 10
+  #logs = []
 
   addProgressListener(fn) {
     if (typeof fn !== 'function') {
@@ -78,10 +79,22 @@ class AssetManager {
     }
 
     try {
+      const itemLoadingStart = Date.now()
+
       this.#cache[item.url] = await this._loadItem({ renderer, ...item })
+
+      if (window.DEBUG) {
+        console.log(
+          `📦 Loaded single asset %c${item.url}%c in ${prettyMs(Date.now() - itemLoadingStart)}`,
+          'color:blue',
+          'color:black',
+        )
+      }
+
+      return item.url
     } catch (err) {
       delete this.#cache[item.url]
-      console.error(`[📦 assets] Skipping ${item.url} from asset loading: \n${err}`)
+      console.error(`📦  Could not load ${item.url}:\n${err}`)
     }
   }
 
@@ -103,19 +116,27 @@ class AssetManager {
       return
     }
 
-    if (window.DEBUG || process.env.NODE_ENV === 'development') {
-      console.log(`[📦 assets] ⏱ Start loading of ${total} queued items`)
-      this.loadingStart = Date.now()
-    }
+    const loadingStart = Date.now()
 
     await pMap(
       queue,
       async (item, i) => {
         try {
+          const itemLoadingStart = Date.now()
+
           this.#cache[item.url] = await this._loadItem({ renderer, ...item })
+
+          if (window.DEBUG) {
+            this.log(
+              `Loaded %c${item.url}%c in ${prettyMs(Date.now() - itemLoadingStart)}`,
+              'color:blue',
+              'color:black',
+            )
+          }
         } catch (err) {
+          // TODO is this delete really needed?
           delete this.#cache[item.url]
-          console.error(`[📦 assets] Skipping ${item.url} from asset loading: \n${err}`)
+          this.logError(`Skipping ${item.url} from asset loading:\n${err}`)
         }
 
         const percent = (i + 1) / total
@@ -124,8 +145,8 @@ class AssetManager {
       { concurrency: this.#asyncConcurrency },
     )
 
-    if (window.DEBUG || process.env.NODE_ENV === 'development') {
-      console.log(`[📦 assets] ⏱ Assets loaded in ${prettyMs(Date.now() - this.loadingStart)}`)
+    if (window.DEBUG) {
+      this.groupLog(`📦 Assets loaded in ${prettyMs(Date.now() - loadingStart)} ⏱`)
     }
   }
 
@@ -135,10 +156,6 @@ class AssetManager {
   async _loadItem({ url, type, renderer, ...options }) {
     if (url in this.#cache) {
       return this.#cache[url]
-    }
-
-    if (window.DEBUG || process.env.NODE_ENV === 'development') {
-      console.log(`[📦 assets] Loading ${url}`)
     }
 
     switch (type) {
@@ -170,6 +187,24 @@ class AssetManager {
       default:
         throw new Error(`Could not load ${url}, the type ${type} is unknown!`)
     }
+  }
+
+  log(...text) {
+    this.#logs.push({ type: 'log', text })
+  }
+
+  logError(...text) {
+    this.#logs.push({ type: 'error', text })
+  }
+
+  groupLog(text) {
+    console.groupCollapsed(text)
+    this.#logs.forEach(log => {
+      console[log.type](...log.text)
+    })
+    console.groupEnd(text)
+
+    this.#logs.length = 0 // clear logs
   }
 }
 

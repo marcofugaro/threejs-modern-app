@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import assets from 'lib/AssetManager'
+import assets from '../lib/AssetManager'
 
 // elaborated three.js component example
 // containing example usage of

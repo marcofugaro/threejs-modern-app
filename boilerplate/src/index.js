@@ -9,7 +9,7 @@ import vignetteFrag from './scene/shaders/vignette.frag'
 window.DEBUG = window.location.search.includes('debug')
 
 // Grab our canvas
-const canvas = document.querySelector('#main')
+const canvas = document.querySelector('#app')
 
 // Setup the WebGLRenderer
 const webgl = new WebGLApp({
