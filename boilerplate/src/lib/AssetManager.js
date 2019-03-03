@@ -134,8 +134,6 @@ class AssetManager {
             )
           }
         } catch (err) {
-          // TODO is this delete really needed?
-          delete this.#cache[item.url]
           this.logError(`Skipping ${item.url} from asset loading:\n${err}`)
         }
 

@@ -1,167 +1,200 @@
 import * as THREE from 'three'
 
+
 /**
- * @author Prashant Sharma / spidersharma03
- * @author Ben Houston / http://clara.io / bhouston
- */
+* @author Prashant Sharma / spidersharma03
+* @author Ben Houston / http://clara.io / bhouston
+*/
 
-THREE.HDRCubeTextureLoader = function(manager) {
-  this.manager = manager !== undefined ? manager : THREE.DefaultLoadingManager
-  // override in sub classes
-  this.hdrLoader = new THREE.RGBELoader()
-}
+THREE.HDRCubeTextureLoader = function ( manager ) {
 
-THREE.HDRCubeTextureLoader.prototype.load = function(type, urls, onLoad, onProgress, onError) {
-  var RGBEByteToRGBFloat = function(sourceArray, sourceOffset, destArray, destOffset) {
-    var e = sourceArray[sourceOffset + 3]
-    var scale = Math.pow(2.0, e - 128.0) / 255.0
+	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
+	// override in sub classes
+	this.hdrLoader = new THREE.RGBELoader();
 
-    destArray[destOffset + 0] = sourceArray[sourceOffset + 0] * scale
-    destArray[destOffset + 1] = sourceArray[sourceOffset + 1] * scale
-    destArray[destOffset + 2] = sourceArray[sourceOffset + 2] * scale
-  }
+};
 
-  var RGBEByteToRGBHalf = (function() {
-    // Source: http://gamedev.stackexchange.com/questions/17326/conversion-of-a-number-from-single-precision-floating-point-representation-to-a/17410#17410
+THREE.HDRCubeTextureLoader.prototype.load = function ( type, urls, onLoad, onProgress, onError ) {
 
-    var floatView = new Float32Array(1)
-    var int32View = new Int32Array(floatView.buffer)
+	var RGBEByteToRGBFloat = function ( sourceArray, sourceOffset, destArray, destOffset ) {
 
-    /* This method is faster than the OpenEXR implementation (very often
-     * used, eg. in Ogre), with the additional benefit of rounding, inspired
-     * by James Tursa?s half-precision code. */
-    function toHalf(val) {
-      floatView[0] = val
-      var x = int32View[0]
+		var e = sourceArray[ sourceOffset + 3 ];
+		var scale = Math.pow( 2.0, e - 128.0 ) / 255.0;
 
-      var bits = (x >> 16) & 0x8000 /* Get the sign */
-      var m = (x >> 12) & 0x07ff /* Keep one extra bit for rounding */
-      var e = (x >> 23) & 0xff /* Using int is faster here */
+		destArray[ destOffset + 0 ] = sourceArray[ sourceOffset + 0 ] * scale;
+		destArray[ destOffset + 1 ] = sourceArray[ sourceOffset + 1 ] * scale;
+		destArray[ destOffset + 2 ] = sourceArray[ sourceOffset + 2 ] * scale;
 
-      /* If zero, or denormal, or exponent underflows too much for a denormal
-       * half, return signed zero. */
-      if (e < 103) return bits
+	};
 
-      /* If NaN, return NaN. If Inf or exponent overflow, return Inf. */
-      if (e > 142) {
-        bits |= 0x7c00
-        /* If exponent was 0xff and one mantissa bit was set, it means NaN,
-         * not Inf, so make sure we set one mantissa bit too. */
-        bits |= (e == 255 ? 0 : 1) && x & 0x007fffff
-        return bits
-      }
+	var RGBEByteToRGBHalf = ( function () {
 
-      /* If exponent underflows but not too much, return a denormal */
-      if (e < 113) {
-        m |= 0x0800
-        /* Extra rounding may overflow and set mantissa to 0 and exponent
-         * to 1, which is OK. */
-        bits |= (m >> (114 - e)) + ((m >> (113 - e)) & 1)
-        return bits
-      }
+		// Source: http://gamedev.stackexchange.com/questions/17326/conversion-of-a-number-from-single-precision-floating-point-representation-to-a/17410#17410
 
-      bits |= ((e - 112) << 10) | (m >> 1)
-      /* Extra rounding. An overflow will set mantissa to 0 and increment
-       * the exponent, which is OK. */
-      bits += m & 1
-      return bits
-    }
+		var floatView = new Float32Array( 1 );
+		var int32View = new Int32Array( floatView.buffer );
 
-    return function(sourceArray, sourceOffset, destArray, destOffset) {
-      var e = sourceArray[sourceOffset + 3]
-      var scale = Math.pow(2.0, e - 128.0) / 255.0
+		/* This method is faster than the OpenEXR implementation (very often
+		 * used, eg. in Ogre), with the additional benefit of rounding, inspired
+		 * by James Tursa?s half-precision code. */
+		function toHalf( val ) {
 
-      destArray[destOffset + 0] = toHalf(sourceArray[sourceOffset + 0] * scale)
-      destArray[destOffset + 1] = toHalf(sourceArray[sourceOffset + 1] * scale)
-      destArray[destOffset + 2] = toHalf(sourceArray[sourceOffset + 2] * scale)
-    }
-  })()
+			floatView[ 0 ] = val;
+			var x = int32View[ 0 ];
 
-  //
+			var bits = ( x >> 16 ) & 0x8000; /* Get the sign */
+			var m = ( x >> 12 ) & 0x07ff; /* Keep one extra bit for rounding */
+			var e = ( x >> 23 ) & 0xff; /* Using int is faster here */
 
-  var texture = new THREE.CubeTexture()
+			/* If zero, or denormal, or exponent underflows too much for a denormal
+			 * half, return signed zero. */
+			if ( e < 103 ) return bits;
 
-  texture.type = type
-  texture.encoding = type === THREE.UnsignedByteType ? THREE.RGBEEncoding : THREE.LinearEncoding
-  texture.format = type === THREE.UnsignedByteType ? THREE.RGBAFormat : THREE.RGBFormat
-  texture.minFilter =
-    texture.encoding === THREE.RGBEEncoding ? THREE.NearestFilter : THREE.LinearFilter
-  texture.magFilter =
-    texture.encoding === THREE.RGBEEncoding ? THREE.NearestFilter : THREE.LinearFilter
-  texture.generateMipmaps = texture.encoding !== THREE.RGBEEncoding
-  texture.anisotropy = 0
+			/* If NaN, return NaN. If Inf or exponent overflow, return Inf. */
+			if ( e > 142 ) {
 
-  var scope = this
+				bits |= 0x7c00;
+				/* If exponent was 0xff and one mantissa bit was set, it means NaN,
+						 * not Inf, so make sure we set one mantissa bit too. */
+				bits |= ( ( e == 255 ) ? 0 : 1 ) && ( x & 0x007fffff );
+				return bits;
 
-  var loaded = 0
+			}
 
-  function loadHDRData(i, onLoad, onProgress, onError) {
-    var loader = new THREE.FileLoader(scope.manager)
-    loader.setPath(scope.path)
-    loader.setResponseType('arraybuffer')
-    loader.load(
-      urls[i],
-      function(buffer) {
-        loaded++
+			/* If exponent underflows but not too much, return a denormal */
+			if ( e < 113 ) {
 
-        var texData = scope.hdrLoader._parser(buffer)
+				m |= 0x0800;
+				/* Extra rounding may overflow and set mantissa to 0 and exponent
+				 * to 1, which is OK. */
+				bits |= ( m >> ( 114 - e ) ) + ( ( m >> ( 113 - e ) ) & 1 );
+				return bits;
 
-        if (!texData) return
+			}
 
-        if (type === THREE.FloatType) {
-          var numElements = (texData.data.length / 4) * 3
-          var floatdata = new Float32Array(numElements)
+			bits |= ( ( e - 112 ) << 10 ) | ( m >> 1 );
+			/* Extra rounding. An overflow will set mantissa to 0 and increment
+			 * the exponent, which is OK. */
+			bits += m & 1;
+			return bits;
 
-          for (var j = 0; j < numElements; j++) {
-            RGBEByteToRGBFloat(texData.data, j * 4, floatdata, j * 3)
-          }
+		}
 
-          texData.data = floatdata
-        } else if (type === THREE.HalfFloatType) {
-          var numElements = (texData.data.length / 4) * 3
-          var halfdata = new Uint16Array(numElements)
+		return function ( sourceArray, sourceOffset, destArray, destOffset ) {
 
-          for (var j = 0; j < numElements; j++) {
-            RGBEByteToRGBHalf(texData.data, j * 4, halfdata, j * 3)
-          }
+			var e = sourceArray[ sourceOffset + 3 ];
+			var scale = Math.pow( 2.0, e - 128.0 ) / 255.0;
 
-          texData.data = halfdata
-        }
+			destArray[ destOffset + 0 ] = toHalf( sourceArray[ sourceOffset + 0 ] * scale );
+			destArray[ destOffset + 1 ] = toHalf( sourceArray[ sourceOffset + 1 ] * scale );
+			destArray[ destOffset + 2 ] = toHalf( sourceArray[ sourceOffset + 2 ] * scale );
 
-        if (texData.image !== undefined) {
-          texture[i].images = texData.image
-        } else if (texData.data !== undefined) {
-          var dataTexture = new THREE.DataTexture(texData.data, texData.width, texData.height)
-          dataTexture.format = texture.format
-          dataTexture.type = texture.type
-          dataTexture.encoding = texture.encoding
-          dataTexture.minFilter = texture.minFilter
-          dataTexture.magFilter = texture.magFilter
-          dataTexture.generateMipmaps = texture.generateMipmaps
+		};
 
-          texture.images[i] = dataTexture
-        }
+	} )();
 
-        if (loaded === 6) {
-          texture.needsUpdate = true
-          if (onLoad) onLoad(texture)
-        }
-      },
-      onProgress,
-      onError,
-    )
-  }
+	//
 
-  for (var i = 0; i < urls.length; i++) {
-    loadHDRData(i, onLoad, onProgress, onError)
-  }
+	var texture = new THREE.CubeTexture();
 
-  return texture
-}
+	texture.type = type;
+	texture.encoding = ( type === THREE.UnsignedByteType ) ? THREE.RGBEEncoding : THREE.LinearEncoding;
+	texture.format = ( type === THREE.UnsignedByteType ) ? THREE.RGBAFormat : THREE.RGBFormat;
+	texture.minFilter = ( texture.encoding === THREE.RGBEEncoding ) ? THREE.NearestFilter : THREE.LinearFilter;
+	texture.magFilter = ( texture.encoding === THREE.RGBEEncoding ) ? THREE.NearestFilter : THREE.LinearFilter;
+	texture.generateMipmaps = ( texture.encoding !== THREE.RGBEEncoding );
+	texture.anisotropy = 0;
 
-THREE.HDRCubeTextureLoader.prototype.setPath = function(value) {
-  this.path = value
-  return this
-}
+	var scope = this;
+
+	var loaded = 0;
+
+	function loadHDRData( i, onLoad, onProgress, onError ) {
+
+		var loader = new THREE.FileLoader( scope.manager );
+		loader.setPath( scope.path );
+		loader.setResponseType( 'arraybuffer' );
+		loader.load( urls[ i ], function ( buffer ) {
+
+			loaded ++;
+
+			var texData = scope.hdrLoader._parser( buffer );
+
+			if ( ! texData ) return;
+
+			if ( type === THREE.FloatType ) {
+
+				var numElements = ( texData.data.length / 4 ) * 3;
+				var floatdata = new Float32Array( numElements );
+
+				for ( var j = 0; j < numElements; j ++ ) {
+
+					RGBEByteToRGBFloat( texData.data, j * 4, floatdata, j * 3 );
+
+				}
+
+				texData.data = floatdata;
+
+			} else if ( type === THREE.HalfFloatType ) {
+
+				var numElements = ( texData.data.length / 4 ) * 3;
+				var halfdata = new Uint16Array( numElements );
+
+				for ( var j = 0; j < numElements; j ++ ) {
+
+					RGBEByteToRGBHalf( texData.data, j * 4, halfdata, j * 3 );
+
+				}
+
+				texData.data = halfdata;
+
+			}
+
+			if ( texData.image !== undefined ) {
+
+				texture[ i ].images = texData.image;
+
+			} else if ( texData.data !== undefined ) {
+
+				var dataTexture = new THREE.DataTexture( texData.data, texData.width, texData.height );
+				dataTexture.format = texture.format;
+				dataTexture.type = texture.type;
+				dataTexture.encoding = texture.encoding;
+				dataTexture.minFilter = texture.minFilter;
+				dataTexture.magFilter = texture.magFilter;
+				dataTexture.generateMipmaps = texture.generateMipmaps;
+
+				texture.images[ i ] = dataTexture;
+
+			}
+
+			if ( loaded === 6 ) {
+
+				texture.needsUpdate = true;
+				if ( onLoad ) onLoad( texture );
+
+			}
+
+		}, onProgress, onError );
+
+	}
+
+	for ( var i = 0; i < urls.length; i ++ ) {
+
+		loadHDRData( i, onLoad, onProgress, onError );
+
+	}
+
+	return texture;
+
+};
+
+THREE.HDRCubeTextureLoader.prototype.setPath = function ( value ) {
+
+	this.path = value;
+	return this;
+
+};
+
 
 export const HDRCubeTextureLoader = THREE.HDRCubeTextureLoader

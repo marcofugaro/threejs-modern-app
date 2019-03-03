@@ -1,57 +1,75 @@
 import * as THREE from 'three'
 import { Pass } from './Pass'
+THREE.Pass = Pass
 
 /**
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE.RenderPass = function(scene, camera, overrideMaterial, clearColor, clearAlpha) {
-  THREE.Pass.call(this)
+THREE.RenderPass = function ( scene, camera, overrideMaterial, clearColor, clearAlpha ) {
 
-  this.scene = scene
-  this.camera = camera
+	THREE.Pass.call( this );
 
-  this.overrideMaterial = overrideMaterial
+	this.scene = scene;
+	this.camera = camera;
 
-  this.clearColor = clearColor
-  this.clearAlpha = clearAlpha !== undefined ? clearAlpha : 0
+	this.overrideMaterial = overrideMaterial;
 
-  this.clear = true
-  this.clearDepth = false
-  this.needsSwap = false
-}
+	this.clearColor = clearColor;
+	this.clearAlpha = ( clearAlpha !== undefined ) ? clearAlpha : 0;
 
-THREE.RenderPass.prototype = Object.assign(Object.create(Pass.prototype), {
-  constructor: THREE.RenderPass,
+	this.clear = true;
+	this.clearDepth = false;
+	this.needsSwap = false;
 
-  render: function(renderer, writeBuffer, readBuffer, delta, maskActive) {
-    var oldAutoClear = renderer.autoClear
-    renderer.autoClear = false
+};
 
-    this.scene.overrideMaterial = this.overrideMaterial
+THREE.RenderPass.prototype = Object.assign( Object.create( THREE.Pass.prototype ), {
 
-    var oldClearColor, oldClearAlpha
+	constructor: THREE.RenderPass,
 
-    if (this.clearColor) {
-      oldClearColor = renderer.getClearColor().getHex()
-      oldClearAlpha = renderer.getClearAlpha()
+	render: function ( renderer, writeBuffer, readBuffer, deltaTime, maskActive ) {
 
-      renderer.setClearColor(this.clearColor, this.clearAlpha)
-    }
+		var oldAutoClear = renderer.autoClear;
+		renderer.autoClear = false;
 
-    if (this.clearDepth) {
-      renderer.clearDepth()
-    }
+		this.scene.overrideMaterial = this.overrideMaterial;
 
-    renderer.render(this.scene, this.camera, this.renderToScreen ? null : readBuffer, this.clear)
+		var oldClearColor, oldClearAlpha;
 
-    if (this.clearColor) {
-      renderer.setClearColor(oldClearColor, oldClearAlpha)
-    }
+		if ( this.clearColor ) {
 
-    this.scene.overrideMaterial = null
-    renderer.autoClear = oldAutoClear
-  },
-})
+			oldClearColor = renderer.getClearColor().getHex();
+			oldClearAlpha = renderer.getClearAlpha();
+
+			renderer.setClearColor( this.clearColor, this.clearAlpha );
+
+		}
+
+		if ( this.clearDepth ) {
+
+			renderer.clearDepth();
+
+		}
+
+		renderer.setRenderTarget( this.renderToScreen ? null : readBuffer );
+
+		// TODO: Avoid using autoClear properties, see https://github.com/mrdoob/three.js/pull/15571#issuecomment-465669600
+		if ( this.clear ) renderer.clear( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil );
+		renderer.render( this.scene, this.camera );
+
+		if ( this.clearColor ) {
+
+			renderer.setClearColor( oldClearColor, oldClearAlpha );
+
+		}
+
+		this.scene.overrideMaterial = null;
+		renderer.autoClear = oldAutoClear;
+
+	}
+
+} );
+
 
 export const RenderPass = THREE.RenderPass

@@ -7,6 +7,7 @@ import assets from '../lib/AssetManager'
 //   - control panel
 //   - touch events
 //   - postprocessing
+//   - screenshot saving
 
 // preload the suzanne head
 const suzanneKey = assets.queue({
@@ -77,10 +78,12 @@ export default class Suzanne extends THREE.Group {
     // set the background as the hdr
     this.webgl.scene.background = assets.get(hdrKey).renderTarget
 
-    // update the angularVelocity from the control-panel
-    this.webgl.panel.on('input', inputs => {
-      this.angularVelocity = inputs['Angular Velocity']
-    })
+    if (window.DEBUG) {
+      // update the angularVelocity from the control-panel
+      this.webgl.panel.on('input', inputs => {
+        this.angularVelocity = inputs['Angular Velocity']
+      })
+    }
   }
 
   onTouchStart(event, pos) {
@@ -133,4 +136,23 @@ export function addNaturalLight(webgl) {
   dirLight.shadow.camera.bottom = -d
   dirLight.shadow.camera.far = 3500
   dirLight.shadow.bias = -0.0001
+}
+
+// demo the save screenshot feature
+export function addScreenshotButton(webgl) {
+  const screenshotButton = document.createElement('div')
+
+  // normally the styles would be in style.css
+  screenshotButton.style.position = 'fixed'
+  screenshotButton.style.bottom = 0
+  screenshotButton.style.right = 0
+  screenshotButton.style.background = 'tomato'
+  screenshotButton.style.cursor = 'pointer'
+  screenshotButton.style.padding = '8px 16px'
+  screenshotButton.style.color = 'white'
+  screenshotButton.style.fontSize = '24px'
+
+  screenshotButton.textContent = 'Save screenshot'
+  document.body.appendChild(screenshotButton)
+  screenshotButton.addEventListener('click', webgl.saveScreenshot)
 }
