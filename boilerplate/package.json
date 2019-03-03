@@ -21,13 +21,34 @@
       "last 1 Chrome version"
     ]
   },
+  "dependencies": {
+    "canvas-sketch-util": "^1.6.2",
+    "control-panel": "marcofugaro/control-panel",
+    "datauritoblob": "^1.0.0",
+    "glsl-vignette": "^1.1.0",
+    "image-promise": "^6.0.0",
+    "lodash": "^4.17.11",
+    "orbit-controls": "^1.2.4",
+    "p-map": "^2.0.0",
+    "pretty-ms": "^4.0.0",
+    "stats.js": "^0.17.0",
+    "three": "^0.102.1",
+    "touches": "^1.2.2"
+  },
   "devDependencies": {
     "@babel/core": "^7.3.4",
+    "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/plugin-proposal-decorators": "^7.3.0",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.2.0",
+    "@babel/plugin-proposal-numeric-separator": "^7.2.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.2.0",
+    "@babel/plugin-proposal-pipeline-operator": "^7.3.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.4",
-    "@wildpeaks/three-webpack-plugin": "^2.0.0",
     "babel-loader": "^8.0.5",
     "babel-plugin-lodash": "^3.3.4",
-    "babel-preset-proposals": "^0.1.0",
     "chalk": "^2.4.2",
     "eslint-config-accurapp": "^4.2.0",
     "event-hooks-webpack-plugin": "^2.1.1",
@@ -43,19 +64,5 @@
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.2.1",
     "webpack-merge": "^4.2.1"
-  },
-  "dependencies": {
-    "canvas-sketch-util": "^1.6.2",
-    "control-panel": "marcofugaro/control-panel",
-    "datauritoblob": "^1.0.0",
-    "glsl-vignette": "^1.1.0",
-    "image-promise": "^6.0.0",
-    "lodash": "^4.17.11",
-    "orbit-controls": "^1.2.4",
-    "p-map": "^2.0.0",
-    "pretty-ms": "^4.0.0",
-    "stats.js": "^0.17.0",
-    "three": "^0.102.1",
-    "touches": "^1.2.2"
   }
 }

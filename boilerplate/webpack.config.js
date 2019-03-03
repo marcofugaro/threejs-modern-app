@@ -8,7 +8,6 @@ const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeM
 const { prepareUrls } = require('react-dev-utils/WebpackDevServerUtils')
 const formatWebpackMessages = require('react-dev-utils/formatWebpackMessages')
 const prettyMs = require('pretty-ms')
-const ThreeWebpackPlugin = require('@wildpeaks/three-webpack-plugin')
 const EventHooksPlugin = require('event-hooks-webpack-plugin')
 const chalk = require('chalk')
 const indentString = require('indent-string')
@@ -56,13 +55,7 @@ module.exports = merge.smart(
         inject: true,
         template: './public/index.html',
       }),
-      // Makes you import normally from `three/examples/js` files
-      new ThreeWebpackPlugin(),
     ],
-    // import files without doing the ../../../
-    resolve: {
-      modules: ['node_modules', 'src'],
-    },
     // automatically split vendor and app code
     optimization: {
       splitChunks: {
@@ -163,7 +156,7 @@ module.exports = merge.smart(
     devtool: 'source-map',
     output: {
       path: path.resolve(__dirname, 'build'),
-      filename: 'app.[chunkhash:8].js',
+      filename: 'app.[contenthash:8].js',
       chunkFilename: '[name].[contenthash:8].chunk.js',
       // change this if you're deploying on a subfolder
       publicPath: '/',
