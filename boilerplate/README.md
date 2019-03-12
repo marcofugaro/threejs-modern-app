@@ -8,3 +8,5 @@ Once you installed the dependencies running `yarn`, these are the available comm
 - `yarn build` builds the project for production, ready to be deployed from the `build/` folder
 
 All the build tools logic is in the `package.json` and `webpack.config.js`.
+
+##read the full documentation for ad more indepth guide

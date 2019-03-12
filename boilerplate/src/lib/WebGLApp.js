@@ -11,8 +11,10 @@ import { EffectComposer } from './three/EffectComposer'
 import { RenderPass } from './three/RenderPass'
 
 export default class WebGLApp {
-  #tmpTarget = new THREE.Vector3()
   #updateListeners = []
+  #tmpTarget = new THREE.Vector3()
+  #rafID
+  #lastTime
 
   constructor({
     background = '#000',
@@ -25,7 +27,7 @@ export default class WebGLApp {
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: false,
-      // enabled for saving screen shots of the canvas,
+      // enabled for saving screenshots of the canvas,
       // may wish to disable this for perf reasons
       preserveDrawingBuffer: true,
       failIfMajorPerformanceCaveat: true,
@@ -49,8 +51,8 @@ export default class WebGLApp {
 
     this.time = 0
     this.isRunning = false
-    this._lastTime = performance.now()
-    this._rafID = null
+    this.#lastTime = performance.now()
+    this.#rafID = null
 
     // handle resize events
     window.addEventListener('resize', this.resize)
@@ -233,16 +235,16 @@ export default class WebGLApp {
   }
 
   start = () => {
-    if (this._rafID !== null) return
-    this._rafID = window.requestAnimationFrame(this.animate)
+    if (this.#rafID !== null) return
+    this.#rafID = window.requestAnimationFrame(this.animate)
     this.isRunning = true
     return this
   }
 
   stop = () => {
-    if (this._rafID === null) return
-    window.cancelAnimationFrame(this._rafID)
-    this._rafID = null
+    if (this.#rafID === null) return
+    window.cancelAnimationFrame(this.#rafID)
+    this.#rafID = null
     this.isRunning = false
     return this
   }
@@ -254,9 +256,9 @@ export default class WebGLApp {
     if (this.stats) this.stats.begin()
 
     const now = performance.now()
-    const dt = Math.min(this.maxDeltaTime, (now - this._lastTime) / 1000)
+    const dt = Math.min(this.maxDeltaTime, (now - this.#lastTime) / 1000)
     this.time += dt
-    this._lastTime = now
+    this.#lastTime = now
     this.update(dt, this.time)
     this.draw()
 
