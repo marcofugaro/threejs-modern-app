@@ -18,11 +18,23 @@ const canvas = document.querySelector('#app')
 // setup the WebGLRenderer
 const webgl = new WebGLApp({
   canvas,
-  backgroundAlpha: 0,
+  // enable transparency
   alpha: true,
+  // set the scene background color
+  background = '#000',
+  backgroundAlpha: 1,
+  // enable postprocessing
+  // ⚠️ Warning! This disables antialiasing for the scene,
+  // at least until WebGL2 comes along in Three.js
   postprocessing: true,
+  // show the fps counter from stats.js
   showFps: window.DEBUG,
+  // enable orbit-controls with a z-distance of 5,
+  // it is recommended to keep the distance the same as
+  // the camera distance:
+  // webgl.camera.position.set(0, 0, 5)
   orbitControls: window.DEBUG && { distance: 5 },
+  // Add the control-panel inputs
   panelInputs: window.DEBUG && [
     {
       type: 'range',
@@ -33,7 +45,9 @@ const webgl = new WebGLApp({
       scale: 'log',
     },
   ],
+  // enable Cannon.js
   // world: new CANNON.World(),
+  // enable Tween.js
   // tween: TWEEN,
 })
 
