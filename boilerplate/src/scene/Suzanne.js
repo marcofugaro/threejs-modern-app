@@ -9,7 +9,7 @@ import assets from '../lib/AssetManager'
 //   - postprocessing
 //   - screenshot saving
 
-// preload the suzanne head
+// preload the suzanne model
 const suzanneKey = assets.queue({
   url: 'assets/suzanne.gltf',
   type: 'gltf',
@@ -93,7 +93,7 @@ export default class Suzanne extends THREE.Group {
     // object with raycasting
     const coords = new THREE.Vector2().set(
       (x / this.webgl.width) * 2 - 1,
-      (-y / this.webgl.height) * 2 + 1,
+      (-y / this.webgl.height) * 2 + 1
     )
     const raycaster = new THREE.Raycaster()
     raycaster.setFromCamera(coords, this.webgl.camera)

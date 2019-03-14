@@ -21,7 +21,7 @@ const webgl = new WebGLApp({
   // enable transparency
   alpha: true,
   // set the scene background color
-  background = '#000',
+  background: '#000',
   backgroundAlpha: 1,
   // enable postprocessing
   // ⚠️ Warning! This disables antialiasing for the scene,
