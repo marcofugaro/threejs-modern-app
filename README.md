@@ -29,7 +29,7 @@ const webgl = new WebGLApp({ ...options })
 
 The WebGLApp class contains all the code needed for Three.js to run a scene, it is always the same so it makes sense to hide it in a standalone file and don't think about it.
 
-You can see an example configuration here.
+You can see an example configuration here:
 
 https://github.com/marcofugaro/threejs-modern-app/blob/4af53b2748e2ea923f2e4482c657c894b2b848b3/boilerplate/src/index.js#L18-L52
 
@@ -73,11 +73,25 @@ TODO
 
 ### Debug mode
 
-TODO
+Often you want to show the fps count or debug helpers such as the [SpotLightHelper](https://threejs.org/docs/#api/en/helpers/SpotLightHelper) only when you're developing or debugging.
+
+A really manageable way is to have a global `window.DEBUG` constant which is true only if you append `?debug` to your url, for example `http://localhost:8080/?debug` or even in production like `https://example.com/?debug`.
+
+This is done [here](https://github.com/marcofugaro/threejs-modern-app/blob/4af53b2748e2ea923f2e4482c657c894b2b848b3/boilerplate/src/index.js#L13) in just one line:
+
+```js
+window.DEBUG = window.location.search.includes('debug')
+```
+
+You could also add more global constants by just using more query-string parameters, like this `?debug&fps`.
 
 ### glslify
 
-TODO
+You can import shaders from `node_modules` with glslify, here is an example that uses [glsl-vignette](https://github.com/TyLindberg/glsl-vignette):
+
+https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/scene/shaders/vignette.frag
+
+For a list of shaders you can import check out [stack.gl packages list](http://stack.gl/packages/), more info on [glslify's readme](https://github.com/glslify/glslify).
 
 ### Hot reload
 
