@@ -216,5 +216,5 @@ module.exports = merge.smart(
         }),
       ],
     },
-  },
+  }
 )
