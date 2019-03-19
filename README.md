@@ -2,16 +2,16 @@
 
 > Boilerplate and utils for a fullscreen Three.js app
 
-### [DEMO](https://marcofugaro.github.io/threejs-modern-app/)
-
 [![demo](demo.png)](https://marcofugaro.github.io/threejs-modern-app/)
 
 > <small>assets thanks to [Poliigon](https://www.poliigon.com/) and [Blender](https://www.blender.org/)</small>
 
-Example of a production scale project: [shrimpc.at](https://github.com/marcofugaro/shrimpcat/)
-
-
 It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](https://github.com/mattdesl/threejs-app), but it was rewritten and simplified using **ES6** syntax rather than node, making it easier to read and well commented, so it can be easily customized to fit your needs.
+
+
+### [DEMO](https://marcofugaro.github.io/threejs-modern-app/?debug)
+
+### [Example of production scale project](https://github.com/marcofugaro/shrimpcat/)
 
 ## Features
 - All the **Three.js boilerplate code is tucked away** in a file, the exported `WebGLApp` is easily configurable from the outside, for example you can enable postprocessing, [orbit controls](https://github.com/Jam3/orbit-controls), [FPS stats](https://github.com/mrdoob/stats.js/), a [control-panel](https://github.com/freeman-lab/control-panel) and use the save screenshot functionality. It also has built-in support for [Cannon.js](https://github.com/schteppe/cannon.js) and [Tween.js](https://github.com/tweenjs/tween.js/). [[Read more](#webglapp)]
