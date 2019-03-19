@@ -2,8 +2,11 @@
 
 > Boilerplate and utils for a fullscreen Three.js app
 
-![demo]()
-(assets thanks to poliigon & blender)
+### [DEMO](https://marcofugaro.github.io/threejs-modern-app/)
+
+[![demo](demo.png)](https://marcofugaro.github.io/threejs-modern-app/)
+
+> <small>assets thanks to [Poliigon](https://www.poliigon.com/) and [Blender](https://www.blender.org/)</small>
 
 Example of a production scale project: [shrimpc.at]()
 
