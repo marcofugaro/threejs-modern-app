@@ -24,6 +24,8 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 ### WebGLApp
 
 ```js
+import WebGLApp from './lib/WebGLApp'
+
 const webgl = new WebGLApp({ ...options })
 ```
 
@@ -43,24 +45,27 @@ You can pass the class the options you would pass to the [THREE.WebGLRenderer](h
 | `maxDeltaTime` | 1 / 30 | Clamp the `dt` to prevent stepping anything too far forward |
 | `postprocessing` | false | Enable Three.js postprocessing. The composer gets exposed as `webgl.composer`. |
 | `showFps` | false | Show the [stats.js](https://github.com/mrdoob/stats.js/) fps counter |
-| `orbitControls` | false | Accepts an object with the [orbit-controls](https://github.com/Jam3/orbit-controls) options. Exposed as `webgl.orbitControls`. |
-| `panelInputs` | false | Accepts an array with the [control-panel](https://github.com/freeman-lab/control-panel) inputs. Exposed ad `webgl.panel`. |
-| `world` | false | Accepts an instance of the [cannon.js](https://github.com/schteppe/cannon.js) world (`new CANNON.World()`). Exposed as `webgl.world`. |
-| `tween` | false | Accepts the [TWEEN.js](https://github.com/tweenjs/tween.js/) library (`TWEEN`). Exposed as `webgl.tween`. |
+| `orbitControls` | undefined | Accepts an object with the [orbit-controls](https://github.com/Jam3/orbit-controls) options. Exposed as `webgl.orbitControls`. |
+| `panelInputs` | undefined | Accepts an array with the [control-panel](https://github.com/freeman-lab/control-panel) inputs. Exposed ad `webgl.panel`. |
+| `world` | undefined | Accepts an instance of the [cannon.js](https://github.com/schteppe/cannon.js) world (`new CANNON.World()`). Exposed as `webgl.world`. |
+| `tween` | undefined | Accepts the [TWEEN.js](https://github.com/tweenjs/tween.js/) library (`TWEEN`). Exposed as `webgl.tween`. |
 
-The `webgl` instance will contain all the Three.js elements such as `webgl.scene`, `webgl.renderer`, `webgl.camera` or `webgl.canvas`.
+The `webgl` instance will contain all the Three.js elements such as `webgl.scene`, `webgl.renderer`, `webgl.camera` or `webgl.canvas`. It also exposes some methods:
 
-Also it will expose the `webgl.saveScreenshot()` method, which you can call with there options:
+#### webgl.saveScreenshot({ ...options })
 
-```js
-webgl.saveScreenshot({ ...options })
-```
+Save a screenshot of the application as a png.
 
 | Option | Default | Description |
 | --- | --- | --- |
 | `width` | 2560 | The width of the screenshot |
 | `height` | 1440 | The height of the screenshot |
-| `fileName` | 'image.png' | The filename, can be only .png |
+| `fileName` | `'image.png'` | The filename, can be only .png |
+
+#### webgl.onUpdate((dt, time) => {})
+
+Subscribe to the update `requestAnimationFrame` without having to create a component.
+
 
 ### Component structure
 
@@ -68,8 +73,89 @@ TODO
 
 ### Asset Manager
 
-TODO
+The Asseet Manager handles the preloading of all the assets needed to run the scene, you use it like this:
 
+https://github.com/marcofugaro/threejs-modern-app/blob/52cbbb330419ce830eb4cc8c9ef06584f21d1bd7/boilerplate/src/scene/Suzanne.js#L12-L42
+
+In detail, first you queue the asset you want to preload in the component where you will use it
+
+```js
+import assets from '../lib/AssetManager'
+
+const key = assets.queue({
+  url: 'assets/model.gltf',
+  type: 'gltf',
+})
+```
+
+Then you import the component in the `index.js` so that code gets executed
+
+```js
+import Component from './scene/Component'
+```
+
+And then you start the queue assets loading promise, always in the `index.js`
+
+```js
+assets.load({ renderer: webgl.renderer }).then(() => {
+  // assets loaded! we can show the canvas
+})
+```
+
+After that, you init the component and use the asset in the component like this
+
+```js
+const modelGltf = assets.get(key)
+```
+
+These are all the exposed methods:
+
+#### assets.queue({ url, type, ...others })
+
+Queue an asset to be downloaded later with `assets.load()`.
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `url` |  | The url of the asset relative to the `public/` folder. |
+| `type` | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension. |
+| `equirectangular` | false | Only if you set `type: 'env-map'`, you can pass `equirectangular: true` if you have a single [equirectangular image](https://www.google.com/search?q=equirectangular+image&tbm=isch) rather than the six squared subimages. |
+| ...others |  | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadTexture.js) when the type is either `env-map` or `texture` |
+
+Returns a `key` that later you can use with `assets.get()`.
+
+#### assets.load({ renderer })
+
+Load all the assets previously queued.
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `renderer` |  | The WebGLRenderer of your application, exposed as `webgl.renderer` |
+
+#### assets.loadSingle({ url, type, renderer, ...others })
+
+Load a single asset without having to pass through the queue. Useful if you want to lazy-load some assets after the application has started. Usually the assets that are not needed immediately.
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `renderer` |  | The WebGLRenderer of your application, exposed as `webgl.renderer` |
+| `url` |  | The url of the asset relative to the `public/` folder. |
+| `type` | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension. |
+| `equirectangular` | false | Only if you set `type: 'env-map'`, you can pass `equirectangular: true` if you have a single [equirectangular image](https://www.google.com/search?q=equirectangular+image&tbm=isch) rather than the six squared subimages. |
+| ...others |  | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadTexture.js) when the type is either `env-map` or `texture` |
+
+Returns a `key` that later you can use with `assets.get()`.
+
+#### assets.addProgressListener((progress) => {})
+
+Pass a function that gets called each time an assets finishes downloading. The argument `progress` goes from 0 to 1, with 1 being every asset queued has been downloaded.
+
+#### assets.get(key)
+
+Retrieve an asset previously loaded with `assets.load()` or `assets.loadSingle()`.
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `key` |  | The key returned from `assets.queue()` or `assets.loadSingle()`. It corresponds to the url of the asset. |
 
 ### Debug mode
 

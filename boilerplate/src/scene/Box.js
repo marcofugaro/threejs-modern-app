@@ -16,7 +16,7 @@ export default class Box extends THREE.Group {
     this.add(this.box)
   }
 
-  update(dt = 0, time = 0) {
+  update(dt, time) {
     this.box.rotation.y += dt * 0.5
   }
 }

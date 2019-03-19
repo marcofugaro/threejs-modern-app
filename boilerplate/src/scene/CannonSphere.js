@@ -32,7 +32,7 @@ export default class CannonSphere extends CANNON.Body {
     this.update()
   }
 
-  update(dt = 0, time = 0) {
+  update(dt, time) {
     // sync the mesh to the physical body
     this.mesh.position.copy(this.position)
     this.mesh.quaternion.copy(this.quaternion)

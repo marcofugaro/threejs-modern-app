@@ -105,7 +105,7 @@ export default class Suzanne extends THREE.Group {
 
   onTouchEnd(event, pos) {}
 
-  update(dt = 0, time = 0) {
+  update(dt, time) {
     this.rotation.y += dt * this.angularVelocity
   }
 }

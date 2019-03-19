@@ -169,7 +169,7 @@ export default class WebGLApp {
     saveDataURI(fileName, dataURI)
   }
 
-  update = (dt = 0, time = 0) => {
+  update = (dt, time) => {
     if (this.orbitControls) {
       this.orbitControls.update()
 
