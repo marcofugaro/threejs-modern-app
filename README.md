@@ -19,9 +19,7 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 - Hot reload not enabled by default. [[Read more](#hot-reload)]
 - Modern and customizable development tools such as webpack, babel, eslint, prettier and browserslist.
 
-## User Guide
-
-### WebGLApp
+## WebGLApp
 
 ```js
 import WebGLApp from './lib/WebGLApp'
@@ -52,7 +50,7 @@ You can pass the class the options you would pass to the [THREE.WebGLRenderer](h
 
 The `webgl` instance will contain all the Three.js elements such as `webgl.scene`, `webgl.renderer`, `webgl.camera` or `webgl.canvas`. It also exposes some methods:
 
-#### webgl.saveScreenshot({ ...options })
+### webgl.saveScreenshot({ ...options })
 
 Save a screenshot of the application as a png.
 
@@ -62,16 +60,16 @@ Save a screenshot of the application as a png.
 | `height` | 1440 | The height of the screenshot |
 | `fileName` | `'image.png'` | The filename, can be only .png |
 
-#### webgl.onUpdate((dt, time) => {})
+### webgl.onUpdate((dt, time) => {})
 
 Subscribe to the update `requestAnimationFrame` without having to create a component.
 
 
-### Component structure
+## Component structure
 
 TODO
 
-### Asset Manager
+## Asset Manager
 
 The Asseet Manager handles the preloading of all the assets needed to run the scene, you use it like this:
 
@@ -110,7 +108,7 @@ const modelGltf = assets.get(key)
 
 These are all the exposed methods:
 
-#### assets.queue({ url, type, ...others })
+### assets.queue({ url, type, ...others })
 
 Queue an asset to be downloaded later with `assets.load()`.
 
@@ -123,7 +121,7 @@ Queue an asset to be downloaded later with `assets.load()`.
 
 Returns a `key` that later you can use with `assets.get()`.
 
-#### assets.load({ renderer })
+### assets.load({ renderer })
 
 Load all the assets previously queued.
 
@@ -131,7 +129,7 @@ Load all the assets previously queued.
 | --- | --- | --- |
 | `renderer` |  | The WebGLRenderer of your application, exposed as `webgl.renderer` |
 
-#### assets.loadSingle({ url, type, renderer, ...others })
+### assets.loadSingle({ url, type, renderer, ...others })
 
 Load a single asset without having to pass through the queue. Useful if you want to lazy-load some assets after the application has started. Usually the assets that are not needed immediately.
 
@@ -145,11 +143,11 @@ Load a single asset without having to pass through the queue. Useful if you want
 
 Returns a `key` that later you can use with `assets.get()`.
 
-#### assets.addProgressListener((progress) => {})
+### assets.addProgressListener((progress) => {})
 
 Pass a function that gets called each time an assets finishes downloading. The argument `progress` goes from 0 to 1, with 1 being every asset queued has been downloaded.
 
-#### assets.get(key)
+### assets.get(key)
 
 Retrieve an asset previously loaded with `assets.load()` or `assets.loadSingle()`.
 
@@ -157,7 +155,7 @@ Retrieve an asset previously loaded with `assets.load()` or `assets.loadSingle()
 | --- | --- | --- |
 | `key` |  | The key returned from `assets.queue()` or `assets.loadSingle()`. It corresponds to the url of the asset. |
 
-### Debug mode
+## Debug mode
 
 Often you want to show the fps count or debug helpers such as the [SpotLightHelper](https://threejs.org/docs/#api/en/helpers/SpotLightHelper) only when you're developing or debugging.
 
@@ -171,7 +169,7 @@ window.DEBUG = window.location.search.includes('debug')
 
 You could also add more global constants by just using more query-string parameters, like this `?debug&fps`.
 
-### glslify
+## glslify
 
 You can import shaders from `node_modules` with glslify, here is an example that uses [glsl-vignette](https://github.com/TyLindberg/glsl-vignette):
 
@@ -179,7 +177,7 @@ https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/sc
 
 For a list of shaders you can import check out [stack.gl packages list](http://stack.gl/packages/), more info on [glslify's readme](https://github.com/glslify/glslify).
 
-### Hot reload
+## Hot reload
 
 TODO
 
