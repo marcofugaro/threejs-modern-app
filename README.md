@@ -78,6 +78,10 @@ The Asseet Manager handles the preloading of all the assets needed to run the sc
 
 https://github.com/marcofugaro/threejs-modern-app/blob/52cbbb330419ce830eb4cc8c9ef06584f21d1bd7/boilerplate/src/scene/Suzanne.js#L12-L42
 
+https://github.com/marcofugaro/threejs-modern-app/blob/d499b9c4ff6f6dc8f8fb1607aeef6b41c6e4887d/boilerplate/src/index.js#L63
+
+https://github.com/marcofugaro/threejs-modern-app/blob/d499b9c4ff6f6dc8f8fb1607aeef6b41c6e4887d/boilerplate/src/scene/Suzanne.js#L53s
+
 In detail, first you queue the asset you want to preload in the component where you will use it
 
 ```js

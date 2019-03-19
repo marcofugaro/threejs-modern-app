@@ -26,7 +26,7 @@ class AssetManager {
 
   // Add an asset to be queued, input: { url, type, ...options }
   queue({ url, type, ...options }) {
-    if (!url) throw new TypeError('Must specify a URL or opt.url for AssetManager#queue()')
+    if (!url) throw new TypeError('Must specify a URL or opt.url for AssetManager.queue()')
 
     if (!this._getQueued(url)) {
       this.#queue.push({ url, type: type || this._extractType(url), ...options })
@@ -62,9 +62,9 @@ class AssetManager {
 
   // Fetch a loaded asset by URL
   get = url => {
-    if (!url) throw new TypeError('Must specify an URL for AssetManager#get()')
+    if (!url) throw new TypeError('Must specify an URL for AssetManager.get()')
     if (!(url in this.#cache)) {
-      throw new Error(`Could not find an asset by the URL ${url}`)
+      throw new Error(`The asset ${url} is not in the loaded files.`)
     }
 
     return this.#cache[url]
@@ -75,7 +75,7 @@ class AssetManager {
     // renderer is used to load textures and env maps,
     // but require it always since it is an extensible pattern
     if (!renderer) {
-      throw new Error('You must provide a renderer to the load function')
+      throw new Error('You must provide a renderer to the loadSingle function.')
     }
 
     try {
@@ -87,7 +87,7 @@ class AssetManager {
         console.log(
           `📦 Loaded single asset %c${item.url}%c in ${prettyMs(Date.now() - itemLoadingStart)}`,
           'color:blue',
-          'color:black',
+          'color:black'
         )
       }
 
@@ -103,7 +103,7 @@ class AssetManager {
     // renderer is used to load textures and env maps,
     // but require it always since it is an extensible pattern
     if (!renderer) {
-      throw new Error('You must provide a renderer to the load function')
+      throw new Error('You must provide a renderer to the load function.')
     }
 
     const queue = this.#queue.slice()
@@ -130,7 +130,7 @@ class AssetManager {
             this.log(
               `Loaded %c${item.url}%c in ${prettyMs(Date.now() - itemLoadingStart)}`,
               'color:blue',
-              'color:black',
+              'color:black'
             )
           }
         } catch (err) {
@@ -140,11 +140,20 @@ class AssetManager {
         const percent = (i + 1) / total
         this.#onProgressListeners.forEach(fn => fn(percent))
       },
-      { concurrency: this.#asyncConcurrency },
+      { concurrency: this.#asyncConcurrency }
     )
 
     if (window.DEBUG) {
-      this.groupLog(`📦 Assets loaded in ${prettyMs(Date.now() - loadingStart)} ⏱`)
+      const errors = this.#logs.filter(log => log.type === 'error')
+
+      this.groupLog(
+        `📦 Assets loaded in ${prettyMs(Date.now() - loadingStart)} ⏱ ${
+          errors.length > 0
+            ? `%c ⚠️ Skipped ${errors.length} asset${errors.length > 1 ? 's' : ''} `
+            : ''
+        }`,
+        errors.length > 0 ? 'color:white;background:red;' : ''
+      )
     }
   }
 
@@ -160,7 +169,7 @@ class AssetManager {
       case 'gltf':
         return new Promise((resolve, reject) => {
           new GLTFLoader().load(url, resolve, null, err =>
-            reject(new Error(`Could not load GLTF asset ${url}. ${err}`)),
+            reject(new Error(`Could not load GLTF asset ${url}:\n${err}`))
           )
         })
       case 'json':
@@ -195,12 +204,12 @@ class AssetManager {
     this.#logs.push({ type: 'error', text })
   }
 
-  groupLog(text) {
-    console.groupCollapsed(text)
+  groupLog(...text) {
+    console.groupCollapsed(...text)
     this.#logs.forEach(log => {
       console[log.type](...log.text)
     })
-    console.groupEnd(text)
+    console.groupEnd()
 
     this.#logs.length = 0 // clear logs
   }
