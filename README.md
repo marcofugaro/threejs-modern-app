@@ -23,7 +23,7 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 - Modern and customizable development tools such as webpack, babel, eslint, prettier and browserslist.
 - Beautiful console output:
 
-<img src="screenshots/console-success.png" width="450" /><img src="screenshots/console-error.png" width="440" /><img src="screenshots/console-build.png" width="700" />
+<img src="screenshots/console-success.png" width="450" /><img src="screenshots/console-error.png" width="430" /><img src="screenshots/console-build.png" width="700" />
 
 ## WebGLApp
 
