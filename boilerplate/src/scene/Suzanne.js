@@ -86,9 +86,7 @@ export default class Suzanne extends THREE.Group {
     }
   }
 
-  onTouchStart(event, pos) {
-    const [x, y] = pos
-
+  onPointerDown(event, [x, y]) {
     // for example, check of we clicked on an
     // object with raycasting
     const coords = new THREE.Vector2().set(
@@ -101,9 +99,9 @@ export default class Suzanne extends THREE.Group {
     console.log(hits.length > 0 ? `Hit ${hits[0].object.name}!` : 'No hit')
   }
 
-  onTouchMove(event, pos) {}
+  onPointerMove(event, [x, y]) {}
 
-  onTouchEnd(event, pos) {}
+  onPointerUp(event, [x, y]) {}
 
   update(dt, time) {
     this.rotation.y += dt * this.angularVelocity

@@ -43,10 +43,10 @@ You can pass the class the options you would pass to the [THREE.WebGLRenderer](h
 
 | Option | Default | Description |
 | --- | --- | --- |
-| `background` | `'#000'` | The background of the scene |
-| `backgroundAlpha` | 1 | The transparency of the background |
-| `maxPixelRatio` | 2 | The clamped pixelRatio, for performance reasons |
-| `maxDeltaTime` | 1 / 30 | Clamp the `dt` to prevent stepping anything too far forward |
+| `background` | `'#000'` | The background of the scene. |
+| `backgroundAlpha` | 1 | The transparency of the background. |
+| `maxPixelRatio` | 2 | The clamped pixelRatio, for performance reasons. |
+| `maxDeltaTime` | 1 / 30 | Clamp the `dt` to prevent stepping anything too far forward. |
 | `postprocessing` | false | Enable Three.js postprocessing. The composer gets exposed as `webgl.composer`. |
 | `showFps` | false | Show the [stats.js](https://github.com/mrdoob/stats.js/) fps counter |
 | `orbitControls` | undefined | Accepts an object with the [orbit-controls](https://github.com/Jam3/orbit-controls) options. Exposed as `webgl.orbitControls`. |
@@ -70,10 +70,75 @@ Save a screenshot of the application as a png.
 
 Subscribe to the update `requestAnimationFrame` without having to create a component.
 
+| Parameter | Description |
+| --- | --- |
+| `dt` | The seconds elapsed from the latest frame, in a 60fps application it's `0.016s` (aka `16ms`) |
+| `time` | The time in seconds elapsed from when the animation loop starts |
 
 ## Component structure
 
-TODO
+Rather than writing all of your Three.js app in one file instruction after instruction, you can split your app into "Three.js components". This makes it easier to manage the app as it grows. Here is a basic component:
+
+https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/scene/Box.js
+
+A Three.js component is a class which extends [`THREE.Group`](https://threejs.org/docs/#api/en/objects/Group) (an alias for [`THREE.Object3D`](https://threejs.org/docs/#api/en/core/Object3D)) and subsequently inherits its properties and methods, such as `this.add(someMesh)` or `this.position` or `this.rotation`. [Here is a full list](https://threejs.org/docs/#api/en/core/Object3D).
+
+After having instantiated the class, you can add it directly to the scene.
+
+```js
+// attach it to the scene so you can access it in other components
+webgl.scene.birds = new Birds({ webgl })
+webgl.scene.add(webgl.scene.birds)
+```
+
+The class supports some hooks, which get called once the element is in the scene:
+
+### update(dt, time) {}
+
+Called each frame of the animation loop of the application. Gets called by the main `requestAnimationFrame`.
+
+| Parameter | Description |
+| --- | --- |
+| `dt` | The seconds elapsed from the latest frame, in a 60fps application it's `0.016s` (aka `16ms`). |
+| `time` | The time in seconds elapsed from when the animation loop starts. |
+
+### resize({ width, height, pixelRatio }) {}
+
+Called each time the window has been resized.
+
+| Parameter | Description |
+| --- | --- |
+| `width` | The window width. |
+| `height` | The window height. |
+| `pixelRatio` | The application pixelRatio, it's usually `window.devicePixelRatio` but clamped with `webgl.maxPixelRatio`. |
+
+
+### onPointerDown(event, [x, y]) {}
+
+Called on the `mousedown`/`touchstart` (aka the newer `pointerdown`) event on the canvas. It uses [touches.js](https://github.com/Jam3/touches) behind the scenes.
+
+| Parameter | Description |
+| --- | --- |
+| `event` | The native event. |
+| `position` | An array containing the `x` and the `y` position from the top left of the window. |
+
+### onPointerMove(event, [x, y]) {}
+
+Called on the `mousemove`/`touchmove` (aka the newer `pointermove`) event on the canvas. It uses [touches.js](https://github.com/Jam3/touches) behind the scenes.
+
+| Parameter | Description |
+| --- | --- |
+| `event` | The native event. |
+| `position` | An array containing the `x` and the `y` position from the top left of the window. |
+
+### onPointerUp(event, [x, y]) {}
+
+Called on the `mouseup`/`touchend` (aka the newer `pointerup`) event on the canvas. It uses [touches.js](https://github.com/Jam3/touches) behind the scenes.
+
+| Parameter | Description |
+| --- | --- |
+| `event` | The native event. |
+| `position` | An array containing the `x` and the `y` position from the top left of the window. |
 
 ## Asset Manager
 
@@ -127,7 +192,7 @@ Queue an asset to be downloaded later with `assets.load()`.
 | `url` |  | The url of the asset relative to the `public/` folder. |
 | `type` | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension. |
 | `equirectangular` | false | Only if you set `type: 'env-map'`, you can pass `equirectangular: true` if you have a single [equirectangular image](https://www.google.com/search?q=equirectangular+image&tbm=isch) rather than the six squared subimages. |
-| ...others |  | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadTexture.js) when the type is either `env-map` or `texture` |
+| ...others |  | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadTexture.js) when the type is either `env-map` or `texture`. |
 
 Returns a `key` that later you can use with `assets.get()`.
 
@@ -137,7 +202,7 @@ Load all the assets previously queued.
 
 | Option | Default | Description |
 | --- | --- | --- |
-| `renderer` |  | The WebGLRenderer of your application, exposed as `webgl.renderer` |
+| `renderer` |  | The WebGLRenderer of your application, exposed as `webgl.renderer`. |
 
 ### assets.loadSingle({ url, type, renderer, ...others })
 
@@ -145,11 +210,11 @@ Load a single asset without having to pass through the queue. Useful if you want
 
 | Option | Default | Description |
 | --- | --- | --- |
-| `renderer` |  | The WebGLRenderer of your application, exposed as `webgl.renderer` |
+| `renderer` |  | The WebGLRenderer of your application, exposed as `webgl.renderer`. |
 | `url` |  | The url of the asset relative to the `public/` folder. |
 | `type` | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension. |
 | `equirectangular` | false | Only if you set `type: 'env-map'`, you can pass `equirectangular: true` if you have a single [equirectangular image](https://www.google.com/search?q=equirectangular+image&tbm=isch) rather than the six squared subimages. |
-| ...others |  | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadTexture.js) when the type is either `env-map` or `texture` |
+| ...others |  | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadTexture.js) when the type is either `env-map` or `texture`. |
 
 Returns a `key` that later you can use with `assets.get()`.
 
@@ -190,5 +255,3 @@ For a list of shaders you can import check out [stack.gl packages list](http://s
 ## Hot reload
 
 TODO
-
-## console screenshots

@@ -68,9 +68,9 @@ export default class WebGLApp {
       target: this.canvas,
       filtered: true,
     })
-    this.touchHandler.on('start', (ev, pos) => this.traverse('onTouchStart', ev, pos))
-    this.touchHandler.on('end', (ev, pos) => this.traverse('onTouchEnd', ev, pos))
-    this.touchHandler.on('move', (ev, pos) => this.traverse('onTouchMove', ev, pos))
+    this.touchHandler.on('start', (ev, pos) => this.traverse('onPointerDown', ev, pos))
+    this.touchHandler.on('move', (ev, pos) => this.traverse('onPointerMove', ev, pos))
+    this.touchHandler.on('end', (ev, pos) => this.traverse('onPointerUp', ev, pos))
 
     // expose a composer for postprocessing passes
     if (options.postprocessing) {
