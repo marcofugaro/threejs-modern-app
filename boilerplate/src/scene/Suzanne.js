@@ -51,7 +51,7 @@ export default class Suzanne extends THREE.Group {
     this.webgl = webgl
 
     const suzanneGltf = assets.get(suzanneKey)
-    const suzanne = suzanneGltf.scene
+    const suzanne = suzanneGltf.scene.clone()
 
     const material = new THREE.MeshStandardMaterial({
       map: assets.get(albedoKey),
