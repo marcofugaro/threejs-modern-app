@@ -6,6 +6,7 @@
   "author": "Marco Fugaro",
   "license": "MIT",
   "scripts": {
+    "postinstall": "hash brew && ! hash tree && brew install tree || true",
     "start": "NODE_ENV=development webpack-dev-server",
     "prebuild": "yarn clean; yarn copy-public",
     "build": "NODE_ENV=production webpack",

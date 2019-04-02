@@ -25,6 +25,8 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 
 ![console screenshots](screenshots/console.png)
 
+> **NOTE**: [brew](https://brew.sh/) is required for the build command output
+
 ## WebGLApp
 
 ```js

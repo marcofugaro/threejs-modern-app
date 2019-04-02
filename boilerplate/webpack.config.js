@@ -179,11 +179,28 @@ module.exports = merge.smart(
           }
         },
         afterEmit() {
-          const tree = execSync('tree --du -h --dirsfirst build/').toString()
           console.log(chalk.green(`✅ Compiled successfully!`))
           console.log(`The folder ${chalk.bold(`build/`)} is ready to be deployed`)
           console.log()
-          console.log(beautifyTree(tree))
+
+          try {
+            const tree = execSync('tree --du -h --dirsfirst build/').toString()
+            console.log(beautifyTree(tree))
+          } catch (e) {
+            console.log(
+              chalk.yellow(
+                `⚠️ Homerew and the tree package are required for the file tree output,`
+              ),
+              `please install them with the following command:`
+            )
+            console.log()
+            console.log(
+              chalk.cyan(
+                `  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && brew install tree`
+              )
+            )
+          }
+
           console.log()
         },
       }),
