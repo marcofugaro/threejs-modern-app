@@ -1,11 +1,8 @@
 import * as THREE from 'three'
+import State from 'controls-state'
 import WebGLApp from './lib/WebGLApp'
 import assets from './lib/AssetManager'
-import Suzanne, {
-  addNaturalLight,
-  addScreenshotButton,
-  DEFAULT_ANGULAR_VELOCITY,
-} from './scene/Suzanne'
+import Suzanne, { addNaturalLight, addScreenshotButton } from './scene/Suzanne'
 import { ShaderPass } from './lib/three/ShaderPass'
 import passVert from './scene/shaders/pass.vert'
 import vignetteFrag from './scene/shaders/vignette.frag'
@@ -34,17 +31,16 @@ const webgl = new WebGLApp({
   // the camera distance:
   // webgl.camera.position.set(0, 0, 5)
   orbitControls: window.DEBUG && { distance: 5 },
-  // Add the control-panel inputs
-  panelInputs: window.DEBUG && [
-    {
-      type: 'range',
+  // Add the controls-gui inputs
+  controls: {
+    angularVelocity: State.Slider(0.5, {
       label: 'Angular Velocity',
       min: 0.1,
       max: 30,
-      initial: DEFAULT_ANGULAR_VELOCITY,
-      scale: 'log',
-    },
-  ],
+      step: 0.1,
+    }),
+  },
+  hideControls: !window.DEBUG,
   // enable Cannon.js
   // world: new CANNON.World(),
   // enable Tween.js

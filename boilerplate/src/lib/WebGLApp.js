@@ -6,7 +6,8 @@ import createOrbitControls from 'orbit-controls'
 import createTouches from 'touches'
 import dataURIToBlob from 'datauritoblob'
 import Stats from 'stats.js'
-import controlPanel from 'control-panel'
+import State from 'controls-state'
+import wrapGUI from 'controls-gui'
 import { EffectComposer } from './three/EffectComposer'
 import { RenderPass } from './three/RenderPass'
 
@@ -101,13 +102,10 @@ export default class WebGLApp {
       document.body.appendChild(this.stats.dom)
     }
 
-    // initialize the control panel
-    if (options.panelInputs) {
-      this.panel = controlPanel(options.panelInputs, {
-        theme: 'dark',
-        position: 'top-right',
-        ...(options.panelOptions instanceof Object ? options.panelOptions : {}),
-      })
+    // initialize the controls-state
+    if (options.controls) {
+      const controlsState = State(options.controls)
+      this.controls = options.hideControls ? controlsState : wrapGUI(controlsState)
     }
   }
 

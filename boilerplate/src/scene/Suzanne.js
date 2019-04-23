@@ -41,11 +41,7 @@ const hdrKey = assets.queue({
   equirectangular: true,
 })
 
-export const DEFAULT_ANGULAR_VELOCITY = 0.5
-
 export default class Suzanne extends THREE.Group {
-  angularVelocity = DEFAULT_ANGULAR_VELOCITY
-
   constructor({ webgl, ...options }) {
     super(options)
     this.webgl = webgl
@@ -77,13 +73,6 @@ export default class Suzanne extends THREE.Group {
 
     // set the background as the hdr
     this.webgl.scene.background = assets.get(hdrKey).renderTarget
-
-    if (window.DEBUG) {
-      // update the angularVelocity from the control-panel
-      this.webgl.panel.on('input', inputs => {
-        this.angularVelocity = inputs['Angular Velocity']
-      })
-    }
   }
 
   onPointerDown(event, [x, y]) {
@@ -104,7 +93,7 @@ export default class Suzanne extends THREE.Group {
   onPointerUp(event, [x, y]) {}
 
   update(dt, time) {
-    this.rotation.y += dt * this.angularVelocity
+    this.rotation.y += dt * this.webgl.controls.angularVelocity
   }
 }
 

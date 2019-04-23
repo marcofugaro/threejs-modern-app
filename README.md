@@ -14,7 +14,7 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 ### [Example of production scale project](https://github.com/marcofugaro/shrimpcat/)
 
 ## Features
-- All the **Three.js boilerplate code is tucked away** in a file, the exported `WebGLApp` is easily configurable from the outside, for example you can enable postprocessing, [orbit controls](https://github.com/Jam3/orbit-controls), [FPS stats](https://github.com/mrdoob/stats.js/), a [control-panel](https://github.com/freeman-lab/control-panel) and use the save screenshot functionality. It also has built-in support for [Cannon.js](https://github.com/schteppe/cannon.js) and [Tween.js](https://github.com/tweenjs/tween.js/). [[Read more](#webglapp)]
+- All the **Three.js boilerplate code is tucked away** in a file, the exported `WebGLApp` is easily configurable from the outside, for example you can enable postprocessing, [orbit controls](https://github.com/Jam3/orbit-controls), [FPS stats](https://github.com/mrdoob/stats.js/), a [controls-gui](https://github.com/rreusser/controls-gui) and use the save screenshot functionality. It also has built-in support for [Cannon.js](https://github.com/schteppe/cannon.js) and [Tween.js](https://github.com/tweenjs/tween.js/). [[Read more](#webglapp)]
 - A **scalable Three.js component structure** where each component is a class which extends `THREE.Group`, so you can add any object to it. The class also has update, resize, and touch hooks. [[Read more](#component-structure)]
 - An **asset manager** which handles the preloading of `.gltf` models, images, audios, videos and can be easily extended to support other files. It also automatically uploads a texture to the GPU, loads cube env maps or parses equirectangular projection images. [[Read more](#asset-manager)]
 - global `window.DEBUG` flag which is true when the url contains `?debug` as a query parameter. So you can enable **debug mode** both locally and in production. [[Read more](#debug-mode)]
@@ -52,7 +52,8 @@ You can pass the class the options you would pass to the [THREE.WebGLRenderer](h
 | `postprocessing` | false | Enable Three.js postprocessing. The composer gets exposed as `webgl.composer`. |
 | `showFps` | false | Show the [stats.js](https://github.com/mrdoob/stats.js/) fps counter |
 | `orbitControls` | undefined | Accepts an object with the [orbit-controls](https://github.com/Jam3/orbit-controls) options. Exposed as `webgl.orbitControls`. |
-| `panelInputs` | undefined | Accepts an array with the [control-panel](https://github.com/freeman-lab/control-panel) inputs. Exposed ad `webgl.panel`. |
+| `controls` | undefined | Accepts an object with the [controls-gui](https://github.com/rreusser/controls-gui) configuration. Exposed ad `webgl.controls`. |
+| `hideControls` | false | Set this to `true` to hide the controls-gui panel. |
 | `world` | undefined | Accepts an instance of the [cannon.js](https://github.com/schteppe/cannon.js) world (`new CANNON.World()`). Exposed as `webgl.world`. |
 | `tween` | undefined | Accepts the [TWEEN.js](https://github.com/tweenjs/tween.js/) library (`TWEEN`). Exposed as `webgl.tween`. |
 
