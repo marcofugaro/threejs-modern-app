@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-THREE.Pass = function() {
+THREE.Pass = function () {
   // if set to true, the pass is processed by the composer
   this.enabled = true
 
@@ -15,11 +15,39 @@ THREE.Pass = function() {
 }
 
 Object.assign(THREE.Pass.prototype, {
-  setSize: function(width, height) {},
+  setSize: function (width, height) {},
 
-  render: function(renderer, writeBuffer, readBuffer, delta, maskActive) {
+  render: function (renderer, writeBuffer, readBuffer, delta, maskActive) {
     console.error('THREE.Pass: .render() must be implemented in derived pass.')
   },
 })
+
+// Helper for passes that need to fill the viewport with a single quad.
+THREE.Pass.FullScreenQuad = (function () {
+  var camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
+  var geometry = new THREE.PlaneBufferGeometry(2, 2)
+
+  var FullScreenQuad = function (material) {
+    this._mesh = new THREE.Mesh(geometry, material)
+  }
+
+  Object.defineProperty(FullScreenQuad.prototype, 'material', {
+    get: function () {
+      return this._mesh.material
+    },
+
+    set: function (value) {
+      this._mesh.material = value
+    },
+  })
+
+  Object.assign(FullScreenQuad.prototype, {
+    render: function (renderer) {
+      renderer.render(this._mesh, camera)
+    },
+  })
+
+  return FullScreenQuad
+})()
 
 export const Pass = THREE.Pass

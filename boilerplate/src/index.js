@@ -14,7 +14,7 @@ window.DEBUG = window.location.search.includes('debug')
 
 // grab our canvas
 const canvas = document.querySelector('#app')
-console.log('asa')
+
 // setup the WebGLRenderer
 const webgl = new WebGLApp({
   canvas,

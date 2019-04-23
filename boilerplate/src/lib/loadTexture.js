@@ -18,7 +18,10 @@ export default async function loadTexture(url, options) {
     if (options.renderer) {
       // Force texture to be uploaded to GPU immediately,
       // this will avoid "jank" on first rendered frame
-      options.renderer.setTexture2D(texture, 0)
+      //
+      // BUG this was removed in r103
+      // https://github.com/mrdoob/three.js/pull/16069
+      // texture.setTexture2D(texture, 0)
     }
     return texture
   } catch (err) {

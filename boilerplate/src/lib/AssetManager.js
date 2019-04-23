@@ -27,7 +27,6 @@ class AssetManager {
   // Add an asset to be queued, input: { url, type, ...options }
   queue({ url, type, ...options }) {
     if (!url) throw new TypeError('Must specify a URL or opt.url for AssetManager.queue()')
-
     if (!this._getQueued(url)) {
       this.#queue.push({ url, type: type || this._extractType(url), ...options })
     }
