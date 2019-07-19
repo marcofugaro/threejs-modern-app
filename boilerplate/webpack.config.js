@@ -13,9 +13,10 @@ const chalk = require('chalk')
 const indentString = require('indent-string')
 const _ = require('lodash')
 
+const PROTOCOL = 'http'
 const HOST = '0.0.0.0'
 const PORT = 8080
-const urls = prepareUrls('http', HOST, PORT)
+const urls = prepareUrls(PROTOCOL, HOST, PORT)
 
 // make the console >tree command look pretty
 function beautifyTree(tree) {
@@ -85,6 +86,7 @@ module.exports = merge.smart(
     // a good compromise betwee fast and readable sourcemaps
     devtool: 'cheap-module-source-map',
     devServer: {
+      https: PROTOCOL === 'https',
       host: HOST,
       port: PORT,
       public: urls.lanUrlForConfig,
