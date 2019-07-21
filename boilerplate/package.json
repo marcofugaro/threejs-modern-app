@@ -33,6 +33,7 @@
     "controls-gui": "^1.2.2",
     "controls-state": "^1.1.1",
     "datauritoblob": "^1.0.0",
+    "detect-gpu": "^1.1.0",
     "glsl-vignette": "^1.1.0",
     "image-promise": "^6.0.2",
     "lodash": "^4.17.15",

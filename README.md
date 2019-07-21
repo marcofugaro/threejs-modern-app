@@ -21,7 +21,9 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 - An **asset manager** which handles the preloading of `.gltf` models, images, audios, videos and can be easily extended to support other files. It also automatically uploads a texture to the GPU, loads cube env maps or parses equirectangular projection images. [[Read more](#asset-manager)]
 - global `window.DEBUG` flag which is true when the url contains `?debug` as a query parameter. So you can enable **debug mode** both locally and in production. [[Read more](#debug-mode)]
 - [glslify](https://github.com/glslify/glslify) to import shaders from `node_modules`. [[Read more](#glslify)]
-- Hot reload not enabled by default. [[Read more](#hot-reload)]
+- GPU tiering info using [detect-gpu](https://github.com/TimvanScherpenzeel/detect-gpu) [[Read more](#gpu-info)]
+- A lot of useful creative coding util functions from [canvas-sketch-util](https://github.com/mattdesl/canvas-sketch-util) [[Read more](#util-functions)]
+- **Hot reload** not enabled by default. [[Read more](#hot-reload)]
 - Modern and customizable development tools such as webpack, babel, eslint, prettier and browserslist.
 - Beautiful console output:
 
@@ -256,6 +258,56 @@ You can import shaders from `node_modules` with glslify, here is an example that
 https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/scene/shaders/vignette.frag
 
 For a list of shaders you can import check out [stack.gl packages list](http://stack.gl/packages/), more info on [glslify's readme](https://github.com/glslify/glslify).
+
+## GPU Info
+
+Sometimes it might be useful to enable expensive application configurationw only on higher-end devices.
+
+This can be done by detecting the user's GPU and checking in which tier it belongs to based on its benchmark score.
+
+This is done thanks to [detect-gpu](https://github.com/TimvanScherpenzeel/detect-gpu), more detailed info about its mechanics in its README.
+
+For example, here is how to enable shadows only on high-tier devices:
+
+```js
+if (webgl.gpu.tier > 0) {
+  webgl.renderer.shadowMap.enabled = true
+
+  // soft shadows
+  webgl.renderer.shadowMap.type = THREE.PCFSoftShadowMap
+}
+```
+Here is what the exposed `webgl.gpu` object contains:
+
+| Key | Example Value | Description |
+| --- | --- | --- |
+| `tier` | `1` | The tier the GPU belongs to. It is incremental, so the higher the better. It goes from 0 to 3. Most GPUs belong to the Tier 1  |
+| `isMobile` | `false` | Wheter it is a mobile/tablet GPU, or a desktop GPU |
+| `name` | `'Apple A11 GPU'` | The string name of the GPU |
+
+More info on this approach also in [this great talk](http://www.youtube.com/watch?v=iNMD8Vr1tKg&t=32m4s) by [luruke](https://github.com/luruke)
+
+## Utils functions
+
+Often you will find yourself using some really common and useful math functions, such as `mapRange`, `lerp` or `noise`.
+
+[canvas-sketch-util](https://github.com/mattdesl/canvas-sketch-util) is a library that contains a lot of those functions. It is written by [mattdesl](https://github.com/mattdesl).
+
+For instance, here is how to use the `mapRange` funcion (also known as `map` in processing or `fit` in other softwares).
+
+```js
+import { mapRange } from 'canvas-sketch-util/math'
+
+// ...
+
+document.body.addEventListener('mousemove', (event) => {
+  const angle = mapRange(event.clientX, 0, window.innerWidth, -90, 90)
+
+  // ...
+})
+```
+
+This example above will transform the x value from a `mousemove` event, which can go from `0` to `window.innerWidth`, to to a  -90 and 90 range. You can assign this value to the rotation of an object which will rotate as you move the mouse.
 
 ## Hot reload
 

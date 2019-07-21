@@ -2405,6 +2405,13 @@ detect-file@^1.0.0:
   resolved "https://registry.yarnpkg.com/detect-file/-/detect-file-1.0.0.tgz#f0d66d03672a825cb1b73bdb3fe62310c8e552b7"
   integrity sha1-8NZtA2cqglyxtzvbP+YjEMjlUrc=
 
+detect-gpu@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/detect-gpu/-/detect-gpu-1.1.0.tgz#1d938afe4f78efa207966f91c63e7d5783135e07"
+  integrity sha512-e1D3CB1plv7ZEpC760i+eni9V18QfwtXYo/ImXm+kyKdtBxbIetC71Xb41mVffy/w4mXqjcmuDTqj3KanvdH9w==
+  dependencies:
+    detect-ua "^0.0.11"
+
 detect-libc@^1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
@@ -2422,6 +2429,11 @@ detect-port-alt@1.1.6:
   dependencies:
     address "^1.0.1"
     debug "^2.6.0"
+
+detect-ua@^0.0.11:
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/detect-ua/-/detect-ua-0.0.11.tgz#9f73dab0548bb45ad9de9a3ad7a928c7422f0b8c"
+  integrity sha512-IzaMCf0Yuwft9U6zhCvcP/OwHECpNd1wACACL0Y6hVQn6hzKXHvGgNACMtWT0X74Gm9t1Te3yjSwaYaxKasWpg==
 
 diffie-hellman@^5.0.0:
   version "5.0.3"
