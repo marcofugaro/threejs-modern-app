@@ -52,7 +52,7 @@
     "eslint-config-accurapp": "^4.2.8",
     "event-hooks-webpack-plugin": "^2.1.4",
     "fs-extra": "^8.1.0",
-    "gh-pages": "^2.0.1",
+    "gh-pages": "^2.1.0",
     "glob": "^7.1.4",
     "glslify-loader": "^2.0.0",
     "html-webpack-plugin": "4.0.0-beta.5",
@@ -60,7 +60,7 @@
     "outdent": "^0.7.0",
     "raw-loader": "^3.1.0",
     "react-dev-utils": "^9.0.1",
-    "webpack": "^4.38.0",
+    "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.7.2",
     "webpack-merge": "^4.2.1"
