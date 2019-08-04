@@ -8,9 +8,9 @@ import dataURIToBlob from 'datauritoblob'
 import Stats from 'stats.js'
 import State from 'controls-state'
 import wrapGUI from 'controls-gui'
+import { getGPUTier } from 'detect-gpu'
 import { EffectComposer } from './three/EffectComposer'
 import { RenderPass } from './three/RenderPass'
-import { getGPUTier } from 'detect-gpu'
 
 export default class WebGLApp {
   #updateListeners = []
