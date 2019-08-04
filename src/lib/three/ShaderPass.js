@@ -34,13 +34,14 @@ THREE.ShaderPass = function ( shader, textureID ) {
 	}
 
 	this.fsQuad = new THREE.Pass.FullScreenQuad( this.material );
+
 };
 
 THREE.ShaderPass.prototype = Object.assign( Object.create( THREE.Pass.prototype ), {
 
 	constructor: THREE.ShaderPass,
 
-	render: function ( renderer, writeBuffer, readBuffer, deltaTime, maskActive ) {
+	render: function ( renderer, writeBuffer, readBuffer /*, deltaTime, maskActive */ ) {
 
 		if ( this.uniforms[ this.textureID ] ) {
 

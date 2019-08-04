@@ -41,7 +41,7 @@
     "p-map": "^3.0.0",
     "pretty-ms": "^5.0.0",
     "stats.js": "^0.17.0",
-    "three": "0.103.0",
+    "three": "0.107.0",
     "touches": "^1.2.2"
   },
   "devDependencies": {

@@ -21,9 +21,19 @@ THREE.EffectComposer = function ( renderer, renderTarget ) {
 			stencilBuffer: false
 		};
 
-		var size = renderer.getDrawingBufferSize( new THREE.Vector2() );
-		renderTarget = new THREE.WebGLRenderTarget( size.width, size.height, parameters );
+		var size = renderer.getSize( new THREE.Vector2() );
+		this._pixelRatio = renderer.getPixelRatio();
+		this._width = size.width;
+		this._height = size.height;
+
+		renderTarget = new THREE.WebGLRenderTarget( this._width * this._pixelRatio, this._height * this._pixelRatio, parameters );
 		renderTarget.texture.name = 'EffectComposer.rt1';
+
+	} else {
+
+		this._pixelRatio = 1;
+		this._width = renderTarget.width;
+		this._height = renderTarget.height;
 
 	}
 
@@ -54,7 +64,7 @@ THREE.EffectComposer = function ( renderer, renderTarget ) {
 
 	this.copyPass = new THREE.ShaderPass( THREE.CopyShader );
 
-	this._previousFrameTime = Date.now();
+	this.clock = new THREE.Clock();
 
 };
 
@@ -71,9 +81,7 @@ Object.assign( THREE.EffectComposer.prototype, {
 	addPass: function ( pass ) {
 
 		this.passes.push( pass );
-
-		var size = this.renderer.getDrawingBufferSize( new THREE.Vector2() );
-		pass.setSize( size.width, size.height );
+		pass.setSize( this._width * this._pixelRatio, this._height * this._pixelRatio );
 
 	},
 
@@ -105,11 +113,9 @@ Object.assign( THREE.EffectComposer.prototype, {
 
 		if ( deltaTime === undefined ) {
 
-			deltaTime = ( Date.now() - this._previousFrameTime ) * 0.001;
+			deltaTime = this.clock.getDelta();
 
 		}
-
-		this._previousFrameTime = Date.now();
 
 		var currentRenderTarget = this.renderer.getRenderTarget();
 
@@ -130,13 +136,16 @@ Object.assign( THREE.EffectComposer.prototype, {
 
 				if ( maskActive ) {
 
-					var context = this.renderer.context;
+					var context = this.renderer.getContext();
+					var stencil = this.renderer.state.buffers.stencil;
 
-					context.stencilFunc( context.NOTEQUAL, 1, 0xffffffff );
+					//context.stencilFunc( context.NOTEQUAL, 1, 0xffffffff );
+					stencil.setFunc( context.NOTEQUAL, 1, 0xffffffff );
 
 					this.copyPass.render( this.renderer, this.writeBuffer, this.readBuffer, deltaTime );
 
-					context.stencilFunc( context.EQUAL, 1, 0xffffffff );
+					//context.stencilFunc( context.EQUAL, 1, 0xffffffff );
+					stencil.setFunc( context.EQUAL, 1, 0xffffffff );
 
 				}
 
@@ -168,10 +177,13 @@ Object.assign( THREE.EffectComposer.prototype, {
 
 		if ( renderTarget === undefined ) {
 
-			var size = this.renderer.getDrawingBufferSize( new THREE.Vector2() );
+			var size = this.renderer.getSize( new THREE.Vector2() );
+			this._pixelRatio = this.renderer.getPixelRatio();
+			this._width = size.width;
+			this._height = size.height;
 
 			renderTarget = this.renderTarget1.clone();
-			renderTarget.setSize( size.width, size.height );
+			renderTarget.setSize( this._width * this._pixelRatio, this._height * this._pixelRatio );
 
 		}
 
@@ -187,14 +199,28 @@ Object.assign( THREE.EffectComposer.prototype, {
 
 	setSize: function ( width, height ) {
 
-		this.renderTarget1.setSize( width, height );
-		this.renderTarget2.setSize( width, height );
+		this._width = width;
+		this._height = height;
+
+		var effectiveWidth = this._width * this._pixelRatio;
+		var effectiveHeight = this._height * this._pixelRatio;
+
+		this.renderTarget1.setSize( effectiveWidth, effectiveHeight );
+		this.renderTarget2.setSize( effectiveWidth, effectiveHeight );
 
 		for ( var i = 0; i < this.passes.length; i ++ ) {
 
-			this.passes[ i ].setSize( width, height );
+			this.passes[ i ].setSize( effectiveWidth, effectiveHeight );
 
 		}
+
+	},
+
+	setPixelRatio: function ( pixelRatio ) {
+
+		this._pixelRatio = pixelRatio;
+
+		this.setSize( this._width, this._height );
 
 	}
 
@@ -219,9 +245,9 @@ THREE.Pass = function () {
 
 Object.assign( THREE.Pass.prototype, {
 
-	setSize: function ( width, height ) {},
+	setSize: function ( /* width, height */ ) {},
 
-	render: function ( renderer, writeBuffer, readBuffer, deltaTime, maskActive ) {
+	render: function ( /* renderer, writeBuffer, readBuffer, deltaTime, maskActive */ ) {
 
 		console.error( 'THREE.Pass: .render() must be implemented in derived pass.' );
 
