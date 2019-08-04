@@ -12,7 +12,6 @@ const EventHooksPlugin = require('event-hooks-webpack-plugin')
 const chalk = require('chalk')
 const indentString = require('indent-string')
 const _ = require('lodash')
-const webpack = require('webpack')
 
 const PROTOCOL = 'http'
 const HOST = '0.0.0.0'
@@ -105,16 +104,14 @@ module.exports = merge.smart(
       quiet: true,
       clientLogLevel: 'none',
       // enable HMR
-      hot: true,
-      hotOnly: true,
+      // TODO do code to enable HMR from the client-side
+      // hot: true,
       after() {
         // try to open into the already existing tab
         openBrowser(urls.localUrlForBrowser)
       },
     },
     plugins: [
-      // Needed to enable HMR
-      new webpack.HotModuleReplacementPlugin(),
       // Automatic rediscover of packages after `npm install`
       new WatchMissingNodeModulesPlugin('node_modules'),
       // TODO use webpack's api when it will be implemented
