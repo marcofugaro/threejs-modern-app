@@ -1,10 +1,14 @@
 {
-  "name": "",
+  "name": "<%= title %>",
   "version": "0.0.0",
-  "description": "",
-  "repository": "",
-  "author": "Marco Fugaro",
+  "description": "<%= description %>",
   "license": "MIT",
+  "repository": "https://github.com/<%= githubUsername %>/<%= title %>",
+  "author": {
+    "name": "<%= name %>",
+    "email": "<%= email %>",
+    "url": "<%= website %>"
+  },
   "scripts": {
     "postinstall": "yarn install-tree",
     "install-tree": "hash brew && ! hash tree && brew install tree || true",
