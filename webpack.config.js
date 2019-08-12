@@ -15,6 +15,7 @@ const _ = require('lodash')
 
 const PROTOCOL = 'http'
 const HOST = '0.0.0.0'
+// check if the port is already in use, if so use the next port
 const DEFAULT_PORT = '8080'
 const PORT = execSync(`detect-port ${DEFAULT_PORT}`)
   .toString()
