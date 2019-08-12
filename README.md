@@ -23,7 +23,7 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 - [glslify](https://github.com/glslify/glslify) to import shaders from `node_modules`. [[Read more](#glslify)]
 - GPU tiering info using [detect-gpu](https://github.com/TimvanScherpenzeel/detect-gpu) [[Read more](#gpu-info)]
 - A lot of useful creative coding util functions from [canvas-sketch-util](https://github.com/mattdesl/canvas-sketch-util) [[Read more](#util-functions)]
-- **Hot reload** not enabled by default. [[Read more](#hot-reload)]
+<!-- - **Hot reload**. [[Read more](#hot-reload)] -->
 - Modern and customizable development tools such as webpack, babel, eslint, prettier and browserslist.
 - Beautiful console output:
 
@@ -322,3 +322,5 @@ This example above will transform the x value from a `mousemove` event, which ca
 ## Hot reload
 
 TODO
+
+(found some use cases, maybe only the hot shader reload?)

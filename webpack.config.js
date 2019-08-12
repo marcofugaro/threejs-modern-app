@@ -15,7 +15,10 @@ const _ = require('lodash')
 
 const PROTOCOL = 'http'
 const HOST = '0.0.0.0'
-const PORT = 8080
+const DEFAULT_PORT = '8080'
+const PORT = execSync(`detect-port ${DEFAULT_PORT}`)
+  .toString()
+  .trim()
 const urls = prepareUrls(PROTOCOL, HOST, PORT)
 
 // make the console >tree command look pretty
