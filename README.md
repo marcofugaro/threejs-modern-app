@@ -53,7 +53,7 @@ The WebGLApp class contains all the code needed for Three.js to run a scene, it 
 
 You can see an example configuration here:
 
-https://github.com/marcofugaro/threejs-modern-app/blob/4af53b2748e2ea923f2e4482c657c894b2b848b3/boilerplate/src/index.js#L18-L52
+https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd813d04681c84815/src/index.js#L15-L48
 
 You can pass the class the options you would pass to the [THREE.WebGLRenderer](https://threejs.org/docs/#api/en/renderers/WebGLRenderer), and also some more options:
 
@@ -96,7 +96,7 @@ Subscribe to the update `requestAnimationFrame` without having to create a compo
 
 Rather than writing all of your Three.js app in one file instruction after instruction, you can split your app into "Three.js components". This makes it easier to manage the app as it grows. Here is a basic component:
 
-https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/scene/Box.js
+https://github.com/marcofugaro/threejs-modern-app/blob/master/src/scene/Box.js
 
 A Three.js component is a class which extends [`THREE.Group`](https://threejs.org/docs/#api/en/objects/Group) (an alias for [`THREE.Object3D`](https://threejs.org/docs/#api/en/core/Object3D)) and subsequently inherits its properties and methods, such as `this.add(someMesh)` or `this.position` or `this.rotation`. [Here is a full list](https://threejs.org/docs/#api/en/core/Object3D).
 
@@ -161,11 +161,11 @@ Called on the `mouseup`/`touchend` (aka the newer `pointerup`) event on the canv
 
 The Asseet Manager handles the preloading of all the assets needed to run the scene, you use it like this:
 
-https://github.com/marcofugaro/threejs-modern-app/blob/52cbbb330419ce830eb4cc8c9ef06584f21d1bd7/boilerplate/src/scene/Suzanne.js#L12-L42
+https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd813d04681c84815/src/scene/Suzanne.js#L12-L42
 
-https://github.com/marcofugaro/threejs-modern-app/blob/d499b9c4ff6f6dc8f8fb1607aeef6b41c6e4887d/boilerplate/src/index.js#L63
+https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd813d04681c84815/src/index.js#L59
 
-https://github.com/marcofugaro/threejs-modern-app/blob/d499b9c4ff6f6dc8f8fb1607aeef6b41c6e4887d/boilerplate/src/scene/Suzanne.js#L53s
+https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd813d04681c84815/src/scene/Suzanne.js#L49
 
 In detail, first you queue the asset you want to preload in the component where you will use it
 
@@ -209,7 +209,7 @@ Queue an asset to be downloaded later with `assets.load()`.
 | `url` |  | The url of the asset relative to the `public/` folder. |
 | `type` | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension. |
 | `equirectangular` | false | Only if you set `type: 'env-map'`, you can pass `equirectangular: true` if you have a single [equirectangular image](https://www.google.com/search?q=equirectangular+image&tbm=isch) rather than the six squared subimages. |
-| ...others |  | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadTexture.js) when the type is either `env-map` or `texture`. |
+| ...others |  | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadTexture.js) when the type is either `env-map` or `texture`. |
 
 Returns a `key` that later you can use with `assets.get()`.
 
@@ -231,7 +231,7 @@ Load a single asset without having to pass through the queue. Useful if you want
 | `url` |  | The url of the asset relative to the `public/` folder. |
 | `type` | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension. |
 | `equirectangular` | false | Only if you set `type: 'env-map'`, you can pass `equirectangular: true` if you have a single [equirectangular image](https://www.google.com/search?q=equirectangular+image&tbm=isch) rather than the six squared subimages. |
-| ...others |  | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/lib/loadTexture.js) when the type is either `env-map` or `texture`. |
+| ...others |  | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadTexture.js) when the type is either `env-map` or `texture`. |
 
 Returns a `key` that later you can use with `assets.get()`.
 
@@ -253,7 +253,7 @@ Often you want to show the fps count or debug helpers such as the [SpotLightHelp
 
 A really manageable way is to have a global `window.DEBUG` constant which is true only if you append `?debug` to your url, for example `http://localhost:8080/?debug` or even in production like `https://example.com/?debug`.
 
-This is done [here](https://github.com/marcofugaro/threejs-modern-app/blob/4af53b2748e2ea923f2e4482c657c894b2b848b3/boilerplate/src/index.js#L13) in just one line:
+This is done [here](https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd813d04681c84815/src/index.js#L10) in just one line:
 
 ```js
 window.DEBUG = window.location.search.includes('debug')
@@ -265,7 +265,7 @@ You could also add more global constants by just using more query-string paramet
 
 You can import shaders from `node_modules` with glslify, here is an example that uses [glsl-vignette](https://github.com/TyLindberg/glsl-vignette):
 
-https://github.com/marcofugaro/threejs-modern-app/blob/master/boilerplate/src/scene/shaders/vignette.frag
+https://github.com/marcofugaro/threejs-modern-app/blob/master/src/scene/shaders/vignette.frag
 
 For a list of shaders you can import check out [stack.gl packages list](http://stack.gl/packages/), more info on [glslify's readme](https://github.com/glslify/glslify).
 
