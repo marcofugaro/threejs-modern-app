@@ -297,7 +297,7 @@ Here is what the exposed `webgl.gpu` object contains:
 
 More info on this approach also in [this great talk](http://www.youtube.com/watch?v=iNMD8Vr1tKg&t=32m4s) by [luruke](https://github.com/luruke)
 
-## Utils functions
+## Util functions
 
 Often you will find yourself using some really common and useful math functions, such as `mapRange`, `lerp` or `noise`.
 
