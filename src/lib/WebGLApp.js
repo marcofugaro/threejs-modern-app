@@ -9,8 +9,8 @@ import Stats from 'stats.js'
 import State from 'controls-state'
 import wrapGUI from 'controls-gui'
 import { getGPUTier } from 'detect-gpu'
-import { EffectComposer } from './three/EffectComposer'
-import { RenderPass } from './three/RenderPass'
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
 
 export default class WebGLApp {
   #updateListeners = []

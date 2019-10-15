@@ -4,9 +4,7 @@
 import pMap from 'p-map'
 import prettyMs from 'pretty-ms'
 import loadImage from 'image-promise'
-// TODO import the GLTFLoader from three.js when this issue will be solved
-// https://github.com/mrdoob/three.js/issues/9562
-import { GLTFLoader } from './three/GLTFLoader'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import loadTexture from './loadTexture'
 import loadEnvMap from './loadEnvMap'
 

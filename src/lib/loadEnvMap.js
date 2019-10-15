@@ -3,12 +3,10 @@
 // https://github.com/mattdesl/threejs-app/blob/master/src/util/loadEnvMap.js
 import * as THREE from 'three'
 import clamp from 'lodash/clamp'
-// TODO import those from three.js when this issue will be solved
-// https://github.com/mrdoob/three.js/issues/9562
-import { HDRCubeTextureLoader } from './three/HDRCubeTextureLoader'
-import { PMREMGenerator } from './three/PMREMGenerator'
-import { PMREMCubeUVPacker } from './three/PMREMCubeUVPacker'
-import { EquirectangularToCubeGenerator } from './three/EquirectangularToCubeGenerator'
+import { HDRCubeTextureLoader } from 'three/examples/jsm/loaders/HDRCubeTextureLoader'
+import { PMREMGenerator } from 'three/examples/jsm/pmrem/PMREMGenerator'
+import { PMREMCubeUVPacker } from 'three/examples/jsm/pmrem/PMREMCubeUVPacker'
+import { EquirectangularToCubeGenerator } from 'three/examples/jsm/loaders/EquirectangularToCubeGenerator'
 import loadTexture from './loadTexture'
 
 export default async function loadEnvMap(url, options) {
@@ -48,7 +46,7 @@ export default async function loadEnvMap(url, options) {
         urls,
         map => resolve(buildCubeMap(map, options)),
         null,
-        () => reject(new Error(`Could not load PBR map: ${basePath}`)),
+        () => reject(new Error(`Could not load PBR map: ${basePath}`))
       )
     })
   }
@@ -62,7 +60,7 @@ export default async function loadEnvMap(url, options) {
         resolve(buildCubeMap(cubeMap, options))
       },
       null,
-      () => reject(new Error(`Could not load PBR map: ${basePath}`)),
+      () => reject(new Error(`Could not load PBR map: ${basePath}`))
     )
   })
 }
