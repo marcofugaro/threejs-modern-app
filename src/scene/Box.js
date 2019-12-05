@@ -9,7 +9,7 @@ export default class Box extends THREE.Group {
     this.webgl = webgl
     this.options = options
 
-    // TODO make this better
+    // destructure and default values like you do in React
     const { color = 0x00ff00 } = this.options
 
     const geometry = new THREE.BoxGeometry(1, 1, 1)

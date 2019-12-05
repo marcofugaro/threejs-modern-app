@@ -117,7 +117,7 @@ export default class Birds extends THREE.Group {
     this.webgl = webgl
     this.options = options
 
-    // destructure and default values, like you do in React
+    // destructure and default values like you do in React
     const { count = 10 } = this.options
 
     // ...
