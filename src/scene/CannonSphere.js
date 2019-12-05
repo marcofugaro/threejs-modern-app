@@ -11,9 +11,12 @@ import CANNON from 'cannon'
 export default class CannonSphere extends CANNON.Body {
   mesh = new THREE.Group()
 
-  constructor({ webgl, radius, ...options }) {
+  constructor(webgl, options) {
     super(options)
     this.webgl = webgl
+    this.options = options
+
+    const { radius } = this.options
 
     this.addShape(new CANNON.Sphere(radius))
 
@@ -23,8 +26,8 @@ export default class CannonSphere extends CANNON.Body {
       this.mesh.add(
         new THREE.Mesh(
           new THREE.SphereGeometry(radius, 32, 32),
-          new THREE.MeshLambertMaterial({ color: Math.random() * 0xfffff }),
-        ),
+          new THREE.MeshLambertMaterial({ color: Math.random() * 0xfffff })
+        )
       )
     }
 

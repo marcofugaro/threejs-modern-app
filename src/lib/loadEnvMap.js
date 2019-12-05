@@ -6,7 +6,6 @@ import clamp from 'lodash/clamp'
 import { HDRCubeTextureLoader } from 'three/examples/jsm/loaders/HDRCubeTextureLoader'
 import { PMREMGenerator } from 'three/examples/jsm/pmrem/PMREMGenerator'
 import { PMREMCubeUVPacker } from 'three/examples/jsm/pmrem/PMREMCubeUVPacker'
-import { EquirectangularToCubeGenerator } from 'three/examples/jsm/loaders/EquirectangularToCubeGenerator'
 import loadTexture from './loadTexture'
 
 export default async function loadEnvMap(url, options) {
@@ -19,12 +18,15 @@ export default async function loadEnvMap(url, options) {
   if (options.equirectangular) {
     const texture = await loadTexture(url, { renderer })
 
-    const cubemapGenerator = new EquirectangularToCubeGenerator(texture, { resolution: 1024 })
+    const cubeRenderTarget = new THREE.WebGLRenderTargetCube(1024, 1024).fromEquirectangularTexture(
+      renderer,
+      texture
+    )
 
-    const cubeMapTexture = cubemapGenerator.update(renderer)
+    const cubeMapTexture = cubeRenderTarget.texture
 
     // renderTarget is used for the scene.background
-    cubeMapTexture.renderTarget = cubemapGenerator.renderTarget
+    cubeMapTexture.renderTarget = cubeRenderTarget
 
     texture.dispose() // dispose original texture
     texture.image.data = null // remove Image reference

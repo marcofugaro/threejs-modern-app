@@ -8,7 +8,6 @@
 
 It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](https://github.com/mattdesl/threejs-app), but it was rewritten and simplified using **ES6** syntax rather than node, making it easier to read and well commented, so it can be easily customized to fit your needs.
 
-
 ### [DEMO](https://marcofugaro.github.io/threejs-modern-app/?debug)
 
 ### [Example of production scale project](https://github.com/marcofugaro/shrimpcat/)
@@ -16,6 +15,7 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 ### [Yeoman Generator (CLI that generates a blank project without the example code)](https://github.com/marcofugaro/generator-treejs-modern-app)
 
 ## Features
+
 - All the **Three.js boilerplate code is tucked away** in a file, the exported `WebGLApp` is easily configurable from the outside, for example you can enable postprocessing, [orbit controls](https://github.com/Jam3/orbit-controls), [FPS stats](https://github.com/mrdoob/stats.js/), a [controls-gui](https://github.com/rreusser/controls-gui) and use the save screenshot functionality. It also has built-in support for [Cannon.js](https://github.com/schteppe/cannon.js) and [Tween.js](https://github.com/tweenjs/tween.js/). [[Read more](#webglapp)]
 - A **scalable Three.js component structure** where each component is a class which extends `THREE.Group`, so you can add any object to it. The class also has update, resize, and touch hooks. [[Read more](#component-structure)]
 - An **asset manager** which handles the preloading of `.gltf` models, images, audios, videos and can be easily extended to support other files. It also automatically uploads a texture to the GPU, loads cube env maps or parses equirectangular projection images. [[Read more](#asset-manager)]
@@ -23,14 +23,13 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 - [glslify](https://github.com/glslify/glslify) to import shaders from `node_modules`. [[Read more](#glslify)]
 - GPU tiering info using [detect-gpu](https://github.com/TimvanScherpenzeel/detect-gpu) [[Read more](#gpu-info)]
 - A lot of useful creative coding util functions from [canvas-sketch-util](https://github.com/mattdesl/canvas-sketch-util) [[Read more](#util-functions)]
-<!-- - **Hot reload**. [[Read more](#hot-reload)] -->
+  <!-- - **Hot reload**. [[Read more](#hot-reload)] -->
 - Modern and customizable development tools such as webpack, babel, eslint, prettier and browserslist.
 - Beautiful console output:
 
 ![console screenshots](.github/screenshots/console.png)
 
 > **NOTE**: [brew](https://brew.sh/) is required for the build command output
-
 
 ## Usage
 
@@ -57,19 +56,19 @@ https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd
 
 You can pass the class the options you would pass to the [THREE.WebGLRenderer](https://threejs.org/docs/#api/en/renderers/WebGLRenderer), and also some more options:
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `background` | `'#000'` | The background of the scene. |
-| `backgroundAlpha` | 1 | The transparency of the background. |
-| `maxPixelRatio` | 2 | The clamped pixelRatio, for performance reasons. |
-| `maxDeltaTime` | 1 / 30 | Clamp the `dt` to prevent stepping anything too far forward. |
-| `postprocessing` | false | Enable Three.js postprocessing. The composer gets exposed as `webgl.composer`. |
-| `showFps` | false | Show the [stats.js](https://github.com/mrdoob/stats.js/) fps counter |
-| `orbitControls` | undefined | Accepts an object with the [orbit-controls](https://github.com/Jam3/orbit-controls) options. Exposed as `webgl.orbitControls`. |
-| `controls` | undefined | Accepts an object with the [controls-gui](https://github.com/rreusser/controls-gui) configuration. Exposed ad `webgl.controls`. |
-| `hideControls` | false | Set this to `true` to hide the controls-gui panel. |
-| `world` | undefined | Accepts an instance of the [cannon.js](https://github.com/schteppe/cannon.js) world (`new CANNON.World()`). Exposed as `webgl.world`. |
-| `tween` | undefined | Accepts the [TWEEN.js](https://github.com/tweenjs/tween.js/) library (`TWEEN`). Exposed as `webgl.tween`. |
+| Option            | Default   | Description                                                                                                                           |
+| ----------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `background`      | `'#000'`  | The background of the scene.                                                                                                          |
+| `backgroundAlpha` | 1         | The transparency of the background.                                                                                                   |
+| `maxPixelRatio`   | 2         | The clamped pixelRatio, for performance reasons.                                                                                      |
+| `maxDeltaTime`    | 1 / 30    | Clamp the `dt` to prevent stepping anything too far forward.                                                                          |
+| `postprocessing`  | false     | Enable Three.js postprocessing. The composer gets exposed as `webgl.composer`.                                                        |
+| `showFps`         | false     | Show the [stats.js](https://github.com/mrdoob/stats.js/) fps counter                                                                  |
+| `orbitControls`   | undefined | Accepts an object with the [orbit-controls](https://github.com/Jam3/orbit-controls) options. Exposed as `webgl.orbitControls`.        |
+| `controls`        | undefined | Accepts an object with the [controls-gui](https://github.com/rreusser/controls-gui) configuration. Exposed ad `webgl.controls`.       |
+| `hideControls`    | false     | Set this to `true` to hide the controls-gui panel.                                                                                    |
+| `world`           | undefined | Accepts an instance of the [cannon.js](https://github.com/schteppe/cannon.js) world (`new CANNON.World()`). Exposed as `webgl.world`. |
+| `tween`           | undefined | Accepts the [TWEEN.js](https://github.com/tweenjs/tween.js/) library (`TWEEN`). Exposed as `webgl.tween`.                             |
 
 The `webgl` instance will contain all the Three.js elements such as `webgl.scene`, `webgl.renderer`, `webgl.camera` or `webgl.canvas`. It also exposes some methods:
 
@@ -77,20 +76,20 @@ The `webgl` instance will contain all the Three.js elements such as `webgl.scene
 
 Save a screenshot of the application as a png.
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `width` | 2560 | The width of the screenshot |
-| `height` | 1440 | The height of the screenshot |
+| Option     | Default       | Description                    |
+| ---------- | ------------- | ------------------------------ |
+| `width`    | 2560          | The width of the screenshot    |
+| `height`   | 1440          | The height of the screenshot   |
 | `fileName` | `'image.png'` | The filename, can be only .png |
 
 ### webgl.onUpdate((dt, time) => {})
 
 Subscribe to the update `requestAnimationFrame` without having to create a component.
 
-| Parameter | Description |
-| --- | --- |
-| `dt` | The seconds elapsed from the latest frame, in a 60fps application it's `0.016s` (aka `16ms`) |
-| `time` | The time in seconds elapsed from when the animation loop starts |
+| Parameter | Description                                                                                  |
+| --------- | -------------------------------------------------------------------------------------------- |
+| `dt`      | The seconds elapsed from the latest frame, in a 60fps application it's `0.016s` (aka `16ms`) |
+| `time`    | The time in seconds elapsed from when the animation loop starts                              |
 
 ## Component structure
 
@@ -104,8 +103,24 @@ After having instantiated the class, you can add it directly to the scene.
 
 ```js
 // attach it to the scene so you can access it in other components
-webgl.scene.birds = new Birds({ webgl })
+webgl.scene.birds = new Birds(webgl, { count: 1000 })
 webgl.scene.add(webgl.scene.birds)
+```
+
+And in the component, you can use the options like this.
+
+```js
+export default class Birds extends THREE.Group {
+  constructor(webgl, options) {
+    super(options)
+    // these can be used also in other methods
+    this.webgl = webgl
+    this.options = options
+
+    // destructure and default values, like you do in React
+    const { count = 10 } = this.options
+
+    // ...
 ```
 
 The class supports some hooks, which get called once the element is in the scene:
@@ -114,47 +129,46 @@ The class supports some hooks, which get called once the element is in the scene
 
 Called each frame of the animation loop of the application. Gets called by the main `requestAnimationFrame`.
 
-| Parameter | Description |
-| --- | --- |
-| `dt` | The seconds elapsed from the latest frame, in a 60fps application it's `0.016s` (aka `16ms`). |
-| `time` | The time in seconds elapsed from when the animation loop starts. |
+| Parameter | Description                                                                                   |
+| --------- | --------------------------------------------------------------------------------------------- |
+| `dt`      | The seconds elapsed from the latest frame, in a 60fps application it's `0.016s` (aka `16ms`). |
+| `time`    | The time in seconds elapsed from when the animation loop starts.                              |
 
 ### resize({ width, height, pixelRatio }) {}
 
 Called each time the window has been resized.
 
-| Parameter | Description |
-| --- | --- |
-| `width` | The window width. |
-| `height` | The window height. |
+| Parameter    | Description                                                                                                |
+| ------------ | ---------------------------------------------------------------------------------------------------------- |
+| `width`      | The window width.                                                                                          |
+| `height`     | The window height.                                                                                         |
 | `pixelRatio` | The application pixelRatio, it's usually `window.devicePixelRatio` but clamped with `webgl.maxPixelRatio`. |
-
 
 ### onPointerDown(event, [x, y]) {}
 
 Called on the `mousedown`/`touchstart` (aka the newer `pointerdown`) event on the canvas. It uses [touches.js](https://github.com/Jam3/touches) behind the scenes.
 
-| Parameter | Description |
-| --- | --- |
-| `event` | The native event. |
+| Parameter  | Description                                                                       |
+| ---------- | --------------------------------------------------------------------------------- |
+| `event`    | The native event.                                                                 |
 | `position` | An array containing the `x` and the `y` position from the top left of the window. |
 
 ### onPointerMove(event, [x, y]) {}
 
 Called on the `mousemove`/`touchmove` (aka the newer `pointermove`) event on the canvas. It uses [touches.js](https://github.com/Jam3/touches) behind the scenes.
 
-| Parameter | Description |
-| --- | --- |
-| `event` | The native event. |
+| Parameter  | Description                                                                       |
+| ---------- | --------------------------------------------------------------------------------- |
+| `event`    | The native event.                                                                 |
 | `position` | An array containing the `x` and the `y` position from the top left of the window. |
 
 ### onPointerUp(event, [x, y]) {}
 
 Called on the `mouseup`/`touchend` (aka the newer `pointerup`) event on the canvas. It uses [touches.js](https://github.com/Jam3/touches) behind the scenes.
 
-| Parameter | Description |
-| --- | --- |
-| `event` | The native event. |
+| Parameter  | Description                                                                       |
+| ---------- | --------------------------------------------------------------------------------- |
+| `event`    | The native event.                                                                 |
 | `position` | An array containing the `x` and the `y` position from the top left of the window. |
 
 ## Asset Manager
@@ -204,12 +218,12 @@ These are all the exposed methods:
 
 Queue an asset to be downloaded later with `assets.load()`.
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `url` |  | The url of the asset relative to the `public/` folder. |
-| `type` | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension. |
-| `equirectangular` | false | Only if you set `type: 'env-map'`, you can pass `equirectangular: true` if you have a single [equirectangular image](https://www.google.com/search?q=equirectangular+image&tbm=isch) rather than the six squared subimages. |
-| ...others |  | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadTexture.js) when the type is either `env-map` or `texture`. |
+| Option            | Default      | Description                                                                                                                                                                                                                                                                               |
+| ----------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `url`             |              | The url of the asset relative to the `public/` folder.                                                                                                                                                                                                                                    |
+| `type`            | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension.                                                                                                                  |
+| `equirectangular` | false        | Only if you set `type: 'env-map'`, you can pass `equirectangular: true` if you have a single [equirectangular image](https://www.google.com/search?q=equirectangular+image&tbm=isch) rather than the six squared subimages.                                                               |
+| ...others         |              | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadTexture.js) when the type is either `env-map` or `texture`. |
 
 Returns a `key` that later you can use with `assets.get()`.
 
@@ -217,21 +231,21 @@ Returns a `key` that later you can use with `assets.get()`.
 
 Load all the assets previously queued.
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `renderer` |  | The WebGLRenderer of your application, exposed as `webgl.renderer`. |
+| Option     | Default | Description                                                         |
+| ---------- | ------- | ------------------------------------------------------------------- |
+| `renderer` |         | The WebGLRenderer of your application, exposed as `webgl.renderer`. |
 
 ### assets.loadSingle({ url, type, renderer, ...others })
 
 Load a single asset without having to pass through the queue. Useful if you want to lazy-load some assets after the application has started. Usually the assets that are not needed immediately.
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `renderer` |  | The WebGLRenderer of your application, exposed as `webgl.renderer`. |
-| `url` |  | The url of the asset relative to the `public/` folder. |
-| `type` | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension. |
-| `equirectangular` | false | Only if you set `type: 'env-map'`, you can pass `equirectangular: true` if you have a single [equirectangular image](https://www.google.com/search?q=equirectangular+image&tbm=isch) rather than the six squared subimages. |
-| ...others |  | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadTexture.js) when the type is either `env-map` or `texture`. |
+| Option            | Default      | Description                                                                                                                                                                                                                                                                               |
+| ----------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `renderer`        |              | The WebGLRenderer of your application, exposed as `webgl.renderer`.                                                                                                                                                                                                                       |
+| `url`             |              | The url of the asset relative to the `public/` folder.                                                                                                                                                                                                                                    |
+| `type`            | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension.                                                                                                                  |
+| `equirectangular` | false        | Only if you set `type: 'env-map'`, you can pass `equirectangular: true` if you have a single [equirectangular image](https://www.google.com/search?q=equirectangular+image&tbm=isch) rather than the six squared subimages.                                                               |
+| ...others         |              | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadTexture.js) when the type is either `env-map` or `texture`. |
 
 Returns a `key` that later you can use with `assets.get()`.
 
@@ -243,9 +257,9 @@ Pass a function that gets called each time an assets finishes downloading. The a
 
 Retrieve an asset previously loaded with `assets.load()` or `assets.loadSingle()`.
 
-| Option | Default | Description |
-| --- | --- | --- |
-| `key` |  | The key returned from `assets.queue()` or `assets.loadSingle()`. It corresponds to the url of the asset. |
+| Option | Default | Description                                                                                              |
+| ------ | ------- | -------------------------------------------------------------------------------------------------------- |
+| `key`  |         | The key returned from `assets.queue()` or `assets.loadSingle()`. It corresponds to the url of the asset. |
 
 ## Debug mode
 
@@ -287,13 +301,14 @@ if (webgl.gpu.tier > 0) {
   webgl.renderer.shadowMap.type = THREE.PCFSoftShadowMap
 }
 ```
+
 Here is what the exposed `webgl.gpu` object contains:
 
-| Key | Example Value | Description |
-| --- | --- | --- |
-| `tier` | `1` | The tier the GPU belongs to. It is incremental, so the higher the better. It goes from 0 to 3. Most GPUs belong to the Tier 1  |
-| `isMobile` | `false` | Wheter it is a mobile/tablet GPU, or a desktop GPU |
-| `name` | `'Apple A11 GPU'` | The string name of the GPU |
+| Key        | Example Value     | Description                                                                                                                   |
+| ---------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `tier`     | `1`               | The tier the GPU belongs to. It is incremental, so the higher the better. It goes from 0 to 3. Most GPUs belong to the Tier 1 |
+| `isMobile` | `false`           | Wheter it is a mobile/tablet GPU, or a desktop GPU                                                                            |
+| `name`     | `'Apple A11 GPU'` | The string name of the GPU                                                                                                    |
 
 More info on this approach also in [this great talk](http://www.youtube.com/watch?v=iNMD8Vr1tKg&t=32m4s) by [luruke](https://github.com/luruke)
 
@@ -310,17 +325,21 @@ import { mapRange } from 'canvas-sketch-util/math'
 
 // ...
 
-document.body.addEventListener('mousemove', (event) => {
+document.body.addEventListener('mousemove', event => {
   const angle = mapRange(event.clientX, 0, window.innerWidth, -90, 90)
 
   // ...
 })
 ```
 
-This example above will transform the x value from a `mousemove` event, which can go from `0` to `window.innerWidth`, to to a  -90 and 90 range. You can assign this value to the rotation of an object which will rotate as you move the mouse.
+This example above will transform the x value from a `mousemove` event, which can go from `0` to `window.innerWidth`, to to a -90 and 90 range. You can assign this value to the rotation of an object which will rotate as you move the mouse.
 
 ## Hot reload
 
 TODO
 
 (found some use cases, maybe only the hot shader reload?)
+
+Take a look at:
+https://github.com/mattdesl/canvas-sketch/blob/1cefbcdf2c5302e74a6a84ff803ddbb377e473f5/docs/hot-reloading.md
+https://github.com/mattdesl/shader-reload
