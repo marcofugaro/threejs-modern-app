@@ -67,6 +67,7 @@ You can pass the class the options you would pass to the [THREE.WebGLRenderer](h
 | `orbitControls`   | undefined | Accepts an object with the [orbit-controls](https://github.com/Jam3/orbit-controls) options. Exposed as `webgl.orbitControls`.        |
 | `controls`        | undefined | Accepts an object with the [controls-gui](https://github.com/rreusser/controls-gui) configuration. Exposed ad `webgl.controls`.       |
 | `hideControls`    | false     | Set this to `true` to hide the controls-gui panel.                                                                                    |
+| `closeControls`   | false     | Set this to `true` to initialize the controls-gui panel closed.                                                                       |
 | `world`           | undefined | Accepts an instance of the [cannon.js](https://github.com/schteppe/cannon.js) world (`new CANNON.World()`). Exposed as `webgl.world`. |
 | `tween`           | undefined | Accepts the [TWEEN.js](https://github.com/tweenjs/tween.js/) library (`TWEEN`). Exposed as `webgl.tween`.                             |
 
@@ -170,6 +171,25 @@ Called on the `mouseup`/`touchend` (aka the newer `pointerup`) event on the canv
 | ---------- | --------------------------------------------------------------------------------- |
 | `event`    | The native event.                                                                 |
 | `position` | An array containing the `x` and the `y` position from the top left of the window. |
+
+### Functional Components
+
+If you don't need any of the previous methods, you can use functional components, which are just plain functions with the objective of making code easier to navigate in.
+
+```js
+export function addLights(webgl) {
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6)
+  directionalLight.position.copy(position)
+  webgl.scene.add(directionalLight)
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+  webgl.scene.add(ambientLight)
+}
+
+// ...
+
+addLights(webgl)
+```
 
 ## Asset Manager
 

@@ -27,9 +27,6 @@ const webgl = new WebGLApp({
   // show the fps counter from stats.js
   showFps: window.DEBUG,
   // enable orbit-controls with a z-distance of 5,
-  // it is recommended to keep the distance the same as
-  // the camera distance:
-  // webgl.camera.position.set(0, 0, 5)
   orbitControls: window.DEBUG && { distance: 5 },
   // Add the controls-gui inputs
   controls: {
@@ -60,7 +57,8 @@ assets.load({ renderer: webgl.renderer }).then(() => {
   // show canvas
   webgl.canvas.style.visibility = ''
 
-  // move the camera behind
+  // move the camera behind,
+  // this will be considered only if orbitControls are disabled
   webgl.camera.position.set(0, 0, 5)
 
   // add any "WebGL components" here...
