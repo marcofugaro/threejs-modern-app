@@ -91,7 +91,7 @@ export default class WebGLApp {
         ...(options.orbitControls instanceof Object ? options.orbitControls : {}),
       })
 
-      // move the camera position accordingly to the orgitcontrols options
+      // move the camera position accordingly to the orbitcontrols options
       this.camera.position.fromArray(this.orbitControls.position)
       this.camera.lookAt(new THREE.Vector3().fromArray(this.orbitControls.target))
     }
