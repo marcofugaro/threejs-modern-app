@@ -55,9 +55,10 @@ export default class Suzanne extends THREE.Group {
       metalnessMap: assets.get(metalnessKey),
       roughnessMap: assets.get(roughnessKey),
       normalMap: assets.get(normalKey),
-      normalScale: new THREE.Vector2(1.5, 1.5),
+      normalScale: new THREE.Vector2(2, 2),
       envMap: assets.get(hdrKey),
-      envMapIntensity: 1,
+      roughness: 0.5,
+      metalness: 0.8,
     })
 
     // apply the material to the model
@@ -112,18 +113,6 @@ export function addNaturalLight(webgl) {
   dirLight.position.set(3, 5, 1)
   dirLight.position.multiplyScalar(50)
   webgl.scene.add(dirLight)
-
-  dirLight.castShadow = true
-  dirLight.shadow.mapSize.width = 2048
-  dirLight.shadow.mapSize.height = 2048
-
-  var d = 50
-  dirLight.shadow.camera.left = -d
-  dirLight.shadow.camera.right = d
-  dirLight.shadow.camera.top = d
-  dirLight.shadow.camera.bottom = -d
-  dirLight.shadow.camera.far = 3500
-  dirLight.shadow.bias = -0.0001
 }
 
 // demo the save screenshot feature

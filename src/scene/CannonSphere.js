@@ -4,7 +4,7 @@ import CANNON from 'cannon'
 // remember to add the body to the CANNON world and
 // the mesh to the three js scene or some component
 //
-//   const sphere = new CannonSphere({ radius: 1, webgl })
+//   const sphere = new CannonSphere(webgl, { radius: 1 })
 //   webgl.world.addBody(sphere)
 //   webgl.scene.add(sphere.mesh)
 
@@ -26,7 +26,7 @@ export default class CannonSphere extends CANNON.Body {
       this.mesh.add(
         new THREE.Mesh(
           new THREE.SphereGeometry(radius, 32, 32),
-          new THREE.MeshLambertMaterial({ color: Math.random() * 0xfffff })
+          new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff })
         )
       )
     }
