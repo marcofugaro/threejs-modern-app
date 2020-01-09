@@ -4,8 +4,6 @@
 import * as THREE from 'three'
 import clamp from 'lodash/clamp'
 import { HDRCubeTextureLoader } from 'three/examples/jsm/loaders/HDRCubeTextureLoader'
-import { PMREMGenerator } from 'three/examples/jsm/pmrem/PMREMGenerator'
-import { PMREMCubeUVPacker } from 'three/examples/jsm/pmrem/PMREMCubeUVPacker'
 import loadTexture from './loadTexture'
 
 export default async function loadEnvMap(url, options) {
@@ -16,22 +14,18 @@ export default async function loadEnvMap(url, options) {
   }
 
   if (options.equirectangular) {
+    const pmremGenerator = new THREE.PMREMGenerator(renderer)
+    pmremGenerator.compileEquirectangularShader()
+
     const texture = await loadTexture(url, { renderer })
 
-    const cubeRenderTarget = new THREE.WebGLRenderTargetCube(1024, 1024).fromEquirectangularTexture(
-      renderer,
-      texture
-    )
+    const cubeRenderTarget = pmremGenerator.fromEquirectangular(texture)
 
-    const cubeMapTexture = cubeRenderTarget.texture
-
-    // renderTarget is used for the scene.background
-    cubeMapTexture.renderTarget = cubeRenderTarget
-
+    pmremGenerator.dispose() // dispose PMREMGenerator
     texture.dispose() // dispose original texture
-    texture.image.data = null // remove Image reference
+    texture.image.data = null // remove image reference
 
-    return buildCubeMap(cubeMapTexture, options)
+    return cubeRenderTarget.texture
   }
 
   const basePath = url
@@ -70,14 +64,11 @@ export default async function loadEnvMap(url, options) {
 function buildCubeMap(cubeMap, options) {
   if (options.pbr || typeof options.level === 'number') {
     // prefilter the environment map for irradiance
-    const pmremGenerator = new PMREMGenerator(cubeMap)
-    pmremGenerator.update(options.renderer)
+    const pmremGenerator = new THREE.PMREMGenerator(cubeMap)
+    pmremGenerator.compileCubemapShader()
     if (options.pbr) {
-      const pmremCubeUVPacker = new PMREMCubeUVPacker(pmremGenerator.cubeLods)
-      pmremCubeUVPacker.update(options.renderer)
-      const target = pmremCubeUVPacker.CubeUVRenderTarget
+      const target = pmremGenerator.fromCubemap(cubeMap)
       cubeMap = target.texture
-      pmremCubeUVPacker.dispose()
     } else {
       const idx = clamp(Math.floor(options.level), 0, pmremGenerator.cubeLods.length)
       cubeMap = pmremGenerator.cubeLods[idx].texture

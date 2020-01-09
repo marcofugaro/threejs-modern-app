@@ -74,7 +74,7 @@ export default class Suzanne extends THREE.Group {
     this.add(suzanne)
 
     // set the background as the hdr
-    this.webgl.scene.background = assets.get(hdrKey).renderTarget
+    this.webgl.scene.background = assets.get(hdrKey)
   }
 
   onPointerDown(event, [x, y]) {
