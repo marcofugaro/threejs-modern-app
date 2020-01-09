@@ -113,7 +113,7 @@ export default class WebGLApp {
     if (options.controls) {
       const controlsState = State(options.controls)
       this.controls = options.hideControls ? controlsState : wrapGUI(controlsState)
-      if (options.closeControls) {
+      if (options.closeControls && !options.hideControls) {
         const controlsElement = document.querySelector('[class*="controlPanel"]')
 
         controlsElement.style.display = 'none'
