@@ -16,7 +16,7 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 
 ## Features
 
-- All the **Three.js boilerplate code is tucked away** in a file, the exported `WebGLApp` is easily configurable from the outside, for example you can enable postprocessing, [orbit controls](https://github.com/Jam3/orbit-controls), [FPS stats](https://github.com/mrdoob/stats.js/), a [controls-gui](https://github.com/rreusser/controls-gui) and use the save screenshot functionality. It also has built-in support for [Cannon.js](https://github.com/schteppe/cannon.js) and [Tween.js](https://github.com/tweenjs/tween.js/). [[Read more](#webglapp)]
+- All the **Three.js boilerplate code is tucked away** in a file, the exported `WebGLApp` is easily configurable from the outside, for example you can enable postprocessing, [orbit controls](https://github.com/Jam3/orbit-controls), [FPS stats](https://github.com/mrdoob/stats.js/), a [controls-gui](https://github.com/rreusser/controls-gui) and use the save screenshot functionality. It also has built-in support for [Cannon.js](https://github.com/schteppe/cannon.js). [[Read more](#webglapp)]
 - A **scalable Three.js component structure** where each component is a class which extends `THREE.Group`, so you can add any object to it. The class also has update, resize, and touch hooks. [[Read more](#component-structure)]
 - An **asset manager** which handles the preloading of `.gltf` models, images, audios, videos and can be easily extended to support other files. It also automatically uploads a texture to the GPU, loads cube env maps or parses equirectangular projection images. [[Read more](#asset-manager)]
 - global `window.DEBUG` flag which is true when the url contains `?debug` as a query parameter. So you can enable **debug mode** both locally and in production. [[Read more](#debug-mode)]
@@ -72,9 +72,29 @@ You can pass the class the options you would pass to the [THREE.WebGLRenderer](h
 | `closeControls`       | false                | Set this to `true` to initialize the controls-gui panel closed.                                                                                                  |
 | `world`               | undefined            | Accepts an instance of the [cannon.js](https://github.com/schteppe/cannon.js) world (`new CANNON.World()`). Exposed as `webgl.world`.                            |
 | `showWorldWireframes` | false                | Set this to `true` to show the wireframes of every body in the world. Uses [CannonDebugRenderer](http://schteppe.github.io/cannon.js/tools/threejs/example.html) |
-| `tween`               | undefined            | Accepts the [TWEEN.js](https://github.com/tweenjs/tween.js/) library (`TWEEN`). Exposed as `webgl.tween`.                                                        |
 
-The `webgl` instance will contain all the Three.js elements such as `webgl.scene`, `webgl.renderer`, `webgl.camera` or `webgl.canvas`. It also exposes some methods:
+The `webgl` instance will contain all the Three.js elements such as `webgl.scene`, `webgl.renderer`, `webgl.camera` or `webgl.canvas`. It also exposes some useful properties and methods:
+
+### webgl.isDragging
+
+Wether or not the user is currently dragging. It is `true` between the `onPointerDown` and `onPointerUp` events.
+
+### webgl.cursor
+
+Set this property to change the cursor style of the canvas. For example you can use it to display the pointer cursor on some objects:
+
+```js
+onPointerMove(event, [x, y]) {
+  // raycast and get the intersecting mesh
+  const intersectingMesh = getIntersectingMesh([x, y], this, this.webgl)
+
+  if (intersectingMesh) {
+    this.webgl.cursor = 'pointer'
+  } else {
+    this.webgl.cursor = null
+  }
+}
+```
 
 ### webgl.saveScreenshot({ ...options })
 

@@ -118,9 +118,6 @@ export default class WebGLApp {
       }
     }
 
-    // Attach Tween.js
-    if (options.tween) this.tween = options.tween
-
     // show the fps meter
     if (options.showFps) {
       this.stats = new Stats()
@@ -131,14 +128,24 @@ export default class WebGLApp {
     // initialize the controls-state
     if (options.controls) {
       const controlsState = State(options.controls)
-      this.controls = options.hideControls ? controlsState : wrapGUI(controlsState)
-      if (options.closeControls && !options.hideControls) {
-        const controlsElement = document.querySelector('[class*="controlPanel"]')
+      this.controls = options.hideControls
+        ? controlsState
+        : wrapGUI(controlsState, { expanded: !options.closeControls })
 
-        controlsElement.style.display = 'none'
-        const controlsButton = document.querySelector('[class*="controlPanel"] button')
-        controlsButton.click()
-        controlsElement.style.display = 'block'
+      // add the custom controls-gui styles
+      if (!options.hideControls) {
+        const styles = `
+          [class^="controlPanel-"] [class*="__field"]::before {
+            content: initial !important;
+          }
+          [class^="controlPanel-"] [class*="__field--button"] > button::before {
+            content: initial !important;
+          }
+        `
+        const style = document.createElement('style')
+        style.type = 'text/css'
+        style.innerHTML = styles
+        document.head.appendChild(style)
       }
     }
 
@@ -248,11 +255,6 @@ export default class WebGLApp {
       })
     }
 
-    if (this.tween) {
-      // update the Tween.js engine
-      this.tween.update()
-    }
-
     // call the update listeners
     this.#updateListeners.forEach(fn => fn(dt, time))
 
@@ -320,6 +322,18 @@ export default class WebGLApp {
         child[fn].apply(child, args)
       }
     })
+  }
+
+  get cursor() {
+    return this.canvas.style.cursor
+  }
+
+  set cursor(cursor) {
+    if (cursor) {
+      this.canvas.style.cursor = cursor
+    } else {
+      this.canvas.style.cursor = null
+    }
   }
 }
 

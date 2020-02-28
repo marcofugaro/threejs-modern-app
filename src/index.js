@@ -3,7 +3,8 @@ import State from 'controls-state'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass'
 import WebGLApp from './lib/WebGLApp'
 import assets from './lib/AssetManager'
-import Suzanne, { addNaturalLight, addScreenshotButton } from './scene/Suzanne'
+import Suzanne, { addScreenshotButton } from './scene/Suzanne'
+import { addNaturalLight } from './scene/lights'
 import passVert from './scene/shaders/pass.vert'
 import vignetteFrag from './scene/shaders/vignette.frag'
 
@@ -30,18 +31,18 @@ const webgl = new WebGLApp({
   orbitControls: window.DEBUG && { distance: 5 },
   // Add the controls-gui inputs
   controls: {
-    angularVelocity: State.Slider(0.5, {
+    angularVelocity: State.Slider(0.1, {
       label: 'Angular Velocity',
-      min: 0.1,
-      max: 30,
-      step: 0.1,
+      min: 0.01,
+      max: 50,
+      step: 0.01,
+      mapping: x => Math.pow(10, x),
+      inverseMapping: Math.log10,
     }),
   },
   hideControls: !window.DEBUG,
   // enable Cannon.js
   // world: new CANNON.World(),
-  // enable Tween.js
-  // tween: TWEEN,
 })
 
 // attach it to the window to inspect in the console
