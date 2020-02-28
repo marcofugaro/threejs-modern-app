@@ -56,20 +56,23 @@ https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd
 
 You can pass the class the options you would pass to the [THREE.WebGLRenderer](https://threejs.org/docs/#api/en/renderers/WebGLRenderer), and also some more options:
 
-| Option            | Default   | Description                                                                                                                           |
-| ----------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `background`      | `'#000'`  | The background of the scene.                                                                                                          |
-| `backgroundAlpha` | 1         | The transparency of the background.                                                                                                   |
-| `maxPixelRatio`   | 2         | The clamped pixelRatio, for performance reasons.                                                                                      |
-| `maxDeltaTime`    | 1 / 30    | Clamp the `dt` to prevent stepping anything too far forward.                                                                          |
-| `postprocessing`  | false     | Enable Three.js postprocessing. The composer gets exposed as `webgl.composer`.                                                        |
-| `showFps`         | false     | Show the [stats.js](https://github.com/mrdoob/stats.js/) fps counter                                                                  |
-| `orbitControls`   | undefined | Accepts an object with the [orbit-controls](https://github.com/Jam3/orbit-controls) options. Exposed as `webgl.orbitControls`.        |
-| `controls`        | undefined | Accepts an object with the [controls-gui](https://github.com/rreusser/controls-gui) configuration. Exposed ad `webgl.controls`.       |
-| `hideControls`    | false     | Set this to `true` to hide the controls-gui panel.                                                                                    |
-| `closeControls`   | false     | Set this to `true` to initialize the controls-gui panel closed.                                                                       |
-| `world`           | undefined | Accepts an instance of the [cannon.js](https://github.com/schteppe/cannon.js) world (`new CANNON.World()`). Exposed as `webgl.world`. |
-| `tween`           | undefined | Accepts the [TWEEN.js](https://github.com/tweenjs/tween.js/) library (`TWEEN`). Exposed as `webgl.tween`.                             |
+| Option                | Default              | Description                                                                                                                                                      |
+| --------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `background`          | `'#000'`             | The background of the scene.                                                                                                                                     |
+| `backgroundAlpha`     | 1                    | The transparency of the background.                                                                                                                              |
+| `maxPixelRatio`       | 2                    | The clamped pixelRatio, for performance reasons.                                                                                                                 |
+| `maxDeltaTime`        | 1 / 30               | Clamp the `dt` to prevent stepping anything too far forward.                                                                                                     |
+| `width`               | `window.innerWidth`  | The canvas width.                                                                                                                                                |
+| `height`              | `window.innerHeight` | The canvas height                                                                                                                                                |
+| `postprocessing`      | false                | Enable Three.js postprocessing. The composer gets exposed as `webgl.composer`.                                                                                   |
+| `showFps`             | false                | Show the [stats.js](https://github.com/mrdoob/stats.js/) fps counter                                                                                             |
+| `orbitControls`       | undefined            | Accepts an object with the [orbit-controls](https://github.com/Jam3/orbit-controls) options. Exposed as `webgl.orbitControls`.                                   |
+| `controls`            | undefined            | Accepts an object with the [controls-gui](https://github.com/rreusser/controls-gui) configuration. Exposed ad `webgl.controls`.                                  |
+| `hideControls`        | false                | Set this to `true` to hide the controls-gui panel.                                                                                                               |
+| `closeControls`       | false                | Set this to `true` to initialize the controls-gui panel closed.                                                                                                  |
+| `world`               | undefined            | Accepts an instance of the [cannon.js](https://github.com/schteppe/cannon.js) world (`new CANNON.World()`). Exposed as `webgl.world`.                            |
+| `showWorldWireframes` | false                | Set this to `true` to show the wireframes of every body in the world. Uses [CannonDebugRenderer](http://schteppe.github.io/cannon.js/tools/threejs/example.html) |
+| `tween`               | undefined            | Accepts the [TWEEN.js](https://github.com/tweenjs/tween.js/) library (`TWEEN`). Exposed as `webgl.tween`.                                                        |
 
 The `webgl` instance will contain all the Three.js elements such as `webgl.scene`, `webgl.renderer`, `webgl.camera` or `webgl.canvas`. It also exposes some methods:
 
