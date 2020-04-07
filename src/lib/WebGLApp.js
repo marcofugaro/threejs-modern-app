@@ -138,6 +138,9 @@ export default class WebGLApp {
           [class^="controlPanel-"] [class*="__field"]::before {
             content: initial !important;
           }
+          [class^="controlPanel-"] [class*="__labelText"] {
+            text-indent: 6px !important;
+          }
           [class^="controlPanel-"] [class*="__field--button"] > button::before {
             content: initial !important;
           }
@@ -189,7 +192,7 @@ export default class WebGLApp {
     }
 
     // recursively tell all child objects to resize
-    this.scene.traverse(obj => {
+    this.scene.traverse((obj) => {
       if (typeof obj.resize === 'function') {
         obj.resize({
           width,
@@ -232,7 +235,7 @@ export default class WebGLApp {
     }
 
     // recursively tell all child objects to update
-    this.scene.traverse(obj => {
+    this.scene.traverse((obj) => {
       if (typeof obj.update === 'function') {
         obj.update(dt, time)
       }
@@ -248,7 +251,7 @@ export default class WebGLApp {
       }
 
       // recursively tell all child bodies to update
-      this.world.bodies.forEach(body => {
+      this.world.bodies.forEach((body) => {
         if (typeof body.update === 'function') {
           body.update(dt, time)
         }
@@ -256,7 +259,7 @@ export default class WebGLApp {
     }
 
     // call the update listeners
-    this.#updateListeners.forEach(fn => fn(dt, time))
+    this.#updateListeners.forEach((fn) => fn(dt, time))
 
     return this
   }
@@ -328,7 +331,7 @@ export default class WebGLApp {
   }
 
   traverse = (fn, ...args) => {
-    this.scene.traverse(child => {
+    this.scene.traverse((child) => {
       if (typeof child[fn] === 'function') {
         child[fn].apply(child, args)
       }
