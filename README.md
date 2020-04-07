@@ -108,7 +108,7 @@ Save a screenshot of the application as a png.
 
 ### webgl.onUpdate((dt, time) => {})
 
-Subscribe to the update `requestAnimationFrame` without having to create a component.
+Subscribe to the update `requestAnimationFrame` without having to create a component. If needed you can later unsubscribe the function with `webgl.offUpdate(function)`.
 
 | Parameter | Description                                                                                  |
 | --------- | -------------------------------------------------------------------------------------------- |
@@ -368,7 +368,7 @@ import { mapRange } from 'canvas-sketch-util/math'
 
 // ...
 
-document.body.addEventListener('mousemove', event => {
+document.body.addEventListener('mousemove', (event) => {
   const angle = mapRange(event.clientX, 0, window.innerWidth, -90, 90)
 
   // ...

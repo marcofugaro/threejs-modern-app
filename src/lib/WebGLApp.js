@@ -265,6 +265,17 @@ export default class WebGLApp {
     this.#updateListeners.push(fn)
   }
 
+  offUpdate(fn) {
+    const index = this.#updateListeners.indexOf(fn)
+
+    // return silently if the function can't be found
+    if (index === -1) {
+      return
+    }
+
+    this.#updateListeners.splice(index, 1)
+  }
+
   draw = () => {
     if (this.composer) {
       // make sure to always render the last pass
