@@ -40,6 +40,7 @@
     "datauritoblob": "^1.0.0",
     "detect-gpu": "^1.2.0",
     "glsl-vignette": "^1.1.0",
+    "highest-power-two": "^1.0.2",
     "image-promise": "^7.0.0",
     "lodash": "^4.17.15",
     "orbit-controls": "^1.2.4",

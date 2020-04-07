@@ -4057,6 +4057,11 @@ he@^1.2.0:
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
+highest-power-two@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/highest-power-two/-/highest-power-two-1.0.2.tgz#79fa1e623f5e3b492c1a82fbe0e8eb3cee844c26"
+  integrity sha512-gSBzzJuwlwVQe7d6g2mQR2YeRdFvC+2FsfZa5ydwgtODg4wXamvdvjUdg/6pSKvlAJqttKOtG2mchGYvRFyy6w==
+
 hmac-drbg@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
