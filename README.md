@@ -384,7 +384,7 @@ This example above will transform the x value from a `mousemove` event, which ca
 
 TODO
 
-(found some use cases, maybe only the hot shader reload?)
+(find some use cases, maybe only the hot shader reload?)
 
 Take a look at:
 https://github.com/mattdesl/canvas-sketch/blob/1cefbcdf2c5302e74a6a84ff803ddbb377e473f5/docs/hot-reloading.md
