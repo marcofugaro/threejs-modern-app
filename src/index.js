@@ -36,7 +36,7 @@ const webgl = new WebGLApp({
       min: 0.01,
       max: 50,
       step: 0.01,
-      mapping: x => Math.pow(10, x),
+      mapping: (x) => Math.pow(10, x),
       inverseMapping: Math.log10,
     }),
   },

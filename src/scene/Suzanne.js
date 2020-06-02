@@ -56,13 +56,13 @@ export default class Suzanne extends THREE.Group {
       roughnessMap: assets.get(roughnessKey),
       normalMap: assets.get(normalKey),
       normalScale: new THREE.Vector2(2, 2),
-      envMap: assets.get(hdrKey),
+      envMap: assets.get(hdrKey).texture,
       roughness: 0.5,
       metalness: 0.8,
     })
 
     // apply the material to the model
-    suzanne.traverse(child => {
+    suzanne.traverse((child) => {
       if (child.isMesh) {
         child.material = material
       }

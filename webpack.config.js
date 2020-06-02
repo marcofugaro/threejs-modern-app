@@ -11,6 +11,7 @@ const prettyMs = require('pretty-ms')
 const EventHooksPlugin = require('event-hooks-webpack-plugin')
 const chalk = require('chalk')
 const indentString = require('indent-string')
+const _ = require('lodash')
 
 const PROTOCOL = 'http'
 const HOST = '0.0.0.0'
