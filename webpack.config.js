@@ -228,9 +228,9 @@ module.exports = merge.smart(
               ascii_only: true,
             },
           },
-          parallel: true,
-          cache: true,
           sourceMap: true,
+          // Don't generate the license.txt file
+          extractComments: false,
         }),
       ],
     },

@@ -45,7 +45,7 @@ export default async function loadEnvMap(url, options) {
       new HDRCubeTextureLoader().load(
         THREE.UnsignedByteType,
         urls,
-        cubeMap => resolve(assignCubemapOptions(cubeMap, options)),
+        (cubeMap) => resolve(assignCubemapOptions(cubeMap, options)),
         null,
         () => reject(new Error(`Could not load env map: ${basePath}`))
       )
@@ -56,7 +56,7 @@ export default async function loadEnvMap(url, options) {
   return new Promise((resolve, reject) => {
     new THREE.CubeTextureLoader().load(
       urls,
-      cubeMap => resolve(assignCubemapOptions(cubeMap, options)),
+      (cubeMap) => resolve(assignCubemapOptions(cubeMap, options)),
       null,
       () => reject(new Error(`Could not load env map: ${basePath}`))
     )
