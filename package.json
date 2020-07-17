@@ -42,7 +42,7 @@
     "glsl-vignette": "^1.1.0",
     "highest-power-two": "^1.0.2",
     "image-promise": "^7.0.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "orbit-controls": "^1.2.4",
     "p-map": "^4.0.0",
     "pretty-ms": "^7.0.0",
