@@ -26,7 +26,7 @@ export default async function loadEnvMap(url, options) {
         magFilter: THREE.LinearFilter,
       })
 
-      const outTexture = renderTarget.fromEquirectangularTexture(renderer, texture)
+      const outTexture = renderTarget.fromEquirectangularTexture(renderer, texture).texture
 
       texture.dispose() // dispose original texture
       texture.image.data = null // remove image reference
