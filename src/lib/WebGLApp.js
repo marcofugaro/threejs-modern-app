@@ -21,7 +21,7 @@ export default class WebGLApp {
   #height
 
   constructor({
-    background = '#000',
+    background = '#111',
     backgroundAlpha = 1,
     fov = 45,
     near = 0.01,
