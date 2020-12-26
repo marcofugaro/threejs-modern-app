@@ -173,12 +173,14 @@ export default class WebGLApp {
     }
 
     // detect the gpu info
-    const gpu = getGPUTier({ glContext: this.renderer.getContext() })
-    this.gpu = {
-      name: gpu.type,
-      tier: Number(gpu.tier.slice(-1)),
-      isMobile: gpu.tier.toLowerCase().includes('mobile'),
-    }
+    this.loadGPUTier = getGPUTier({ glContext: this.gl }).then((gpuTier) => {
+      this.gpu = {
+        name: gpuTier.gpu,
+        tier: gpuTier.tier,
+        isMobile: gpuTier.isMobile,
+        fps: gpuTier.fps,
+      }
+    })
   }
 
   get width() {

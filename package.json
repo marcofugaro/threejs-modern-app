@@ -38,7 +38,7 @@
     "controls-gui": "^2.0.0",
     "controls-state": "^2.0.0",
     "datauritoblob": "^1.0.0",
-    "detect-gpu": "^1.3.0",
+    "detect-gpu": "^3.0.0",
     "glsl-vignette": "^1.1.0",
     "highest-power-two": "^1.0.2",
     "image-promise": "^7.0.1",

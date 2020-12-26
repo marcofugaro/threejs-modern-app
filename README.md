@@ -343,12 +343,12 @@ Sometimes it might be useful to enable expensive application configurationw only
 
 This can be done by detecting the user's GPU and checking in which tier it belongs to based on its benchmark score.
 
-This is done thanks to [detect-gpu](https://github.com/TimvanScherpenzeel/detect-gpu), more detailed info about its mechanics in its README.
+This is done thanks to [detect-gpu](https://github.com/TimvanScherpenzeel/detect-gpu), more detailed info about these mechanics in its README.
 
 For example, here is how to enable shadows only on high-tier devices:
 
 ```js
-if (webgl.gpu.tier > 0) {
+if (webgl.gpu.tier > 1) {
   webgl.renderer.shadowMap.enabled = true
 
   // soft shadows
@@ -358,11 +358,14 @@ if (webgl.gpu.tier > 0) {
 
 Here is what the exposed `webgl.gpu` object contains:
 
-| Key        | Example Value     | Description                                                                                                                   |
-| ---------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `tier`     | `1`               | The tier the GPU belongs to. It is incremental, so the higher the better. It goes from 0 to 3. Most GPUs belong to the Tier 1 |
-| `isMobile` | `false`           | Wheter it is a mobile/tablet GPU, or a desktop GPU                                                                            |
-| `name`     | `'Apple A11 GPU'` | The string name of the GPU                                                                                                    |
+| Key        | Example Value                | Description                                                                                                                   |
+| ---------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `tier`     | `1`                          | The tier the GPU belongs to. It is incremental, so the higher the better. It goes from 0 to 3. Most GPUs belong to the Tier 2 |
+| `isMobile` | `false`                      | Wheter it is a mobile/tablet GPU, or a desktop GPU.                                                                           |
+| `name`     | `'intel iris graphics 6100'` | The string name of the GPU.                                                                                                   |
+| `fps`      | `21`                         | The specific rank value of the GPU.                                                                                           |
+
+⚠️ **WARNING**: `webgl.gpu` is set asyncronously since the benchmark data needs to be fetched. You might want to wait for the exposed promise `webgl.loadGPUTier`.
 
 More info on this approach also in [this great talk](http://www.youtube.com/watch?v=iNMD8Vr1tKg&t=32m4s) by [luruke](https://github.com/luruke)
 
