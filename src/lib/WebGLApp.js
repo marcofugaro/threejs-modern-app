@@ -238,7 +238,7 @@ export default class WebGLApp {
 
     // recursively tell all child objects to update
     this.scene.traverse((obj) => {
-      if (typeof obj.update === 'function') {
+      if (typeof obj.update === 'function' && !obj.isTransformControls) {
         obj.update(dt, time, xrframe)
       }
     })
