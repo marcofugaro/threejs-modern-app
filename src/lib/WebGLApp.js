@@ -24,6 +24,7 @@ export default class WebGLApp {
     background = '#111',
     backgroundAlpha = 1,
     fov = 45,
+    frustumSize = 3,
     near = 0.01,
     far = 100,
     ...options
@@ -37,15 +38,19 @@ export default class WebGLApp {
       failIfMajorPerformanceCaveat: true,
       ...options,
     })
-
-    this.renderer.sortObjects = false
-    this.canvas = this.renderer.domElement
-
-    this.renderer.setClearColor(background, backgroundAlpha)
-
+    if (options.sortObjects !== undefined) {
+      this.renderer.sortObjects = options.sortObjects
+    }
+    if (options.gamma) {
+      this.renderer.outputEncoding = THREE.sRGBEncoding
+    }
     if (options.xr) {
       this.renderer.xr.enabled = true
     }
+
+    this.canvas = this.renderer.domElement
+
+    this.renderer.setClearColor(background, backgroundAlpha)
 
     // save the fixed dimensions
     this.#width = options.width
@@ -56,8 +61,23 @@ export default class WebGLApp {
     // clamp delta to stepping anything too far forward
     this.maxDeltaTime = options.maxDeltaTime || 1 / 30
 
-    // setup a basic camera
-    this.camera = new THREE.PerspectiveCamera(fov, 1, near, far)
+    // setup the camera
+    const aspect = this.#width / this.#height
+    if (!options.orthographic) {
+      this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far)
+    } else {
+      this.camera = new THREE.OrthographicCamera(
+        -(frustumSize * aspect) / 2,
+        (frustumSize * aspect) / 2,
+        frustumSize / 2,
+        -frustumSize / 2,
+        near,
+        far
+      )
+      this.camera.frustumSize = frustumSize
+    }
+    this.camera.position.copy(options.cameraPosition || new THREE.Vector3(0, 0, 4))
+    this.camera.lookAt(0, 0, 0)
 
     this.scene = new THREE.Scene()
 
@@ -185,6 +205,12 @@ export default class WebGLApp {
     this.renderer.setSize(width, height)
     if (this.camera.isPerspectiveCamera) {
       this.camera.aspect = width / height
+    } else {
+      const aspect = width / height
+      this.camera.left = -(this.camera.frustumSize * aspect) / 2
+      this.camera.right = (this.camera.frustumSize * aspect) / 2
+      this.camera.top = this.camera.frustumSize / 2
+      this.camera.bottom = -this.camera.frustumSize / 2
     }
     this.camera.updateProjectionMatrix()
 

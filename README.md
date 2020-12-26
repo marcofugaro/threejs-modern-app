@@ -1,6 +1,6 @@
 # threejs-modern-app
 
-> Boilerplate and utils for a fullscreen Three.js app
+> Boilerplate and utils for a fullscreen three.js app
 
 [![demo](.github/screenshots/demo.png)](https://marcofugaro.github.io/threejs-modern-app/?debug)
 
@@ -16,8 +16,8 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 
 ## Features
 
-- All the **Three.js boilerplate code is tucked away** in a file, the exported `WebGLApp` is easily configurable from the outside, for example you can enable postprocessing, [orbit controls](https://github.com/Jam3/orbit-controls), [FPS stats](https://github.com/mrdoob/stats.js/), a [controls-gui](https://github.com/rreusser/controls-gui) and use the save screenshot functionality. It also has built-in support for [Cannon.js](https://github.com/schteppe/cannon.js). [[Read more](#webglapp)]
-- A **scalable Three.js component structure** where each component is a class which extends `THREE.Group`, so you can add any object to it. The class also has update, resize, and touch hooks. [[Read more](#component-structure)]
+- All the **three.js boilerplate code is tucked away** in a file, the exported `WebGLApp` is easily configurable from the outside, for example you can enable postprocessing, [orbit controls](https://github.com/Jam3/orbit-controls), [FPS stats](https://github.com/mrdoob/stats.js/), a [controls-gui](https://github.com/rreusser/controls-gui) and use the save screenshot functionality. It also has built-in support for [Cannon.js](https://github.com/schteppe/cannon.js). [[Read more](#webglapp)]
+- A **scalable three.js component structure** where each component is a class which extends `THREE.Group`, so you can add any object to it. The class also has update, resize, and touch hooks. [[Read more](#component-structure)]
 - An **asset manager** which handles the preloading of `.gltf` models, images, audios, videos and can be easily extended to support other files. It also automatically uploads a texture to the GPU, loads cube env maps or parses equirectangular projection images. [[Read more](#asset-manager)]
 - global `window.DEBUG` flag which is true when the url contains `?debug` as a query parameter. So you can enable **debug mode** both locally and in production. [[Read more](#debug-mode)]
 - [glslify](https://github.com/glslify/glslify) to import shaders from `node_modules`. [[Read more](#glslify)]
@@ -48,7 +48,7 @@ import WebGLApp from './lib/WebGLApp'
 const webgl = new WebGLApp({ ...options })
 ```
 
-The WebGLApp class contains all the code needed for Three.js to run a scene, it is always the same so it makes sense to hide it in a standalone file and don't think about it.
+The WebGLApp class contains all the code needed for three.js to run a scene, it is always the same so it makes sense to hide it in a standalone file and don't think about it.
 
 You can see an example configuration here:
 
@@ -56,24 +56,32 @@ https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd
 
 You can pass the class the options you would pass to the [THREE.WebGLRenderer](https://threejs.org/docs/#api/en/renderers/WebGLRenderer), and also some more options:
 
-| Option                | Default              | Description                                                                                                                                                      |
-| --------------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `background`          | `'#000'`             | The background of the scene.                                                                                                                                     |
-| `backgroundAlpha`     | 1                    | The transparency of the background.                                                                                                                              |
-| `maxPixelRatio`       | 2                    | The clamped pixelRatio, for performance reasons.                                                                                                                 |
-| `maxDeltaTime`        | 1 / 30               | Clamp the `dt` to prevent stepping anything too far forward.                                                                                                     |
-| `width`               | `window.innerWidth`  | The canvas width.                                                                                                                                                |
-| `height`              | `window.innerHeight` | The canvas height                                                                                                                                                |
-| `postprocessing`      | false                | Enable Three.js postprocessing. The composer gets exposed as `webgl.composer`.                                                                                   |
-| `showFps`             | false                | Show the [stats.js](https://github.com/mrdoob/stats.js/) fps counter                                                                                             |
-| `orbitControls`       | undefined            | Accepts an object with the [orbit-controls](https://github.com/Jam3/orbit-controls) options. Exposed as `webgl.orbitControls`.                                   |
-| `controls`            | undefined            | Accepts an object with the [controls-gui](https://github.com/rreusser/controls-gui) configuration. Exposed ad `webgl.controls`.                                  |
-| `hideControls`        | false                | Set this to `true` to hide the controls-gui panel.                                                                                                               |
-| `closeControls`       | false                | Set this to `true` to initialize the controls-gui panel closed.                                                                                                  |
-| `world`               | undefined            | Accepts an instance of the [cannon.js](https://github.com/schteppe/cannon.js) world (`new CANNON.World()`). Exposed as `webgl.world`.                            |
-| `showWorldWireframes` | false                | Set this to `true` to show the wireframes of every body in the world. Uses [CannonDebugRenderer](http://schteppe.github.io/cannon.js/tools/threejs/example.html) |
+| Option                | Default                      | Description                                                                                                                                                                                     |
+| --------------------- | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `background`          | `'#111'`                     | The background of the scene.                                                                                                                                                                    |
+| `backgroundAlpha`     | 1                            | The transparency of the background.                                                                                                                                                             |
+| `maxPixelRatio`       | 2                            | The clamped pixelRatio, for performance reasons.                                                                                                                                                |
+| `maxDeltaTime`        | 1 / 30                       | Clamp the `dt` to prevent stepping anything too far forward. 1 / 30 means 30fps.                                                                                                                |
+| `width`               | `window.innerWidth`          | The canvas width.                                                                                                                                                                               |
+| `height`              | `window.innerHeight`         | The canvas height                                                                                                                                                                               |
+| `orthographic`        | false                        | Use an [OrthographicCamera](https://threejs.org/docs/#api/en/cameras/PerspectiveCamera) instead of the default [PerspectiveCamera](https://threejs.org/docs/#api/en/cameras/PerspectiveCamera). |
+| `cameraPosition`      | `new THREE.Vector3(0, 0, 4)` | Set the initial camera position. The camera will always look at [0, 0, 0].                                                                                                                      |
+| `fov`                 | 45                           | The field of view of the PerspectiveCamera. It is ignored if the option `orthographic` is true.                                                                                                 |
+| `frustumSize`         | 3                            | Defines the size of the OrthographicCamera frustum. It is ignored if the option `orthographic` is false.                                                                                        |
+| `near`                | 0.01                         | The camera near plane.                                                                                                                                                                          |
+| `far`                 | 100                          | The camera far plane.                                                                                                                                                                           |
+| `postprocessing`      | false                        | Enable three.js postprocessing. The composer gets exposed as `webgl.composer`.                                                                                                                  |
+| `xr`                  | false                        | Enable three.js WebXR mode. The update function now will have a `xrframe` object passed as a third parameter.                                                                                   |
+| `gamma`               | false                        | Turn on gamma correction. Remember to turn on gamma corrections also for textures and colors as stated in [this guide](https://www.donmccurdy.com/2020/06/17/color-management-in-threejs/).     |
+| `showFps`             | false                        | Show the [stats.js](https://github.com/mrdoob/stats.js/) fps counter                                                                                                                            |
+| `orbitControls`       | undefined                    | Accepts an object with the [orbit-controls](https://github.com/Jam3/orbit-controls) options. Exposed as `webgl.orbitControls`.                                                                  |
+| `controls`            | undefined                    | Accepts an object with the [controls-gui](https://github.com/rreusser/controls-gui) configuration. Exposed ad `webgl.controls`.                                                                 |
+| `hideControls`        | false                        | Set this to `true` to hide the controls-gui panel.                                                                                                                                              |
+| `closeControls`       | false                        | Set this to `true` to initialize the controls-gui panel closed.                                                                                                                                 |
+| `world`               | undefined                    | Accepts an instance of the [cannon.js](https://github.com/schteppe/cannon.js) world (`new CANNON.World()`). Exposed as `webgl.world`.                                                           |
+| `showWorldWireframes` | false                        | Set this to `true` to show the wireframes of every body in the world. Uses [CannonDebugRenderer](http://schteppe.github.io/cannon.js/tools/threejs/example.html)                                |
 
-The `webgl` instance will contain all the Three.js elements such as `webgl.scene`, `webgl.renderer`, `webgl.camera` or `webgl.canvas`. It also exposes some useful properties and methods:
+The `webgl` instance will contain all the three.js elements such as `webgl.scene`, `webgl.renderer`, `webgl.camera` or `webgl.canvas`. It also exposes some useful properties and methods:
 
 ### webgl.isDragging
 
@@ -117,11 +125,11 @@ Subscribe to the update `requestAnimationFrame` without having to create a compo
 
 ## Component structure
 
-Rather than writing all of your Three.js app in one file instruction after instruction, you can split your app into "Three.js components". This makes it easier to manage the app as it grows. Here is a basic component:
+Rather than writing all of your three.js app in one file instruction after instruction, you can split your app into thhree.js components". This makes it easier to manage the app as it grows. Here is a basic component:
 
 https://github.com/marcofugaro/threejs-modern-app/blob/master/src/scene/Box.js
 
-A Three.js component is a class which extends [`THREE.Group`](https://threejs.org/docs/#api/en/objects/Group) (an alias for [`THREE.Object3D`](https://threejs.org/docs/#api/en/core/Object3D)) and subsequently inherits its properties and methods, such as `this.add(someMesh)` or `this.position` or `this.rotation`. [Here is a full list](https://threejs.org/docs/#api/en/core/Object3D).
+A three.js component is a class which extends [`THREE.Group`](https://threejs.org/docs/#api/en/objects/Group) (an alias for [`THREE.Object3D`](https://threejs.org/docs/#api/en/core/Object3D)) and subsequently inherits its properties and methods, such as `this.add(someMesh)` or `this.position` or `this.rotation`. [Here is a full list](https://threejs.org/docs/#api/en/core/Object3D).
 
 After having instantiated the class, you can add it directly to the scene.
 
