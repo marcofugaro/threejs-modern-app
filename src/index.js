@@ -19,7 +19,7 @@ const webgl = new WebGLApp({
   // enable transparency
   alpha: true,
   // set the scene background color
-  background: '#000',
+  background: '#111',
   backgroundAlpha: 1,
   // enable postprocessing
   // ⚠️ Warning! This disables antialiasing for the scene,
@@ -27,8 +27,8 @@ const webgl = new WebGLApp({
   postprocessing: true,
   // show the fps counter from stats.js
   showFps: window.DEBUG,
-  // enable orbit-controls with a z-distance of 5,
-  orbitControls: window.DEBUG && { distance: 5 },
+  // enable OrbitControls
+  orbitControls: window.DEBUG,
   // Add the controls-gui inputs
   controls: {
     angularVelocity: State.Slider(0.1, {
@@ -57,10 +57,6 @@ webgl.canvas.style.visibility = 'hidden'
 assets.load({ renderer: webgl.renderer }).then(() => {
   // show canvas
   webgl.canvas.style.visibility = ''
-
-  // move the camera behind,
-  // this will be considered only if orbitControls are disabled
-  webgl.camera.position.set(0, 0, 5)
 
   // add any "WebGL components" here...
   // append them to the scene so you can

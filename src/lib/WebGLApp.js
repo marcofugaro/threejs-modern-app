@@ -2,7 +2,7 @@
 // really awesome dude, give him a follow!
 // https://github.com/mattdesl/threejs-app/blob/master/src/webgl/WebGLApp.js
 import * as THREE from 'three'
-import createOrbitControls from 'orbit-controls'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import createTouches from 'touches'
 import dataURIToBlob from 'datauritoblob'
 import Stats from 'stats.js'
@@ -14,11 +14,12 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
 import CannonDebugRenderer from './CannonDebugRenderer'
 
 export default class WebGLApp {
-  #updateListeners = []
-  #tmpTarget = new THREE.Vector3()
-  #lastTime
   #width
   #height
+  isRunning = false
+  time = 0
+  #lastTime = performance.now()
+  #updateListeners = []
 
   constructor({
     background = '#111',
@@ -83,10 +84,6 @@ export default class WebGLApp {
 
     this.gl = this.renderer.getContext()
 
-    this.time = 0
-    this.isRunning = false
-    this.#lastTime = performance.now()
-
     // handle resize events
     window.addEventListener('resize', this.resize)
     window.addEventListener('orientationchange', this.resize)
@@ -118,18 +115,19 @@ export default class WebGLApp {
       this.composer.addPass(new RenderPass(this.scene, this.camera))
     }
 
-    // set up a simple orbit controller
+    // set up OrbitControls
     if (options.orbitControls) {
-      this.orbitControls = createOrbitControls({
-        element: this.canvas,
-        parent: window,
-        distance: 5,
-        ...(options.orbitControls instanceof Object ? options.orbitControls : {}),
-      })
+      this.orbitControls = new OrbitControls(this.camera, this.canvas)
 
-      // move the camera position accordingly to the orbitcontrols options
-      this.camera.position.fromArray(this.orbitControls.position)
-      this.camera.lookAt(new THREE.Vector3().fromArray(this.orbitControls.target))
+      this.orbitControls.enableDamping = true
+      this.orbitControls.dampingFactor = 0.15
+      this.orbitControls.enablePan = false
+
+      if (options.orbitControls instanceof Object) {
+        Object.keys(options.orbitControls).forEach((key) => {
+          this.orbitControls[key] = options.orbitControls[key]
+        })
+      }
     }
 
     // Attach the Cannon physics engine
@@ -254,12 +252,6 @@ export default class WebGLApp {
   update = (dt, time, xrframe) => {
     if (this.orbitControls) {
       this.orbitControls.update()
-
-      // reposition to orbit controls
-      this.camera.up.fromArray(this.orbitControls.up)
-      this.camera.position.fromArray(this.orbitControls.position)
-      this.#tmpTarget.fromArray(this.orbitControls.target)
-      this.camera.lookAt(this.#tmpTarget)
     }
 
     // recursively tell all child objects to update
