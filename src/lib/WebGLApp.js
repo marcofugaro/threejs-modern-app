@@ -236,7 +236,7 @@ export default class WebGLApp {
   }
 
   // convenience function to trigger a PNG download of the canvas
-  saveScreenshot = ({ width = 2560, height = 1440, fileName = 'image.png' } = {}) => {
+  saveScreenshot = ({ width = 2560, height = 1440, fileName = 'Screenshot.png' } = {}) => {
     // force a specific output size
     this.resize({ width, height, pixelRatio: 1 })
     this.draw()
