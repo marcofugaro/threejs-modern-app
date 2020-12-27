@@ -45,7 +45,7 @@
     "postprocessing": "^6.18.0",
     "pretty-ms": "^7.0.1",
     "stats.js": "^0.17.0",
-    "three": "0.124.0"
+    "three": "0.123.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

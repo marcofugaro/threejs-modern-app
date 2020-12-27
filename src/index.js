@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import State from 'controls-state'
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass'
+import { ShaderPass } from 'postprocessing'
 import WebGLApp from './lib/WebGLApp'
 import assets from './lib/AssetManager'
 import Suzanne, { addScreenshotButton } from './scene/Suzanne'
@@ -22,8 +22,6 @@ const webgl = new WebGLApp({
   background: '#111',
   backgroundAlpha: 1,
   // enable postprocessing
-  // ⚠️ Warning! This disables antialiasing for the scene,
-  // at least until WebGL2 comes along in Three.js
   postprocessing: true,
   // show the fps counter from stats.js
   showFps: window.DEBUG,
@@ -68,13 +66,16 @@ assets.load({ renderer: webgl.renderer }).then(() => {
   addNaturalLight(webgl)
 
   // postprocessing
-  const vignette = new ShaderPass({
-    vertexShader: passVert,
-    fragmentShader: vignetteFrag,
-    uniforms: {
-      tDiffuse: { type: 't', value: new THREE.Texture() },
-    },
-  })
+  const vignette = new ShaderPass(
+    new THREE.ShaderMaterial({
+      vertexShader: passVert,
+      fragmentShader: vignetteFrag,
+      uniforms: {
+        tDiffuse: { type: 't', value: null },
+      },
+    }),
+    'tDiffuse'
+  )
   webgl.composer.addPass(vignette)
 
   // add the save screenshot button
@@ -84,5 +85,4 @@ assets.load({ renderer: webgl.renderer }).then(() => {
 
   // start animation loop
   webgl.start()
-  webgl.draw()
 })

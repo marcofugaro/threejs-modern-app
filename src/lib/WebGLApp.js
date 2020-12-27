@@ -5,8 +5,7 @@ import Stats from 'stats.js'
 import State from 'controls-state'
 import wrapGUI from 'controls-gui'
 import { getGPUTier } from 'detect-gpu'
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
+import { EffectComposer, RenderPass } from 'postprocessing'
 import CannonDebugRenderer from './CannonDebugRenderer'
 
 export default class WebGLApp {
@@ -14,6 +13,7 @@ export default class WebGLApp {
   #height
   isRunning = false
   time = 0
+  dt = 0
   #lastTime = performance.now()
   #updateListeners = []
 
@@ -27,7 +27,7 @@ export default class WebGLApp {
     ...options
   } = {}) {
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
+      antialias: !options.postprocessing,
       alpha: false,
       // enabled for saving screenshots of the canvas,
       // may wish to disable this for perf reasons
@@ -127,7 +127,12 @@ export default class WebGLApp {
 
     // expose a composer for postprocessing passes
     if (options.postprocessing) {
-      this.composer = new EffectComposer(this.renderer)
+      const maxMultisampling = this.gl.getParameter(this.gl.MAX_SAMPLES)
+      this.composer = new EffectComposer(this.renderer, {
+        multisampling: Math.min(8, maxMultisampling),
+        frameBufferType: options.gamma ? THREE.HalfFloatType : undefined,
+        ...options,
+      })
       this.composer.addPass(new RenderPass(this.scene, this.camera))
     }
 
@@ -230,9 +235,10 @@ export default class WebGLApp {
     }
     this.camera.updateProjectionMatrix()
 
-    // resize also the composer
+    // resize also the composer, width and height
+    // are automatically extracted from the renderer
     if (this.composer) {
-      this.composer.setSize(pixelRatio * width, pixelRatio * height)
+      this.composer.setSize()
     }
 
     // recursively tell all child objects to resize
@@ -319,18 +325,7 @@ export default class WebGLApp {
 
   draw = () => {
     if (this.composer) {
-      // make sure to always render the last pass
-      this.composer.passes.forEach((pass, i, passes) => {
-        const isLastElement = i === passes.length - 1
-
-        if (isLastElement) {
-          pass.renderToScreen = true
-        } else {
-          pass.renderToScreen = false
-        }
-      })
-
-      this.composer.render()
+      this.composer.render(this.dt)
     } else {
       this.renderer.render(this.scene, this.camera)
     }
@@ -356,10 +351,10 @@ export default class WebGLApp {
 
     if (this.stats) this.stats.begin()
 
-    const dt = Math.min(this.maxDeltaTime, (now - this.#lastTime) / 1000)
-    this.time += dt
+    this.dt = Math.min(this.maxDeltaTime, (now - this.#lastTime) / 1000)
+    this.time += this.dt
     this.#lastTime = now
-    this.update(dt, this.time, xrframe)
+    this.update(this.dt, this.time, xrframe)
     this.draw()
 
     if (this.stats) this.stats.end()
