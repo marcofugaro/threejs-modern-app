@@ -77,7 +77,7 @@ export default class Suzanne extends THREE.Group {
     this.webgl.scene.background = assets.get(hdrKey)
   }
 
-  onPointerDown(event, [x, y]) {
+  onPointerDown(event, { x, y }) {
     // for example, check of we clicked on an
     // object with raycasting
     const coords = new THREE.Vector2().set(
@@ -90,9 +90,9 @@ export default class Suzanne extends THREE.Group {
     console.log(hits.length > 0 ? `Hit ${hits[0].object.name}!` : 'No hit')
   }
 
-  onPointerMove(event, [x, y]) {}
+  onPointerMove(event, { x, y }) {}
 
-  onPointerUp(event, [x, y]) {}
+  onPointerUp(event, { x, y }) {}
 
   update(dt, time) {
     this.rotation.y += dt * this.webgl.controls.angularVelocity

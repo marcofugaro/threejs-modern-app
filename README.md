@@ -92,7 +92,7 @@ Wether or not the user is currently dragging. It is `true` between the `onPointe
 Set this property to change the cursor style of the canvas. For example you can use it to display the pointer cursor on some objects:
 
 ```js
-onPointerMove(event, [x, y]) {
+onPointerMove(event, { x, y }) {
   // raycast and get the intersecting mesh
   const intersectingMesh = getIntersectingMesh([x, y], this, this.webgl)
 
@@ -176,32 +176,32 @@ Called each time the window has been resized.
 | `height`     | The window height.                                                                                         |
 | `pixelRatio` | The application pixelRatio, it's usually `window.devicePixelRatio` but clamped with `webgl.maxPixelRatio`. |
 
-### onPointerDown(event, [x, y]) {}
+### onPointerDown(event, { x, y }) {}
 
-Called on the `mousedown`/`touchstart` (aka the newer `pointerdown`) event on the canvas. It uses [touches.js](https://github.com/Jam3/touches) behind the scenes.
+Called on the `pointerdown` event on the canvas.
 
-| Parameter  | Description                                                                       |
-| ---------- | --------------------------------------------------------------------------------- |
-| `event`    | The native event.                                                                 |
-| `position` | An array containing the `x` and the `y` position from the top left of the window. |
+| Parameter  | Description                                                                        |
+| ---------- | ---------------------------------------------------------------------------------- |
+| `event`    | The native event.                                                                  |
+| `position` | An object containing the `x` and the `y` position from the top left of the canvas. |
 
-### onPointerMove(event, [x, y]) {}
+### onPointerMove(event, { x, y }) {}
 
-Called on the `mousemove`/`touchmove` (aka the newer `pointermove`) event on the canvas. It uses [touches.js](https://github.com/Jam3/touches) behind the scenes.
+Called on the `pointermove` event on the canvas.
 
-| Parameter  | Description                                                                       |
-| ---------- | --------------------------------------------------------------------------------- |
-| `event`    | The native event.                                                                 |
-| `position` | An array containing the `x` and the `y` position from the top left of the window. |
+| Parameter  | Description                                                                        |
+| ---------- | ---------------------------------------------------------------------------------- |
+| `event`    | The native event.                                                                  |
+| `position` | An object containing the `x` and the `y` position from the top left of the canvas. |
 
-### onPointerUp(event, [x, y]) {}
+### onPointerUp(event, { x, y }) {}
 
-Called on the `mouseup`/`touchend` (aka the newer `pointerup`) event on the canvas. It uses [touches.js](https://github.com/Jam3/touches) behind the scenes.
+Called on the `pointerup` event on the canvas.
 
-| Parameter  | Description                                                                       |
-| ---------- | --------------------------------------------------------------------------------- |
-| `event`    | The native event.                                                                 |
-| `position` | An array containing the `x` and the `y` position from the top left of the window. |
+| Parameter  | Description                                                                        |
+| ---------- | ---------------------------------------------------------------------------------- |
+| `event`    | The native event.                                                                  |
+| `position` | An object containing the `x` and the `y` position from the top left of the canvas. |
 
 ### Functional Components
 

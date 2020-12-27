@@ -1,9 +1,5 @@
-// Inspiration for this class goes to Matt DesLauriers @mattdesl,
-// really awesome dude, give him a follow!
-// https://github.com/mattdesl/threejs-app/blob/master/src/webgl/WebGLApp.js
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import createTouches from 'touches'
 import dataURIToBlob from 'datauritoblob'
 import Stats from 'stats.js'
 import State from 'controls-state'
@@ -93,20 +89,40 @@ export default class WebGLApp {
 
     // __________________________ADDONS__________________________
 
-    // really basic touch handler that propagates through the scene
-    this.touchHandler = createTouches(this.canvas, {
-      target: this.canvas,
-      filtered: true,
-    })
+    // really basic pointer events handler, the second argument
+    // contains the x and y relative to the top left corner
+    // of the canvas.
+    // In case of touches with multiple fingers, only the
+    // first touch is registered.
     this.isDragging = false
-    this.touchHandler.on('start', (ev, pos) => {
+    this.canvas.addEventListener('pointerdown', (event) => {
+      if (!event.isPrimary) return
       this.isDragging = true
-      this.traverse('onPointerDown', ev, pos)
+      // call onPointerDown method
+      this.scene.traverse((child) => {
+        if (typeof child.onPointerDown === 'function') {
+          child.onPointerDown(event, { x: event.offsetX, y: event.offsetY })
+        }
+      })
     })
-    this.touchHandler.on('move', (ev, pos) => this.traverse('onPointerMove', ev, pos))
-    this.touchHandler.on('end', (ev, pos) => {
+    this.canvas.addEventListener('pointermove', (event) => {
+      if (!event.isPrimary) return
+      // call onPointerMove method
+      this.scene.traverse((child) => {
+        if (typeof child.onPointerMove === 'function') {
+          child.onPointerMove(event, { x: event.offsetX, y: event.offsetY })
+        }
+      })
+    })
+    this.canvas.addEventListener('pointerup', (event) => {
+      if (!event.isPrimary) return
       this.isDragging = false
-      this.traverse('onPointerUp', ev, pos)
+      // call onPointerUp method
+      this.scene.traverse((child) => {
+        if (typeof child.onPointerUp === 'function') {
+          child.onPointerUp(event, { x: event.offsetX, y: event.offsetY })
+        }
+      })
     })
 
     // expose a composer for postprocessing passes
@@ -347,14 +363,6 @@ export default class WebGLApp {
     this.draw()
 
     if (this.stats) this.stats.end()
-  }
-
-  traverse = (fn, ...args) => {
-    this.scene.traverse((child) => {
-      if (typeof child[fn] === 'function') {
-        child[fn].apply(child, args)
-      }
-    })
   }
 
   get cursor() {
