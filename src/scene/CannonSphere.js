@@ -1,35 +1,32 @@
 import * as THREE from 'three'
-import CANNON from 'cannon'
+import * as CANNON from 'cannon-es'
 
 // remember to add the body to the CANNON world and
-// the mesh to the three js scene or some component
+// the mesh to the three.js scene or to some component
 //
-//   const sphere = new CannonSphere(webgl, { radius: 1 })
+//   const sphere = new CannonSphere(webgl, { mass: 1, radius: 1 })
 //   webgl.world.addBody(sphere)
 //   webgl.scene.add(sphere.mesh)
 
 export default class CannonSphere extends CANNON.Body {
   mesh = new THREE.Group()
 
-  constructor(webgl, options) {
+  constructor(webgl, options = {}) {
     super(options)
     this.webgl = webgl
     this.options = options
 
-    const { radius } = this.options
+    const { radius = 1 } = this.options
 
     this.addShape(new CANNON.Sphere(radius))
 
-    // show bounding sphere only while debugging,
-    // usually you show another object in the scene
-    if (window.DEBUG) {
-      this.mesh.add(
-        new THREE.Mesh(
-          new THREE.SphereGeometry(radius, 32, 32),
-          new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff })
-        )
+    // add corresponding geometry and material
+    this.mesh.add(
+      new THREE.Mesh(
+        new THREE.SphereGeometry(radius, 32, 32),
+        new THREE.MeshStandardMaterial({ color: Math.random() * 0xffffff })
       )
-    }
+    )
 
     // sync the position the first time
     this.update()

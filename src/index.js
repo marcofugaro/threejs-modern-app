@@ -46,7 +46,7 @@ const webgl = new WebGLApp({
     }),
   },
   hideControls: !window.DEBUG,
-  // enable Cannon.js
+  // enable cannon-es
   // world: new CANNON.World(),
 })
 

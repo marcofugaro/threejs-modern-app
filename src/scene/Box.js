@@ -3,7 +3,7 @@ import * as THREE from 'three'
 // basic three.js component example
 
 export default class Box extends THREE.Group {
-  constructor(webgl, options) {
+  constructor(webgl, options = {}) {
     super(options)
     // these can be used also in other methods
     this.webgl = webgl

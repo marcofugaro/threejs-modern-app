@@ -2024,10 +2024,15 @@ caniuse-lite@^1.0.30001125, caniuse-lite@^1.0.30001165:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001170.tgz#0088bfecc6a14694969e391cc29d7eb6362ca6a7"
   integrity sha512-Dd4d/+0tsK0UNLrZs3CvNukqalnVTRrxb5mcQm8rHL49t7V5ZaTygwXkrq+FB+dVDf++4ri8eJnFEJAB8332PA==
 
-cannon@^0.6.2:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/cannon/-/cannon-0.6.2.tgz#1e7bc72dd5841982f3c104c2bc578bfa4fb1c572"
-  integrity sha1-HnvHLdWEGYLzwQTCvFeL+k+xxXI=
+cannon-es-debugger@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/cannon-es-debugger/-/cannon-es-debugger-0.1.0.tgz#5dc1675eacf43983d31d417e2034fac3d5be50ad"
+  integrity sha512-tTZe0raMcXTlGQ5NxinzXWVzpd6o0fRItngKnEwHlaO5WjAXqMt/THfUJs/WdjQvD4aGHWoz/coeTqeU6lyp+w==
+
+cannon-es@^0.15.1:
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/cannon-es/-/cannon-es-0.15.1.tgz#c5185e7efc19ca8b3b494eccd257256425b1642f"
+  integrity sha512-NkrU8OkM5K4q7Ljj69nfwC5UmPuoiAga6v98Aus0QHTdgJFwBfPTDXRkc3qpGGOixdUisFzmJo0DpKWIi6N+4g==
 
 canvas-sketch-util@^1.10.0:
   version "1.10.0"

@@ -16,7 +16,7 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 
 ## Features
 
-- All the **three.js boilerplate code is tucked away** in a file, the exported `WebGLApp` is easily configurable from the outside, for example you can enable [postprocessing](https://github.com/vanruesc/postprocessing), orbit controls, [FPS stats](https://github.com/mrdoob/stats.js/), [Detect GPU](https://github.com/TimvanScherpenzeel/detect-gpu), a [controls-gui](https://github.com/rreusser/controls-gui) and use the save screenshot functionality. It also has built-in support for [Cannon.js](https://github.com/schteppe/cannon.js). [[Read more](#webglapp)]
+- All the **three.js boilerplate code is tucked away** in a file, the exported `WebGLApp` is easily configurable from the outside, for example you can enable [postprocessing](https://github.com/vanruesc/postprocessing), orbit controls, [FPS stats](https://github.com/mrdoob/stats.js/), [Detect GPU](https://github.com/TimvanScherpenzeel/detect-gpu), a [controls-gui](https://github.com/rreusser/controls-gui) and use the save screenshot functionality. It also has built-in support for [cannon-es](https://github.com/pmndrs/cannon-es). [[Read more](#webglapp)]
 - A **scalable three.js component structure** where each component is a class which extends `THREE.Group`, so you can add any object to it. The class also has update, resize, and touch hooks. [[Read more](#component-structure)]
 - An **asset manager** which handles the preloading of `.gltf` models, images, audios, videos and can be easily extended to support other files. It also automatically uploads a texture to the GPU, loads cube env maps or parses equirectangular projection images. [[Read more](#asset-manager)]
 - global `window.DEBUG` flag which is true when the url contains `?debug` as a query parameter. So you can enable **debug mode** both locally and in production. [[Read more](#debug-mode)]
@@ -78,8 +78,8 @@ You can pass the class the options you would pass to the [THREE.WebGLRenderer](h
 | `controls`            | undefined                    | Accepts an object with the [controls-gui](https://github.com/rreusser/controls-gui) configuration. Exposed ad `webgl.controls`.                                                                 |
 | `hideControls`        | false                        | Set this to `true` to hide the controls-gui panel.                                                                                                                                              |
 | `closeControls`       | false                        | Set this to `true` to initialize the controls-gui panel closed.                                                                                                                                 |
-| `world`               | undefined                    | Accepts an instance of the [cannon.js](https://github.com/schteppe/cannon.js) world (`new CANNON.World()`). Exposed as `webgl.world`.                                                           |
-| `showWorldWireframes` | false                        | Set this to `true` to show the wireframes of every body in the world. Uses [CannonDebugRenderer](http://schteppe.github.io/cannon.js/tools/threejs/example.html)                                |
+| `world`               | undefined                    | Accepts an instance of the [cannon-es](https://github.com/pmndrs/cannon-es) world (`new CANNON.World()`). Exposed as `webgl.world`.                                                             |
+| `showWorldWireframes` | false                        | Set this to `true` to show the wireframes of every body in the world. Uses [cannon-es-debugger](https://github.com/pmndrs/cannon-es-debugger).                                                  |
 
 The `webgl` instance will contain all the three.js elements such as `webgl.scene`, `webgl.renderer`, `webgl.camera` or `webgl.canvas`. It also exposes some useful properties and methods:
 
@@ -143,7 +143,7 @@ And in the component, you can use the options like this.
 
 ```js
 export default class Birds extends THREE.Group {
-  constructor(webgl, options) {
+  constructor(webgl, options = {}) {
     super(options)
     // these can be used also in other methods
     this.webgl = webgl

@@ -31,7 +31,8 @@
     ]
   },
   "dependencies": {
-    "cannon": "^0.6.2",
+    "cannon-es": "^0.15.1",
+    "cannon-es-debugger": "^0.1.0",
     "canvas-sketch-util": "^1.10.0",
     "controls-gui": "^2.0.0",
     "controls-state": "^2.0.0",

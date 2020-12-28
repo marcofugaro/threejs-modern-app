@@ -44,7 +44,7 @@ const hdrKey = assets.queue({
 })
 
 export default class Suzanne extends THREE.Group {
-  constructor(webgl, options) {
+  constructor(webgl, options = {}) {
     super(options)
     this.webgl = webgl
     this.options = options

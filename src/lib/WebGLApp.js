@@ -6,7 +6,7 @@ import State from 'controls-state'
 import wrapGUI from 'controls-gui'
 import { getGPUTier } from 'detect-gpu'
 import { EffectComposer, RenderPass } from 'postprocessing'
-import CannonDebugRenderer from './CannonDebugRenderer'
+import cannonDebugger from 'cannon-es-debugger'
 
 export default class WebGLApp {
   #width
@@ -155,7 +155,7 @@ export default class WebGLApp {
     if (options.world) {
       this.world = options.world
       if (options.showWorldWireframes) {
-        this.cannonDebugRenderer = new CannonDebugRenderer(this.scene, this.world)
+        this.cannonDebugger = cannonDebugger(this.scene, this.world.bodies, { autoUpdate: false })
       }
     }
 
@@ -286,12 +286,12 @@ export default class WebGLApp {
     })
 
     if (this.world) {
-      // update the Cannon physics engine
+      // update the cannon-es physics engine
       this.world.step(1 / 60, dt)
 
       // update the debug wireframe renderer
-      if (this.cannonDebugRenderer) {
-        this.cannonDebugRenderer.update()
+      if (this.cannonDebugger) {
+        this.cannonDebugger.update()
       }
 
       // recursively tell all child bodies to update
