@@ -7,6 +7,7 @@ import Suzanne, { addScreenshotButton } from './scene/Suzanne'
 import { addNaturalLight } from './scene/lights'
 import passVert from './scene/shaders/pass.vert'
 import vignetteFrag from './scene/shaders/vignette.frag'
+import { MotionBlurPass } from './lib/MotionBlurPass/MotionBlurPass'
 
 window.DEBUG = window.location.search.includes('debug')
 
@@ -23,6 +24,9 @@ const webgl = new WebGLApp({
   backgroundAlpha: 1,
   // enable postprocessing
   postprocessing: true,
+  // clamping the pixel ratio gives us better performance for
+  // heavy postprocessing effects, such as motion blur
+  maxPixelRatio: 1,
   // show the fps counter from stats.js
   showFps: window.DEBUG,
   // enable OrbitControls
@@ -32,7 +36,7 @@ const webgl = new WebGLApp({
     angularVelocity: State.Slider(0.1, {
       label: 'Angular Velocity',
       min: 0.01,
-      max: 50,
+      max: 30,
       step: 0.01,
       mapping: (x) => Math.pow(10, x),
       inverseMapping: Math.log10,
@@ -66,15 +70,27 @@ assets.load({ renderer: webgl.renderer }).then(() => {
   addNaturalLight(webgl)
 
   // postprocessing
+  // add an existing pass
+  const motionBlurPass = new MotionBlurPass(webgl.scene, webgl.camera, {
+    expandGeometry: 0.2,
+    smearIntensity: 0.5,
+  })
+  webgl.composer.addPass(motionBlurPass)
+
+  // add a custom pass with custom shaders.
+  // VignetteEffect exists in postprocessing,
+  // this is just to show a pass with custom shaders
   const vignette = new ShaderPass(
     new THREE.ShaderMaterial({
       vertexShader: passVert,
       fragmentShader: vignetteFrag,
       uniforms: {
         tDiffuse: { type: 't', value: null },
+        radius: { type: 't', value: 0.6 },
+        smoothness: { type: 't', value: 0.5 },
       },
     }),
-    'tDiffuse'
+    'tDiffuse' // the input texture name
   )
   webgl.composer.addPass(vignette)
 
