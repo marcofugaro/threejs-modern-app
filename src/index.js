@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import State from 'controls-state'
-import { ShaderPass } from 'postprocessing'
+import { ShaderPass, EffectPass, VignetteEffect } from 'postprocessing'
 import WebGLApp from './lib/WebGLApp'
 import assets from './lib/AssetManager'
 import Suzanne, { addScreenshotButton } from './scene/Suzanne'
@@ -22,6 +22,9 @@ const webgl = new WebGLApp({
   // set the scene background color
   background: '#111',
   backgroundAlpha: 1,
+  // enable gamma correction, read more about it here:
+  // https://www.donmccurdy.com/2020/06/17/color-management-in-threejs/
+  gamma: true,
   // enable postprocessing
   postprocessing: true,
   // clamping the pixel ratio gives us better performance for
@@ -72,27 +75,34 @@ assets.load({ renderer: webgl.renderer }).then(() => {
   // postprocessing
   // add an existing pass
   const motionBlurPass = new MotionBlurPass(webgl.scene, webgl.camera, {
-    expandGeometry: 0.2,
-    smearIntensity: 0.5,
+    expandGeometry: 0.1,
+    smearIntensity: 0.8,
+    samples: 50,
+    jitterStrategy: MotionBlurPass.REGULAR_JITTER,
+    jitter: 3,
   })
   webgl.composer.addPass(motionBlurPass)
 
   // add a custom pass with custom shaders.
   // VignetteEffect exists in postprocessing,
   // this is just to show a pass with custom shaders
-  const vignette = new ShaderPass(
-    new THREE.ShaderMaterial({
-      vertexShader: passVert,
-      fragmentShader: vignetteFrag,
-      uniforms: {
-        tDiffuse: { type: 't', value: null },
-        radius: { type: 't', value: 0.6 },
-        smoothness: { type: 't', value: 0.5 },
-      },
-    }),
-    'tDiffuse' // the input texture name
-  )
-  webgl.composer.addPass(vignette)
+  // TODO replace this with monkeypatch shader and distortion
+  // effects based on noise
+  // const vignette = new ShaderPass(
+  //   new THREE.ShaderMaterial({
+  //     vertexShader: passVert,
+  //     fragmentShader: vignetteFrag,
+  //     uniforms: {
+  //       tDiffuse: { type: 't', value: null },
+  //       radius: { type: 't', value: 0.6 },
+  //       smoothness: { type: 't', value: 0.5 },
+  //     },
+  //   }),
+  //   'tDiffuse' // the input texture name
+  // )
+  // webgl.composer.addPass(vignette)
+
+  webgl.composer.addPass(new EffectPass(webgl.camera, new VignetteEffect()))
 
   // add the save screenshot button
   if (window.DEBUG) {

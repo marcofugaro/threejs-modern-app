@@ -19,6 +19,7 @@ const suzanneKey = assets.queue({
 const albedoKey = assets.queue({
   url: 'assets/spotty-metal/albedo.jpg',
   type: 'texture',
+  // encoding: THREE.sRGBEncoding,
 })
 const metalnessKey = assets.queue({
   url: 'assets/spotty-metal/metalness.jpg',
@@ -39,6 +40,7 @@ const hdrKey = assets.queue({
   type: 'env-map',
   // equirectangular means it's just one image, projected
   equirectangular: true,
+  // encoding: THREE.sRGBEncoding,
 })
 
 export default class Suzanne extends THREE.Group {
@@ -50,15 +52,21 @@ export default class Suzanne extends THREE.Group {
     const suzanneGltf = assets.get(suzanneKey)
     const suzanne = suzanneGltf.scene.clone()
 
+    // TODO fix assets and gamma
+    const map = assets.get(albedoKey)
+    const envMap = assets.get(hdrKey)
+    map.encoding = THREE.sRGBEncoding
+    envMap.encoding = THREE.sRGBEncoding
+
     const material = new THREE.MeshStandardMaterial({
-      map: assets.get(albedoKey),
+      map,
       metalnessMap: assets.get(metalnessKey),
       roughnessMap: assets.get(roughnessKey),
       normalMap: assets.get(normalKey),
       normalScale: new THREE.Vector2(2, 2),
-      envMap: assets.get(hdrKey),
+      envMap,
       roughness: 0.5,
-      metalness: 0.8,
+      metalness: 1,
     })
 
     // apply the material to the model
@@ -74,7 +82,7 @@ export default class Suzanne extends THREE.Group {
     this.add(suzanne)
 
     // set the background as the hdr
-    this.webgl.scene.background = assets.get(hdrKey)
+    this.webgl.scene.background = envMap
   }
 
   onPointerDown(event, { x, y }) {
