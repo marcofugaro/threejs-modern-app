@@ -123,6 +123,33 @@ Subscribe to the update `requestAnimationFrame` without having to create a compo
 | `dt`      | The seconds elapsed from the latest frame, in a 60fps application it's `0.016s` (aka `16ms`) |
 | `time`    | The time in seconds elapsed from when the animation loop starts                              |
 
+### webgl.onPointerDown((event, { x, y }) => {})
+
+Subscribe a function to the `pointerdown` event on the canvas without having to create a component. If needed you can later unsubscribe the function with `webgl.offPointerDown(function)`.
+
+| Parameter  | Description                                                                        |
+| ---------- | ---------------------------------------------------------------------------------- |
+| `event`    | The native event.                                                                  |
+| `position` | An object containing the `x` and the `y` position from the top left of the canvas. |
+
+### webgl.onPointerMove((event, { x, y }) => {})
+
+Subscribe a function to the `pointermove` event on the canvas without having to create a component. If needed you can later unsubscribe the function with `webgl.offPointerMove(function)`.
+
+| Parameter  | Description                                                                                                                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `event`    | The native event.                                                                                                                                                                                 |
+| `position` | An object containing the `x` and the `y` position from the top left of the canvas. If the user is dragging, the object contains also the `dragX` and `dragY` distances from the drag start point. |
+
+### webgl.onPointerUp((event, { x, y }) => {})
+
+Subscribe a function to the `pointerup` event on the canvas without having to create a component. If needed you can later unsubscribe the function with `webgl.offPointerUp(function)`.
+
+| Parameter  | Description                                                                                                                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `event`    | The native event.                                                                                                                                                                                 |
+| `position` | An object containing the `x` and the `y` position from the top left of the canvas. If the user is dragging, the object contains also the `dragX` and `dragY` distances from the drag start point. |
+
 ## Component structure
 
 Rather than writing all of your three.js app in one file instruction after instruction, you can split your app into thhree.js components". This makes it easier to manage the app as it grows. Here is a basic component:

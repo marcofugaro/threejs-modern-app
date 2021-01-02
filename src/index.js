@@ -1,12 +1,9 @@
-import * as THREE from 'three'
 import State from 'controls-state'
-import { ShaderPass, EffectPass, VignetteEffect } from 'postprocessing'
+import { EffectPass, VignetteEffect } from 'postprocessing'
 import WebGLApp from './lib/WebGLApp'
 import assets from './lib/AssetManager'
 import Suzanne, { addScreenshotButton } from './scene/Suzanne'
 import { addNaturalLight } from './scene/lights'
-import passVert from './scene/shaders/pass.vert'
-import vignetteFrag from './scene/shaders/vignette.frag'
 import { MotionBlurPass } from './lib/MotionBlurPass/MotionBlurPass'
 
 window.DEBUG = window.location.search.includes('debug')
@@ -36,14 +33,22 @@ const webgl = new WebGLApp({
   orbitControls: window.DEBUG,
   // Add the controls-gui inputs
   controls: {
-    angularVelocity: State.Slider(0.1, {
-      label: 'Angular Velocity',
-      min: 0.01,
-      max: 30,
-      step: 0.01,
-      mapping: (x) => Math.pow(10, x),
-      inverseMapping: Math.log10,
-    }),
+    roughness: 0.5,
+    movement: {
+      speed: State.Slider(1.5, {
+        step: 0.01,
+        min: 0.01,
+        max: 100,
+        // exponential mapping
+        mapping: (x) => Math.pow(10, x),
+        inverseMapping: Math.log10,
+      }),
+      frequency: State.Slider(0.5, {
+        step: 0.01,
+        max: 5,
+      }),
+      amplitude: State.Slider(0.7, { step: 0.01, max: 2 }),
+    },
   },
   hideControls: !window.DEBUG,
   // enable cannon-es
@@ -73,7 +78,7 @@ assets.load({ renderer: webgl.renderer }).then(() => {
   addNaturalLight(webgl)
 
   // postprocessing
-  // add an existing pass
+  // add a custom pass
   const motionBlurPass = new MotionBlurPass(webgl.scene, webgl.camera, {
     expandGeometry: 0.1,
     smearIntensity: 0.8,
@@ -83,25 +88,7 @@ assets.load({ renderer: webgl.renderer }).then(() => {
   })
   webgl.composer.addPass(motionBlurPass)
 
-  // add a custom pass with custom shaders.
-  // VignetteEffect exists in postprocessing,
-  // this is just to show a pass with custom shaders
-  // TODO replace this with monkeypatch shader and distortion
-  // effects based on noise
-  // const vignette = new ShaderPass(
-  //   new THREE.ShaderMaterial({
-  //     vertexShader: passVert,
-  //     fragmentShader: vignetteFrag,
-  //     uniforms: {
-  //       tDiffuse: { type: 't', value: null },
-  //       radius: { type: 't', value: 0.6 },
-  //       smoothness: { type: 't', value: 0.5 },
-  //     },
-  //   }),
-  //   'tDiffuse' // the input texture name
-  // )
-  // webgl.composer.addPass(vignette)
-
+  // add an existing effect from postprocessing
   webgl.composer.addPass(new EffectPass(webgl.camera, new VignetteEffect()))
 
   // add the save screenshot button

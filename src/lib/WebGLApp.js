@@ -16,6 +16,11 @@ export default class WebGLApp {
   dt = 0
   #lastTime = performance.now()
   #updateListeners = []
+  #pointerdownListeners = []
+  #pointermoveListeners = []
+  #pointerupListeners = []
+  #startX
+  #startY
 
   constructor({
     background = '#111',
@@ -98,31 +103,54 @@ export default class WebGLApp {
     this.canvas.addEventListener('pointerdown', (event) => {
       if (!event.isPrimary) return
       this.isDragging = true
+      this.#startX = event.offsetX
+      this.#startY = event.offsetY
       // call onPointerDown method
       this.scene.traverse((child) => {
         if (typeof child.onPointerDown === 'function') {
           child.onPointerDown(event, { x: event.offsetX, y: event.offsetY })
         }
       })
+      // call the pointerdown listeners
+      this.#pointerdownListeners.forEach((fn) => fn(event, { x: event.offsetX, y: event.offsetY }))
     })
     this.canvas.addEventListener('pointermove', (event) => {
       if (!event.isPrimary) return
       // call onPointerMove method
+      const position = {
+        x: event.offsetX,
+        y: event.offsetY,
+        ...(this.#startX !== undefined && { dragX: event.offsetX - this.#startX }),
+        ...(this.#startY !== undefined && { dragY: event.offsetY - this.#startY }),
+      }
       this.scene.traverse((child) => {
         if (typeof child.onPointerMove === 'function') {
-          child.onPointerMove(event, { x: event.offsetX, y: event.offsetY })
+          child.onPointerMove(event, position)
         }
       })
+      // call the pointermove listeners
+      this.#pointermoveListeners.forEach((fn) => fn(event, position))
     })
     this.canvas.addEventListener('pointerup', (event) => {
       if (!event.isPrimary) return
       this.isDragging = false
       // call onPointerUp method
+      const position = {
+        x: event.offsetX,
+        y: event.offsetY,
+        ...(this.#startX !== undefined && { dragX: event.offsetX - this.#startX }),
+        ...(this.#startY !== undefined && { dragY: event.offsetY - this.#startY }),
+      }
       this.scene.traverse((child) => {
         if (typeof child.onPointerUp === 'function') {
-          child.onPointerUp(event, { x: event.offsetX, y: event.offsetY })
+          child.onPointerUp(event, position)
         }
       })
+      // call the pointerup listeners
+      this.#pointerupListeners.forEach((fn) => fn(event, position))
+
+      this.#startX = undefined
+      this.#startY = undefined
     })
 
     // expose a composer for postprocessing passes
@@ -312,6 +340,18 @@ export default class WebGLApp {
     this.#updateListeners.push(fn)
   }
 
+  onPointerDown(fn) {
+    this.#pointerdownListeners.push(fn)
+  }
+
+  onPointerMove(fn) {
+    this.#pointermoveListeners.push(fn)
+  }
+
+  onPointerUp(fn) {
+    this.#pointerupListeners.push(fn)
+  }
+
   offUpdate(fn) {
     const index = this.#updateListeners.indexOf(fn)
 
@@ -321,6 +361,39 @@ export default class WebGLApp {
     }
 
     this.#updateListeners.splice(index, 1)
+  }
+
+  offPointerDown(fn) {
+    const index = this.#pointerdownListeners.indexOf(fn)
+
+    // return silently if the function can't be found
+    if (index === -1) {
+      return
+    }
+
+    this.#pointerdownListeners.splice(index, 1)
+  }
+
+  offPointerMove(fn) {
+    const index = this.#pointermoveListeners.indexOf(fn)
+
+    // return silently if the function can't be found
+    if (index === -1) {
+      return
+    }
+
+    this.#pointermoveListeners.splice(index, 1)
+  }
+
+  offPointerUp(fn) {
+    const index = this.#pointerupListeners.indexOf(fn)
+
+    // return silently if the function can't be found
+    if (index === -1) {
+      return
+    }
+
+    this.#pointerupListeners.splice(index, 1)
   }
 
   draw = () => {

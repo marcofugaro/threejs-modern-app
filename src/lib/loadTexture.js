@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import loadImage from 'image-promise'
 
+// TODO maybe add the textureLoader?
 export default async function loadTexture(url, options) {
   const texture = new THREE.Texture()
   texture.name = url
@@ -31,7 +32,7 @@ function setTextureParams(url, texture, opt) {
   if (typeof opt.format !== 'undefined') {
     texture.format = opt.format
   } else {
-    // choose a nice default format
+    // JPEGs can't have an alpha channel, so memory can be saved by storing them as RGB.
     const isJPEG = url.search(/\.(jpg|jpeg)$/) > 0 || url.search(/^data:image\/jpeg/) === 0
     texture.format = isJPEG ? THREE.RGBFormat : THREE.RGBAFormat
   }

@@ -1,5 +1,8 @@
 import * as THREE from 'three'
+// TODO document better glslify
+import glsl from 'glslify'
 import assets from '../lib/AssetManager'
+import { monkeyPatch } from '../lib/monkeyPatch'
 
 // elaborated three.js component example
 // containing example usage of
@@ -65,8 +68,50 @@ export default class Suzanne extends THREE.Group {
       normalMap: assets.get(normalKey),
       normalScale: new THREE.Vector2(2, 2),
       envMap,
-      roughness: 0.5,
+      roughness: webgl.controls.roughness,
       metalness: 1,
+    })
+
+    material.onBeforeCompile = (shader) => {
+      this.uniforms = shader.uniforms
+      shader.uniforms.time = { value: 0 }
+      shader.uniforms.frequency = { value: webgl.controls.movement.frequency }
+      shader.uniforms.amplitude = { value: webgl.controls.movement.amplitude }
+
+      shader.vertexShader = monkeyPatch(shader.vertexShader, {
+        head: glsl`
+          uniform float time;
+          uniform float frequency;
+          uniform float amplitude;
+
+          // you could import glsl package like this
+          // #pragma glslify: noise = require(glsl-noise/simplex/3d)
+        `,
+        main: glsl`
+          float theta = sin(position.z * frequency + time) * amplitude;
+          float c = cos(theta);
+          float s = sin(theta);
+          mat3 deformMatrix = mat3(c, 0, s, 0, 1, 0, -s, 0, c);
+        `,
+        '#include <beginnormal_vertex>': glsl`
+          vec3 objectNormal = vec3(normal) * deformMatrix;
+        `,
+        '#include <begin_vertex>': glsl`
+          vec3 transformed = vec3(position) * deformMatrix;
+        `,
+      })
+    }
+
+    webgl.controls.$onChanges((controls) => {
+      if (controls.roughness) {
+        material.roughness = controls.roughness.value
+      }
+      if (controls['movement.frequency']) {
+        this.uniforms.frequency.value = controls['movement.frequency'].value
+      }
+      if (controls['movement.amplitude']) {
+        this.uniforms.amplitude.value = controls['movement.amplitude'].value
+      }
     })
 
     // apply the material to the model
@@ -96,6 +141,8 @@ export default class Suzanne extends THREE.Group {
     raycaster.setFromCamera(coords, this.webgl.camera)
     const hits = raycaster.intersectObject(this, true)
     console.log(hits.length > 0 ? `Hit ${hits[0].object.name}!` : 'No hit')
+    // this, of course, doesn't take into consideration the
+    // mesh deformation in the vertex shader
   }
 
   onPointerMove(event, { x, y }) {}
@@ -103,7 +150,7 @@ export default class Suzanne extends THREE.Group {
   onPointerUp(event, { x, y }) {}
 
   update(dt, time) {
-    this.rotation.y += dt * this.webgl.controls.angularVelocity
+    if (this.uniforms) this.uniforms.time.value += dt * this.webgl.controls.movement.speed
   }
 }
 
