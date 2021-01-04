@@ -105,9 +105,6 @@ module.exports = merge.smart(
       // Sssh...
       quiet: true,
       clientLogLevel: 'silent',
-      // enable HMR
-      // TODO do code to enable HMR from the client-side
-      // hot: true,
       after() {
         // try to open into the already existing tab
         openBrowser(urls.localUrlForBrowser)

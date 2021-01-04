@@ -5,6 +5,7 @@ import Suzanne, { addScreenshotButton } from './scene/Suzanne'
 import { addNaturalLight } from './scene/lights'
 import { MotionBlurPass } from './lib/MotionBlurPass/MotionBlurPass'
 
+// true if the url has the `?debug` parameter, otherwise false
 window.DEBUG = window.location.search.includes('debug')
 
 // grab our canvas

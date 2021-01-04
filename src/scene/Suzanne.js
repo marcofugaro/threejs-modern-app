@@ -1,5 +1,4 @@
 import * as THREE from 'three'
-// TODO document better glslify
 import glsl from 'glslify'
 import assets from '../lib/AssetManager'
 import { monkeyPatch } from '../lib/monkeyPatch'
@@ -90,7 +89,7 @@ export default class Suzanne extends THREE.Group {
           uniform float frequency;
           uniform float amplitude;
 
-          // you could import glsl package like this
+          // you could import glsl packages like this
           // #pragma glslify: noise = require(glsl-noise/simplex/3d)
         `,
         main: glsl`

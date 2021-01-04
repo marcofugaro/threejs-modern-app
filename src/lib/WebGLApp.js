@@ -40,10 +40,6 @@ export default class WebGLApp {
   } = {}) {
     this.renderer = new THREE.WebGLRenderer({
       antialias: !options.postprocessing,
-      alpha: false,
-      // enabled for saving screenshots of the canvas,
-      // may wish to disable this for perf reasons
-      preserveDrawingBuffer: true,
       failIfMajorPerformanceCaveat: true,
       ...options,
     })

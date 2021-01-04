@@ -52,7 +52,7 @@ The WebGLApp class contains all the code needed for three.js to run a scene, it 
 
 You can see an example configuration here:
 
-https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd813d04681c84815/src/index.js#L15-L48
+https://github.com/marcofugaro/threejs-modern-app/blob/4a1ebcae5143f47be5be1f5983666ba28e0eec1c/src/index.js#L13-L49
 
 You can pass the class the options you would pass to the [THREE.WebGLRenderer](https://threejs.org/docs/#api/en/renderers/WebGLRenderer), and also some more options:
 
@@ -144,10 +144,10 @@ Subscribe a function to the `pointermove` event on the canvas without having to 
 
 Subscribe a function to the `pointerup` event on the canvas without having to create a component. If needed you can later unsubscribe the function with `webgl.offPointerUp(function)`.
 
-| Parameter  | Description                                                                                                                                                                                       |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `event`    | The native event.                                                                                                                                                                                 |
-| `position` | An object containing the `x` and the `y` position from the top left of the canvas. If the user is dragging, the object contains also the `dragX` and `dragY` distances from the drag start point. |
+| Parameter  | Description                                                                                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `event`    | The native event.                                                                                                                                                        |
+| `position` | An object containing the `x` and the `y` position from the top left of the canvas. The object contains also the `dragX` and `dragY` distances from the drag start point. |
 
 ## Component structure
 
@@ -215,19 +215,19 @@ Called on the `pointerdown` event on the canvas.
 
 Called on the `pointermove` event on the canvas.
 
-| Parameter  | Description                                                                        |
-| ---------- | ---------------------------------------------------------------------------------- |
-| `event`    | The native event.                                                                  |
-| `position` | An object containing the `x` and the `y` position from the top left of the canvas. |
+| Parameter  | Description                                                                                                                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `event`    | The native event.                                                                                                                                                                                 |
+| `position` | An object containing the `x` and the `y` position from the top left of the canvas. If the user is dragging, the object contains also the `dragX` and `dragY` distances from the drag start point. |
 
 ### onPointerUp(event, { x, y }) {}
 
 Called on the `pointerup` event on the canvas.
 
-| Parameter  | Description                                                                        |
-| ---------- | ---------------------------------------------------------------------------------- |
-| `event`    | The native event.                                                                  |
-| `position` | An object containing the `x` and the `y` position from the top left of the canvas. |
+| Parameter  | Description                                                                                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `event`    | The native event.                                                                                                                                                        |
+| `position` | An object containing the `x` and the `y` position from the top left of the canvas. The object contains also the `dragX` and `dragY` distances from the drag start point. |
 
 ### Functional Components
 
@@ -357,15 +357,65 @@ You could also add more global constants by just using more query-string paramet
 
 ## glslify
 
-You can import shaders from `node_modules` with glslify, here is an example that uses [glsl-vignette](https://github.com/TyLindberg/glsl-vignette):
+[glslify](https://github.com/glslify/glslify) lets you import shader code directly from `node_modules`.
 
-https://github.com/marcofugaro/threejs-modern-app/blob/master/src/scene/shaders/vignette.frag
+For example, if you run through glslify a string you're using in three's [onBeforeCompile](https://threejs.org/docs/#api/en/materials/Material.onBeforeCompile), you can import [glsl-noise](https://github.com/hughsk/glsl-noise) like this:
 
-For a list of shaders you can import check out [stack.gl packages list](http://stack.gl/packages/), more info on [glslify's readme](https://github.com/glslify/glslify).
+```js
+import glsl from 'glslify'
+
+// ...
+
+shader.vertexShader = glsl`
+  uniform float time;
+  uniform float speed;
+  uniform float frequency;
+  uniform float amplitude;
+
+  #pragma glslify: noise = require('glsl-noise/simplex/3d')
+
+  // the function which defines the displacement
+  float displace(vec3 point) {
+    return noise(vec3(point.xy * frequency, time * speed)) * amplitude;
+  }
+
+  // ...
+`
+```
+
+💡 **BONUS TIP**: you can have glsl syntax highlighting for inline glsl strings in VSCode with the extension [glsl-literal](https://marketplace.visualstudio.com/items?itemName=boyswan.glsl-literal).
+
+glslify is applied also to files with the `.frag`, `.vert` or `.glsl` extensions. They are imported as plain strings:
+
+```c
+// pass.vert
+varying vec2 vUv;
+
+void main() {
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+```
+
+```js
+// index.js
+import passVertexShader from '../shaders/pass.vert'
+
+// ...
+
+const material = new THREE.ShaderMaterial({
+  // it's a string
+  vertexShader: passVert,
+
+  // ...
+})
+```
+
+For a list of shaders you can import via glslify check out [stack.gl packages list](http://stack.gl/packages/).
 
 ## GPU Info
 
-Sometimes it might be useful to enable expensive application configurationw only on higher-end devices.
+Sometimes it might be useful to enable expensive application configuration only on higher-end devices.
 
 This can be done by detecting the user's GPU and checking in which tier it belongs to based on its benchmark score.
 
