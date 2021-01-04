@@ -79,9 +79,7 @@ export function initControls(object, options = {}) {
   return controlsInstance
 }
 
-export function wireValue(object, fn) {
-  let fnString = fn.toString()
-
+function extractAccessor(fnString) {
   if (fnString.slice(-1) === '}') {
     fnString = fnString.slice(0, -1)
   }
@@ -89,7 +87,12 @@ export function wireValue(object, fn) {
   const accessorStart = fnString.indexOf('.controls.') + '.controls.'.length
   fnString = fnString.slice(accessorStart)
 
-  const accessor = fnString.trim()
+  return fnString.trim()
+}
+
+export function wireValue(object, fn) {
+  const fnString = fn.toString()
+  const accessor = extractAccessor(fnString)
 
   controls.$onChanges((cons) => {
     if (cons[accessor]) {
@@ -101,22 +104,14 @@ export function wireValue(object, fn) {
 }
 
 export function wireUniform(object, fn) {
-  let fnString = fn.toString()
+  const fnString = fn.toString()
+  const accessor = extractAccessor(fnString)
 
-  if (fnString.slice(-1) === '}') {
-    fnString = fnString.slice(0, -1)
-  }
-
-  const accessorStart = fnString.indexOf('.controls.') + '.controls.'.length
-  fnString = fnString.slice(accessorStart)
-
-  const accessor = fnString.trim()
-
-  const accessorUniform = accessor.slice(accessor.indexOf('.') + 1)
+  const key = accessor.includes('.') ? accessor.slice(accessor.lastIndexOf('.') + 1) : accessor
 
   controls.$onChanges((cons) => {
     if (cons[accessor]) {
-      object.uniforms[accessorUniform].value = cons[accessor].value
+      object.uniforms[key].value = cons[accessor].value
     }
   })
 
