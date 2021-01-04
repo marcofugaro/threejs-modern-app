@@ -2,11 +2,10 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import dataURIToBlob from 'datauritoblob'
 import Stats from 'stats.js'
-import State from 'controls-state'
-import wrapGUI from 'controls-gui'
 import { getGPUTier } from 'detect-gpu'
 import { EffectComposer, RenderPass } from 'postprocessing'
 import cannonDebugger from 'cannon-es-debugger'
+import { initControls } from './Controls'
 
 export default class WebGLApp {
   #width
@@ -21,6 +20,14 @@ export default class WebGLApp {
   #pointerupListeners = []
   #startX
   #startY
+
+  get background() {
+    return this.render.getClearColor(new THREE.Color())
+  }
+
+  get backgroundAlpha() {
+    return this.render.getClearAlpha()
+  }
 
   constructor({
     background = '#111',
@@ -60,7 +67,7 @@ export default class WebGLApp {
 
     // clamp pixel ratio for performance
     this.maxPixelRatio = options.maxPixelRatio || 2
-    // clamp delta to stepping anything too far forward
+    // clamp delta to avoid stepping anything too far forward
     this.maxDeltaTime = options.maxDeltaTime || 1 / 30
 
     // setup the camera
@@ -196,29 +203,7 @@ export default class WebGLApp {
 
     // initialize the controls-state
     if (options.controls) {
-      const controlsState = State(options.controls)
-      this.controls = options.hideControls
-        ? controlsState
-        : wrapGUI(controlsState, { expanded: !options.closeControls })
-
-      // add the custom controls-gui styles
-      if (!options.hideControls) {
-        const styles = `
-          [class^="controlPanel-"] [class*="__field"]::before {
-            content: initial !important;
-          }
-          [class^="controlPanel-"] [class*="__labelText"] {
-            text-indent: 6px !important;
-          }
-          [class^="controlPanel-"] [class*="__field--button"] > button::before {
-            content: initial !important;
-          }
-        `
-        const style = document.createElement('style')
-        style.type = 'text/css'
-        style.innerHTML = styles
-        document.head.appendChild(style)
-      }
+      this.controls = initControls(options.controls, options)
     }
 
     // detect the gpu info

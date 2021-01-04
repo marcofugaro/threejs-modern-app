@@ -1,4 +1,7 @@
-export function monkeyPatch(shader, { defines = '', head = '', main = '', ...replaces }) {
+export function monkeyPatch(
+  shader,
+  { defines = '', head = '', main = '', objectNormal, transformed, ...replaces }
+) {
   let patchedShader = shader
 
   const replaceAll = (str, find, rep) => str.split(find).join(rep)
@@ -14,6 +17,24 @@ export function monkeyPatch(shader, { defines = '', head = '', main = '', ...rep
       ${main}
     `
   )
+
+  if (transformed && patchedShader.includes('#include <begin_vertex>')) {
+    patchedShader = patchedShader.replace(
+      '#include <begin_vertex>',
+      `#include <begin_vertex>
+      ${transformed}
+      `
+    )
+  }
+
+  if (objectNormal && patchedShader.includes('#include <beginnormal_vertex>')) {
+    patchedShader = patchedShader.replace(
+      '#include <beginnormal_vertex>',
+      `#include <beginnormal_vertex>
+      ${objectNormal}
+      `
+    )
+  }
 
   const stringDefines = Object.keys(defines)
     .map((d) => `#define ${d} ${defines[d]}`)

@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import glsl from 'glslify'
 import assets from '../lib/AssetManager'
 import { monkeyPatch } from '../lib/monkeyPatch'
+import { wireValue, wireUniform } from '../lib/Controls'
 
 // elaborated three.js component example
 // containing example usage of
@@ -71,12 +72,17 @@ export default class Suzanne extends THREE.Group {
       roughness: webgl.controls.roughness,
       metalness: 1,
     })
+    this.material = material
+
+    wireValue(material, () => webgl.controls.roughness)
 
     material.onBeforeCompile = (shader) => {
-      this.uniforms = shader.uniforms
+      // expose the uniforms
+      material.uniforms = shader.uniforms
+
       shader.uniforms.time = { value: 0 }
-      shader.uniforms.frequency = { value: webgl.controls.movement.frequency }
-      shader.uniforms.amplitude = { value: webgl.controls.movement.amplitude }
+      shader.uniforms.frequency = wireUniform(shader, () => webgl.controls.movement.frequency)
+      shader.uniforms.amplitude = wireUniform(shader, () => webgl.controls.movement.amplitude)
 
       shader.vertexShader = monkeyPatch(shader.vertexShader, {
         head: glsl`
@@ -93,26 +99,16 @@ export default class Suzanne extends THREE.Group {
           float s = sin(theta);
           mat3 deformMatrix = mat3(c, 0, s, 0, 1, 0, -s, 0, c);
         `,
-        '#include <beginnormal_vertex>': glsl`
-          vec3 objectNormal = vec3(normal) * deformMatrix;
+        // hook that lets you modify the normal
+        objectNormal: glsl`
+          objectNormal *= deformMatrix;
         `,
-        '#include <begin_vertex>': glsl`
-          vec3 transformed = vec3(position) * deformMatrix;
+        // hook that lets you modify the position
+        transformed: glsl`
+          transformed *= deformMatrix;
         `,
       })
     }
-
-    webgl.controls.$onChanges((controls) => {
-      if (controls.roughness) {
-        material.roughness = controls.roughness.value
-      }
-      if (controls['movement.frequency']) {
-        this.uniforms.frequency.value = controls['movement.frequency'].value
-      }
-      if (controls['movement.amplitude']) {
-        this.uniforms.amplitude.value = controls['movement.amplitude'].value
-      }
-    })
 
     // apply the material to the model
     suzanne.traverse((child) => {
@@ -150,7 +146,9 @@ export default class Suzanne extends THREE.Group {
   onPointerUp(event, { x, y }) {}
 
   update(dt, time) {
-    if (this.uniforms) this.uniforms.time.value += dt * this.webgl.controls.movement.speed
+    if (this.material.uniforms) {
+      this.material.uniforms.time.value += dt * this.webgl.controls.movement.speed
+    }
   }
 }
 

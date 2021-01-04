@@ -1,4 +1,3 @@
-import State from 'controls-state'
 import { EffectPass, VignetteEffect } from 'postprocessing'
 import WebGLApp from './lib/WebGLApp'
 import assets from './lib/AssetManager'
@@ -31,23 +30,17 @@ const webgl = new WebGLApp({
   showFps: window.DEBUG,
   // enable OrbitControls
   orbitControls: window.DEBUG,
-  // Add the controls-gui inputs
+  // Add the controls pane inputs
   controls: {
     roughness: 0.5,
     movement: {
-      speed: State.Slider(1.5, {
-        step: 0.01,
-        min: 0.01,
+      speed: {
+        value: 1.5,
         max: 100,
-        // exponential mapping
-        mapping: (x) => Math.pow(10, x),
-        inverseMapping: Math.log10,
-      }),
-      frequency: State.Slider(0.5, {
-        step: 0.01,
-        max: 5,
-      }),
-      amplitude: State.Slider(0.7, { step: 0.01, max: 2 }),
+        scale: 'exp',
+      },
+      frequency: { value: 0.5, max: 5 },
+      amplitude: { value: 0.7, max: 2 },
     },
   },
   hideControls: !window.DEBUG,
