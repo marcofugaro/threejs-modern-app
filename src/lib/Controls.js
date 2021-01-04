@@ -80,14 +80,16 @@ export function initControls(object, options = {}) {
 }
 
 export function wireValue(object, fn) {
-  const fnString = fn.toString()
+  let fnString = fn.toString()
 
-  const start1 = '() => this.webgl.controls.'
-  const start2 = '() => webgl.controls.'
+  if (fnString.slice(-1) === '}') {
+    fnString = fnString.slice(0, -1)
+  }
 
-  const accessor = fnString.includes(start1)
-    ? fnString.slice(start1.length)
-    : fnString.slice(start2.length)
+  const accessorStart = fnString.indexOf('.controls.') + '.controls.'.length
+  fnString = fnString.slice(accessorStart)
+
+  const accessor = fnString.trim()
 
   controls.$onChanges((cons) => {
     if (cons[accessor]) {
@@ -99,14 +101,16 @@ export function wireValue(object, fn) {
 }
 
 export function wireUniform(object, fn) {
-  const fnString = fn.toString()
+  let fnString = fn.toString()
 
-  const start1 = '() => this.webgl.controls.'
-  const start2 = '() => webgl.controls.'
+  if (fnString.slice(-1) === '}') {
+    fnString = fnString.slice(0, -1)
+  }
 
-  const accessor = fnString.includes(start1)
-    ? fnString.slice(start1.length)
-    : fnString.slice(start2.length)
+  const accessorStart = fnString.indexOf('.controls.') + '.controls.'.length
+  fnString = fnString.slice(accessorStart)
+
+  const accessor = fnString.trim()
 
   const accessorUniform = accessor.slice(accessor.indexOf('.') + 1)
 
