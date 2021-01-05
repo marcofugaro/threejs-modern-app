@@ -3,7 +3,6 @@ import WebGLApp from './lib/WebGLApp'
 import assets from './lib/AssetManager'
 import Suzanne from './scene/Suzanne'
 import { addNaturalLight } from './scene/lights'
-import { MotionBlurPass } from './lib/MotionBlurPass/MotionBlurPass'
 import { addScreenshotButton, addRecordButton } from './scene/screenshot-record-buttons'
 
 // true if the url has the `?debug` parameter, otherwise false
@@ -25,9 +24,6 @@ const webgl = new WebGLApp({
   gamma: true,
   // enable postprocessing
   postprocessing: true,
-  // clamping the pixel ratio gives us better performance for
-  // heavy postprocessing effects, such as motion blur
-  maxPixelRatio: 1,
   // show the fps counter from stats.js
   showFps: window.DEBUG,
   // enable OrbitControls
@@ -73,17 +69,7 @@ assets.load({ renderer: webgl.renderer }).then(() => {
   addNaturalLight(webgl)
 
   // postprocessing
-  // add a custom pass
-  // const motionBlurPass = new MotionBlurPass(webgl.scene, webgl.camera, {
-  //   expandGeometry: 0.1,
-  //   smearIntensity: 0.8,
-  //   samples: 50,
-  //   jitterStrategy: MotionBlurPass.REGULAR_JITTER,
-  //   jitter: 3,
-  // })
-  // webgl.composer.addPass(motionBlurPass)
-
-  // add an existing effect from postprocessing
+  // add an existing effect from the postprocessing library
   webgl.composer.addPass(new EffectPass(webgl.camera, new VignetteEffect()))
 
   // add the save screenshot and save gif buttons
