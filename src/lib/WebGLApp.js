@@ -5,11 +5,13 @@ import Stats from 'stats.js'
 import { getGPUTier } from 'detect-gpu'
 import { EffectComposer, RenderPass } from 'postprocessing'
 import cannonDebugger from 'cannon-es-debugger'
+import CCapture from 'ccapture.js'
 import { initControls } from './Controls'
 
 export default class WebGLApp {
   #width
   #height
+  #capturer
   isRunning = false
   time = 0
   dt = 0
@@ -29,6 +31,10 @@ export default class WebGLApp {
     return this.render.getClearAlpha()
   }
 
+  get isRecording() {
+    return Boolean(this.#capturer)
+  }
+
   constructor({
     background = '#111',
     backgroundAlpha = 1,
@@ -41,6 +47,9 @@ export default class WebGLApp {
     this.renderer = new THREE.WebGLRenderer({
       antialias: !options.postprocessing,
       failIfMajorPerformanceCaveat: true,
+      // enabled for recording gifs or videos,
+      // might disable it for performance reasons
+      preserveDrawingBuffer: true,
       ...options,
     })
     if (options.sortObjects !== undefined) {
@@ -267,7 +276,7 @@ export default class WebGLApp {
   }
 
   // convenience function to trigger a PNG download of the canvas
-  saveScreenshot = ({ width = 2560, height = 1440, fileName = 'Screenshot.png' } = {}) => {
+  saveScreenshot = ({ width = 1920, height = 1080, fileName = 'Screenshot.png' } = {}) => {
     // force a specific output size
     this.resize({ width, height, pixelRatio: 1 })
     this.draw()
@@ -280,6 +289,46 @@ export default class WebGLApp {
 
     // save
     saveDataURI(fileName, dataURI)
+  }
+
+  // start recording of a gif or a video
+  startRecording = ({
+    width = 1920,
+    height = 1080,
+    fileName = 'Recording',
+    format = 'gif',
+    ...options
+  } = {}) => {
+    if (this.#capturer) {
+      return
+    }
+
+    // force a specific output size
+    this.resize({ width, height, pixelRatio: 1 })
+    this.draw()
+
+    this.#capturer = new CCapture({
+      format,
+      name: fileName,
+      workersPath: '',
+      motionBlurFrames: 2,
+      ...options,
+    })
+    this.#capturer.start()
+  }
+
+  stopRecording = () => {
+    if (!this.#capturer) {
+      return
+    }
+
+    this.#capturer.stop()
+    this.#capturer.save()
+    this.#capturer = undefined
+
+    // reset to default size
+    this.resize()
+    this.draw()
   }
 
   update = (dt, time, xrframe) => {
@@ -410,6 +459,8 @@ export default class WebGLApp {
     this.#lastTime = now
     this.update(this.dt, this.time, xrframe)
     this.draw()
+
+    if (this.#capturer) this.#capturer.capture(this.canvas)
 
     if (this.stats) this.stats.end()
   }

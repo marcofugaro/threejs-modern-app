@@ -1,9 +1,10 @@
 import { EffectPass, VignetteEffect } from 'postprocessing'
 import WebGLApp from './lib/WebGLApp'
 import assets from './lib/AssetManager'
-import Suzanne, { addScreenshotButton } from './scene/Suzanne'
+import Suzanne from './scene/Suzanne'
 import { addNaturalLight } from './scene/lights'
 import { MotionBlurPass } from './lib/MotionBlurPass/MotionBlurPass'
+import { addScreenshotButton, addRecordButton } from './scene/screenshot-record-buttons'
 
 // true if the url has the `?debug` parameter, otherwise false
 window.DEBUG = window.location.search.includes('debug')
@@ -73,21 +74,22 @@ assets.load({ renderer: webgl.renderer }).then(() => {
 
   // postprocessing
   // add a custom pass
-  const motionBlurPass = new MotionBlurPass(webgl.scene, webgl.camera, {
-    expandGeometry: 0.1,
-    smearIntensity: 0.8,
-    samples: 50,
-    jitterStrategy: MotionBlurPass.REGULAR_JITTER,
-    jitter: 3,
-  })
-  webgl.composer.addPass(motionBlurPass)
+  // const motionBlurPass = new MotionBlurPass(webgl.scene, webgl.camera, {
+  //   expandGeometry: 0.1,
+  //   smearIntensity: 0.8,
+  //   samples: 50,
+  //   jitterStrategy: MotionBlurPass.REGULAR_JITTER,
+  //   jitter: 3,
+  // })
+  // webgl.composer.addPass(motionBlurPass)
 
   // add an existing effect from postprocessing
   webgl.composer.addPass(new EffectPass(webgl.camera, new VignetteEffect()))
 
-  // add the save screenshot button
+  // add the save screenshot and save gif buttons
   if (window.DEBUG) {
     addScreenshotButton(webgl)
+    addRecordButton(webgl)
   }
 
   // start animation loop

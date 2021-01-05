@@ -72,6 +72,10 @@ module.exports = merge.smart(
     // TODO re-enable this when it will be more beautiful
     // https://github.com/webpack/webpack-cli/issues/575
     stats: false,
+    // TODO temporary needed for ccapture.js
+    node: {
+      fs: 'empty',
+    },
   },
   //
   //  $$$$$$\    $$$$$$$$\     $$$$$$\     $$$$$$$\    $$$$$$$$\

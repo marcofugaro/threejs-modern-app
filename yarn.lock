@@ -2086,6 +2086,10 @@ canvas-sketch-util@^1.10.0:
     simplex-noise "^2.4.0"
     svg-path-contours "^2.0.0"
 
+ccapture.js@Unsigno/ccapture.js:
+  version "1.0.9"
+  resolved "https://codeload.github.com/Unsigno/ccapture.js/tar.gz/27da814ef7d34a7099a5a1a06ab147e3f8dc664e"
+
 chalk@2.4.2, chalk@^2.0.0, chalk@^2.1.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
