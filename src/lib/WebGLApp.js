@@ -24,11 +24,11 @@ export default class WebGLApp {
   #startY
 
   get background() {
-    return this.render.getClearColor(new THREE.Color())
+    return this.renderer.getClearColor(new THREE.Color())
   }
 
   get backgroundAlpha() {
-    return this.render.getClearAlpha()
+    return this.renderer.getClearAlpha()
   }
 
   get isRecording() {
@@ -46,6 +46,7 @@ export default class WebGLApp {
   } = {}) {
     this.renderer = new THREE.WebGLRenderer({
       antialias: !options.postprocessing,
+      alpha: backgroundAlpha !== 1,
       failIfMajorPerformanceCaveat: true,
       // enabled for recording gifs or videos,
       // might disable it for performance reasons

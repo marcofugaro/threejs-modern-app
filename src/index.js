@@ -14,8 +14,6 @@ const canvas = document.querySelector('#app')
 // setup the WebGLRenderer
 const webgl = new WebGLApp({
   canvas,
-  // enable transparency
-  alpha: true,
   // set the scene background color
   background: '#111',
   backgroundAlpha: 1,
