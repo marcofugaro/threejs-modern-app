@@ -54,9 +54,6 @@ webgl.canvas.style.visibility = 'hidden'
 
 // load any queued assets
 assets.load({ renderer: webgl.renderer }).then(() => {
-  // show canvas
-  webgl.canvas.style.visibility = ''
-
   // add any "WebGL components" here...
   // append them to the scene so you can
   // use them from other components easily
@@ -75,6 +72,9 @@ assets.load({ renderer: webgl.renderer }).then(() => {
     addScreenshotButton(webgl)
     addRecordButton(webgl)
   }
+
+  // show canvas
+  webgl.canvas.style.visibility = ''
 
   // start animation loop
   webgl.start()

@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import glsl from 'glslify'
 import assets from '../lib/AssetManager'
-import { monkeyPatch } from '../lib/monkeyPatch'
 import { wireValue, wireUniform } from '../lib/Controls'
+import { addUniforms, customizeVertexShader } from '../lib/customizeShader'
 
 // elaborated three.js component example
 // containing example usage of
@@ -75,39 +75,37 @@ export default class Suzanne extends THREE.Group {
 
     wireValue(material, () => webgl.controls.roughness)
 
-    material.onBeforeCompile = (shader) => {
-      // expose the uniforms
-      material.uniforms = shader.uniforms
+    // add new unifroms and expose current uniforms
+    addUniforms(material, {
+      time: { value: 0 },
+      frequency: wireUniform(material, () => webgl.controls.movement.frequency),
+      amplitude: wireUniform(material, () => webgl.controls.movement.amplitude),
+    })
 
-      shader.uniforms.time = { value: 0 }
-      shader.uniforms.frequency = wireUniform(shader, () => webgl.controls.movement.frequency)
-      shader.uniforms.amplitude = wireUniform(shader, () => webgl.controls.movement.amplitude)
+    customizeVertexShader(material, {
+      head: glsl`
+        uniform float time;
+        uniform float frequency;
+        uniform float amplitude;
 
-      shader.vertexShader = monkeyPatch(shader.vertexShader, {
-        head: glsl`
-          uniform float time;
-          uniform float frequency;
-          uniform float amplitude;
-
-          // you could import glsl packages like this
-          // #pragma glslify: noise = require(glsl-noise/simplex/3d)
-        `,
-        main: glsl`
-          float theta = sin(position.z * frequency + time) * amplitude;
-          float c = cos(theta);
-          float s = sin(theta);
-          mat3 deformMatrix = mat3(c, 0, s, 0, 1, 0, -s, 0, c);
-        `,
-        // hook that lets you modify the normal
-        objectNormal: glsl`
-          objectNormal *= deformMatrix;
-        `,
-        // hook that lets you modify the position
-        transformed: glsl`
-          transformed *= deformMatrix;
-        `,
-      })
-    }
+        // you could import glsl packages like this
+        // #pragma glslify: noise = require(glsl-noise/simplex/3d)
+      `,
+      main: glsl`
+        float theta = sin(position.z * frequency + time) * amplitude;
+        float c = cos(theta);
+        float s = sin(theta);
+        mat3 deformMatrix = mat3(c, 0, s, 0, 1, 0, -s, 0, c);
+      `,
+      // hook that lets you modify the normal
+      objectNormal: glsl`
+        objectNormal *= deformMatrix;
+      `,
+      // hook that lets you modify the position
+      transformed: glsl`
+        transformed *= deformMatrix;
+      `,
+    })
 
     // apply the material to the model
     suzanne.traverse((child) => {
@@ -145,8 +143,6 @@ export default class Suzanne extends THREE.Group {
   onPointerUp(event, { x, y }) {}
 
   update(dt, time) {
-    if (this.material.uniforms) {
-      this.material.uniforms.time.value += dt * this.webgl.controls.movement.speed
-    }
+    this.material.uniforms.time.value += dt * this.webgl.controls.movement.speed
   }
 }

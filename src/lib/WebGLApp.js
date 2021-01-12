@@ -31,6 +31,14 @@ export default class WebGLApp {
     return this.renderer.getClearAlpha()
   }
 
+  set background(background) {
+    this.renderer.setClearColor(background, this.backgroundAlpha)
+  }
+
+  set backgroundAlpha(backgroundAlpha) {
+    this.renderer.setClearColor(this.background, backgroundAlpha)
+  }
+
   get isRecording() {
     return Boolean(this.#capturer)
   }
@@ -71,7 +79,7 @@ export default class WebGLApp {
     this.#height = options.height
 
     // clamp pixel ratio for performance
-    this.maxPixelRatio = options.maxPixelRatio || 2
+    this.maxPixelRatio = options.maxPixelRatio || 1.5
     // clamp delta to avoid stepping anything too far forward
     this.maxDeltaTime = options.maxDeltaTime || 1 / 30
 
