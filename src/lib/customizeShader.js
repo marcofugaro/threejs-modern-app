@@ -1,3 +1,20 @@
+export function addDefines(material, defines) {
+  prepareOnBeforeCompile(material)
+
+  material.defines = defines
+
+  material.addBeforeCompileListener((shader) => {
+    material.defines = {
+      ...material.defines,
+      ...shader.defines,
+    }
+
+    shader.defines = material.defines
+  })
+
+  constructOnBeforeCompile(material)
+}
+
 export function addUniforms(material, uniforms) {
   prepareOnBeforeCompile(material)
 
@@ -62,6 +79,7 @@ export function monkeyPatch(
     objectNormal,
     transformedNormal,
     diffuse,
+    emissive,
     ...replaces
   }
 ) {
@@ -115,6 +133,17 @@ export function monkeyPatch(
       vec3 diffuse_;
       ${replaceAll(diffuse, 'diffuse =', 'diffuse_ =')}
       vec4 diffuseColor = vec4(diffuse_, opacity);
+      `
+    )
+  }
+
+  if (emissive && patchedShader.includes('vec3 totalEmissiveRadiance = emissive;')) {
+    patchedShader = patchedShader.replace(
+      'vec3 totalEmissiveRadiance = emissive;',
+      `
+      vec3 emissive_;
+      ${replaceAll(emissive, 'emissive =', 'emissive_ =')}
+      vec3 totalEmissiveRadiance = emissive_;
       `
     )
   }
