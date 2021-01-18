@@ -33,7 +33,6 @@
   "dependencies": {
     "cannon-es": "^0.15.1",
     "cannon-es-debugger": "^0.1.0",
-    "canvas-sketch-util": "^1.10.0",
     "ccapture.js": "Unsigno/ccapture.js",
     "controls-gui": "^2.0.0",
     "controls-state": "^2.0.0",

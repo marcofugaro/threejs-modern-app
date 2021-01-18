@@ -22,7 +22,6 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 - global `window.DEBUG` flag which is true when the url contains `?debug` as a query parameter. So you can enable **debug mode** both locally and in production. [[Read more](#debug-mode)]
 - [glslify](https://github.com/glslify/glslify) to import shaders from `node_modules`. [[Read more](#glslify)]
 - GPU tiering info using [detect-gpu](https://github.com/TimvanScherpenzeel/detect-gpu) [[Read more](#gpu-info)]
-- A lot of useful creative coding util functions from [canvas-sketch-util](https://github.com/mattdesl/canvas-sketch-util) [[Read more](#util-functions)]
   <!-- - **Hot reload**. [[Read more](#hot-reload)] -->
 - Modern and customizable development tools such as webpack, babel, eslint, prettier and browserslist.
 - Beautiful console output:
@@ -444,28 +443,6 @@ Here is what the exposed `webgl.gpu` object contains:
 ⚠️ **WARNING**: `webgl.gpu` is set asyncronously since the benchmark data needs to be fetched. You might want to wait for the exposed promise `webgl.loadGPUTier`.
 
 More info on this approach also in [this great talk](http://www.youtube.com/watch?v=iNMD8Vr1tKg&t=32m4s) by [luruke](https://github.com/luruke)
-
-## Util functions
-
-Often you will find yourself using some really common and useful math functions, such as `mapRange`, `lerp` or `noise`.
-
-[canvas-sketch-util](https://github.com/mattdesl/canvas-sketch-util) is a library that contains a lot of those functions. It is written by [mattdesl](https://github.com/mattdesl).
-
-For instance, here is how to use the `mapRange` funcion (also known as `map` in processing or `fit` in other softwares).
-
-```js
-import { mapRange } from 'canvas-sketch-util/math'
-
-// ...
-
-document.body.addEventListener('mousemove', (event) => {
-  const angle = mapRange(event.clientX, 0, window.innerWidth, -90, 90)
-
-  // ...
-})
-```
-
-This example above will transform the x value from a `mousemove` event, which can go from `0` to `window.innerWidth`, to to a -90 and 90 range. You can assign this value to the rotation of an object which will rotate as you move the mouse.
 
 ## Hot reload
 
