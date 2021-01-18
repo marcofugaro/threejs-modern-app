@@ -251,11 +251,21 @@ export function wireValue(object, fn) {
 
   controls.$onChanges((cons) => {
     if (cons[accessor]) {
-      object[key] = cons[accessor].value
+      if (object[key].isColor) {
+        object[key].set(cons[accessor].value)
+      } else {
+        object[key] = cons[accessor].value
+      }
     }
   })
 
-  return fn()
+  let value = fn()
+
+  if (typeof value === 'string' && (value.startsWith('#') || value in _colorKeywords)) {
+    value = new THREE.Color(value)
+  }
+
+  return value
 }
 
 export function wireUniform(object, fn) {
