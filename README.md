@@ -51,7 +51,7 @@ The WebGLApp class contains all the code needed for three.js to run a scene, it 
 
 You can see an example configuration here:
 
-https://github.com/marcofugaro/threejs-modern-app/blob/4a1ebcae5143f47be5be1f5983666ba28e0eec1c/src/index.js#L13-L49
+https://github.com/marcofugaro/threejs-modern-app/blob/bd303c968c0b0ef56a40046e054371ba4b8c7e54/src/index.js#L14-L45
 
 You can pass the class the options you would pass to the [THREE.WebGLRenderer](https://threejs.org/docs/#api/en/renderers/WebGLRenderer), and also some more options:
 
@@ -251,11 +251,11 @@ addLights(webgl)
 
 The Asset Manager handles the preloading of all the assets needed to run the scene, you use it like this:
 
-https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd813d04681c84815/src/scene/Suzanne.js#L12-L42
+https://github.com/marcofugaro/threejs-modern-app/blob/bd303c968c0b0ef56a40046e054371ba4b8c7e54/src/scene/Suzanne.js#L15-L46
 
-https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd813d04681c84815/src/index.js#L59
+https://github.com/marcofugaro/threejs-modern-app/blob/bd303c968c0b0ef56a40046e054371ba4b8c7e54/src/index.js#L56
 
-https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd813d04681c84815/src/scene/Suzanne.js#L49
+https://github.com/marcofugaro/threejs-modern-app/blob/bd303c968c0b0ef56a40046e054371ba4b8c7e54/src/scene/Suzanne.js#L54
 
 In detail, first you queue the asset you want to preload in the component where you will use it
 
@@ -292,7 +292,7 @@ These are all the exposed methods:
 
 ### assets.queue({ url, type, ...others })
 
-Queue an asset to be downloaded later with `assets.load()`.
+Queue an asset to be downloaded later with [`assets.load()`](#assetsload-renderer-).
 
 | Option    | Default      | Description                                                                                                                                                                                                                                                                                                            |
 | --------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -337,7 +337,7 @@ If you're using gamma, the textures with color data will be automatically gamma 
 | `maps`    |         | An object containing urls for any map from the [MeshStandardMaterial](https://threejs.org/docs/#api/en/materials/MeshStandardMaterial) or [MeshPhysicalMaterial](https://threejs.org/docs/#api/en/materials/MeshPhysicalMaterial). |
 | `options` |         | Options you can assign to all textures, such as wrapping or repeating. Any other property of the [Texture](https://threejs.org/docs/#api/en/textures/Texture) can be set.                                                          |
 
-Returns a `keys` object that later you can use with `assets.getStandardMaterial()`.
+Returns a `keys` object that later you can use with [`assets.getStandardMaterial()`](#assetsgetstandardmaterialkeys).
 
 ### assets.load({ renderer })
 
@@ -360,7 +360,7 @@ Load a single asset without having to pass through the queue. Useful if you want
 | `linear`   | false        | Only if you set `type: 'texture'` or `type: 'env-map'`. By default, the encoding of the texture is set to whatever the `renderer.outputEncoding` is. You can pass `linear: true` to disable this behaviour, useful when loading linear color data such as roughness maps or normal maps in a gamma corrected workflow. |
 | ...others  |              | Other options that can be assigned to a [Texture](https://threejs.org/docs/index.html#api/en/textures/Texture) when the type is either `env-map` or `texture`.                                                                                                                                                         |
 
-Returns a `key` that later you can use with `assets.get()`.
+Returns a `key` that later you can use with [`assets.get()`](#assetsgetkey).
 
 ### assets.addProgressListener((progress) => {})
 
@@ -368,15 +368,15 @@ Pass a function that gets called each time an assets finishes downloading. The a
 
 ### assets.get(key)
 
-Retrieve an asset previously loaded with `assets.queue()` or `assets.loadSingle()`.
+Retrieve an asset previously loaded with [`assets.queue()`](#assetsqueue-url-type-others-) or [`assets.loadSingle()`](#assetsloadsingle-url-type-renderer-others-).
 
-| Option | Default | Description                                                                                              |
-| ------ | ------- | -------------------------------------------------------------------------------------------------------- |
-| `key`  |         | The key returned from `assets.queue()` or `assets.loadSingle()`. It corresponds to the url of the asset. |
+| Option | Default | Description                                                                                                                                                                              |
+| ------ | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `key`  |         | The key returned from [`assets.queue()`](#assetsqueue-url-type-others-) or [`assets.loadSingle()`](#assetsloadsingle-url-type-renderer-others-). It corresponds to the url of the asset. |
 
 ### assets.getStandardMaterial(keys)
 
-Retrieve an asset previously queued with `assets.queueStandardMaterial()`.
+Retrieve an asset previously queued with [`assets.queueStandardMaterial()`](#assetsqueuestandardmaterialmaps-options).
 
 It returns an object of the loaded textures that can be fed directly into [MeshStandardMaterial](https://threejs.org/docs/#api/en/materials/MeshStandardMaterial) like this:
 
@@ -385,9 +385,9 @@ const textures = assets.getStandardMaterial(keys)
 const material = new THREE.MeshStandardMaterial({ ...textures })
 ```
 
-| Option | Default | Description                                                     |
-| ------ | ------- | --------------------------------------------------------------- |
-| `keys` |         | The keys object returned from `assets.queueStandardMaterial()`. |
+| Option | Default | Description                                                                                                 |
+| ------ | ------- | ----------------------------------------------------------------------------------------------------------- |
+| `keys` |         | The keys object returned from [`assets.queueStandardMaterial()`](#assetsqueuestandardmaterialmaps-options). |
 
 ## Debug mode
 
@@ -395,7 +395,7 @@ Often you want to show the fps count or debug helpers such as the [SpotLightHelp
 
 A really manageable way is to have a global `window.DEBUG` constant which is true only if you append `?debug` to your url, for example `http://localhost:8080/?debug` or even in production like `https://example.com/?debug`.
 
-This is done [here](https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd813d04681c84815/src/index.js#L10) in just one line:
+This is done [here](https://github.com/marcofugaro/threejs-modern-app/blob/bd303c968c0b0ef56a40046e054371ba4b8c7e54/src/index.js#L9) in just one line:
 
 ```js
 window.DEBUG = window.location.search.includes('debug')
