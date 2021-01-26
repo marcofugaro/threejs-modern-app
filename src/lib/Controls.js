@@ -166,7 +166,8 @@ function fromObjectToSlider(object) {
     max: object.max,
     step: object.step || 0.01,
     ...(object.scale === 'exp' && {
-      min: object.min || 0.01,
+      min: object.min || 0.001,
+      step: object.step || 0.001,
       mapping: (x) => Math.pow(10, x),
       inverseMapping: Math.log10,
     }),

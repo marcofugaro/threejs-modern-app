@@ -2,6 +2,7 @@ import pMap from 'p-map'
 import prettyMs from 'pretty-ms'
 import loadImage from 'image-promise'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { mapValues } from 'lodash-es'
 import loadTexture from './loadTexture'
 import loadEnvMap from './loadEnvMap'
 
@@ -27,6 +28,22 @@ class AssetManager {
     }
 
     return url
+  }
+
+  // Add a MeshStandardMaterial to be queued,
+  // input: { map, metalnessMap, roughnessMap, normalMap, ... }
+  queueStandardMaterial(maps, options = {}) {
+    const keys = mapValues(maps, (url, map) =>
+      this.queue({
+        url,
+        type: 'texture',
+        // force linear workflow on maps not containing color data
+        ...(!['map', 'emissiveMap'].includes(map) && { linear: true }),
+        ...options,
+      })
+    )
+
+    return keys
   }
 
   _getQueued(url) {
@@ -59,6 +76,11 @@ class AssetManager {
     if (!url) throw new TypeError('Must specify an URL for AssetManager.get()')
 
     return this.#cache[url]
+  }
+
+  // Fetch a loaded MeshStandardMaterial object
+  getStandardMaterial = (keys) => {
+    return mapValues(keys, (key) => this.get(key))
   }
 
   // Loads a single asset
@@ -165,6 +187,8 @@ class AssetManager {
         })
       case 'json':
         return fetch(url).then((response) => response.json())
+      case 'envmap':
+      case 'envMap':
       case 'env-map':
         return loadEnvMap(url, { renderer, ...options })
       case 'svg':

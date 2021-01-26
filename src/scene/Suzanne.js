@@ -22,28 +22,27 @@ const suzanneKey = assets.queue({
 const albedoKey = assets.queue({
   url: 'assets/spotty-metal/albedo.jpg',
   type: 'texture',
-  // encoding: THREE.sRGBEncoding,
 })
 const metalnessKey = assets.queue({
   url: 'assets/spotty-metal/metalness.jpg',
   type: 'texture',
+  linear: true, // don't use gamma correction
 })
 const roughnessKey = assets.queue({
   url: 'assets/spotty-metal/roughness.jpg',
   type: 'texture',
+  linear: true, // don't use gamma correction
 })
 const normalKey = assets.queue({
   url: 'assets/spotty-metal/normal.jpg',
   type: 'texture',
+  linear: true, // don't use gamma correction
 })
 
 // preload the environment map
 const hdrKey = assets.queue({
   url: 'assets/ouside-afternoon-blurred-hdr.jpg',
   type: 'env-map',
-  // equirectangular means it's just one image, projected
-  equirectangular: true,
-  // encoding: THREE.sRGBEncoding,
 })
 
 export default class Suzanne extends THREE.Group {
@@ -55,14 +54,9 @@ export default class Suzanne extends THREE.Group {
     const suzanneGltf = assets.get(suzanneKey)
     const suzanne = suzanneGltf.scene.clone()
 
-    // TODO fix assets and gamma
-    const map = assets.get(albedoKey)
     const envMap = assets.get(hdrKey)
-    map.encoding = THREE.sRGBEncoding
-    envMap.encoding = THREE.sRGBEncoding
-
     const material = new THREE.MeshStandardMaterial({
-      map,
+      map: assets.get(albedoKey),
       metalnessMap: assets.get(metalnessKey),
       roughnessMap: assets.get(roughnessKey),
       normalMap: assets.get(normalKey),

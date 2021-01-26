@@ -80,6 +80,7 @@ export function monkeyPatch(
     transformedNormal,
     diffuse,
     emissive,
+    gl_FragColor,
     ...replaces
   }
 ) {
@@ -144,6 +145,19 @@ export function monkeyPatch(
       vec3 emissive_;
       ${replaceAll(emissive, 'emissive =', 'emissive_ =')}
       vec3 totalEmissiveRadiance = emissive_;
+      `
+    )
+  }
+
+  if (
+    gl_FragColor &&
+    patchedShader.includes('gl_FragColor = vec4( outgoingLight, diffuseColor.a );')
+  ) {
+    patchedShader = patchedShader.replace(
+      'gl_FragColor = vec4( outgoingLight, diffuseColor.a );',
+      `
+        gl_FragColor = vec4(outgoingLight, diffuseColor.a);
+        ${gl_FragColor}
       `
     )
   }

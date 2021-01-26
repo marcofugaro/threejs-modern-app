@@ -249,7 +249,7 @@ addLights(webgl)
 
 ## Asset Manager
 
-The Asseet Manager handles the preloading of all the assets needed to run the scene, you use it like this:
+The Asset Manager handles the preloading of all the assets needed to run the scene, you use it like this:
 
 https://github.com/marcofugaro/threejs-modern-app/blob/5f93ae32c378d9ea25a16f3fd813d04681c84815/src/scene/Suzanne.js#L12-L42
 
@@ -274,7 +274,7 @@ Then you import the component in the `index.js` so that code gets executed
 import Component from './scene/Component'
 ```
 
-And then you start the queue assets loading promise, always in the `index.js`
+And then you start the queued assets loading promise, always in the `index.js`
 
 ```js
 assets.load({ renderer: webgl.renderer }).then(() => {
@@ -294,15 +294,50 @@ These are all the exposed methods:
 
 Queue an asset to be downloaded later with `assets.load()`.
 
-| Option            | Default      | Description                                                                                                                                                                                                                                                                               |
-| ----------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `url`             |              | The url of the asset relative to the `public/` folder.                                                                                                                                                                                                                                    |
-| `type`            | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension.                                                                                                                  |
-| `equirectangular` | false        | Only if you set `type: 'env-map'`, you can pass `equirectangular: true` if you have a single [equirectangular image](https://www.google.com/search?q=equirectangular+image&tbm=isch) rather than the six squared subimages.                                                               |
-| `pmrem`           | false        | Only if you set `type: 'env-map'`, you can pass `pmrem: true` to use the [PMREMGenerator](https://threejs.org/docs/#api/en/extras/PMREMGenerator) and prefilter for irradiance. This is often used when applying an envMap to an object rather than a scene background.                   |
-| ...others         |              | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadTexture.js) when the type is either `env-map` or `texture`. |
+| Option    | Default      | Description                                                                                                                                                                                                                                                                                                            |
+| --------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `url`     |              | The url of the asset relative to the `public/` folder. Can be an array if `type: 'env-map'` and you're loading a [cube texture](https://github.com/mrdoob/three.js/tree/dev/examples/textures/cube).                                                                                                                   |
+| `type`    | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension.                                                                                                                                               |
+| `pmrem`   | false        | Only if you set `type: 'env-map'`, you can pass `pmrem: true` to use the [PMREMGenerator](https://threejs.org/docs/#api/en/extras/PMREMGenerator) and prefilter for irradiance. This is often used when applying an envMap to an object rather than a scene background.                                                |
+| `linear`  | false        | Only if you set `type: 'texture'` or `type: 'env-map'`. By default, the encoding of the texture is set to whatever the `renderer.outputEncoding` is. You can pass `linear: true` to disable this behaviour, useful when loading linear color data such as roughness maps or normal maps in a gamma corrected workflow. |
+| ...others |              | Other options that can be assigned to a [Texture](https://threejs.org/docs/index.html#api/en/textures/Texture) when the type is either `env-map` or `texture`.                                                                                                                                                         |
 
-Returns a `key` that later you can use with `assets.get()`.
+Returns a `key` that later you can use with [`assets.get()`](#assetsgetkey).
+
+### assets.queueStandardMaterial(maps, options)
+
+Utility to queue multiple maps belonging to the same PBR material. They can later be passed directly to the [MeshStandardMaterial](https://threejs.org/docs/#api/en/materials/MeshStandardMaterial).
+
+For example, here is how you load a brick PBR texture:
+
+```js
+const bricksKeys = assets.queueStandardMaterial(
+  {
+    map: `assets/bricks/albedo.jpg`,
+    roughnessMap: `assets/bricks/roughness.jpg`,
+    metalnessMap: `assets/bricks/metallic.jpg`,
+    normalMap: `assets/bricks/normal.jpg`,
+    displacementMap: `assets/bricks/height.jpg`,
+    aoMap: `assets/bricks/ambientocclusion.jpg`,
+  },
+  {
+    repeat: new THREE.Vector2().setScalar(0.5),
+    wrapS: THREE.RepeatWrapping,
+    wrapT: THREE.RepeatWrapping,
+  }
+)
+```
+
+As you can see, you can pass as a second argument any property you want to apply to all textures.
+
+If you're using gamma, the textures with color data will be automatically gamma encoded.
+
+| Option    | Default | Description                                                                                                                                                                                                                        |
+| --------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `maps`    |         | An object containing urls for any map from the [MeshStandardMaterial](https://threejs.org/docs/#api/en/materials/MeshStandardMaterial) or [MeshPhysicalMaterial](https://threejs.org/docs/#api/en/materials/MeshPhysicalMaterial). |
+| `options` |         | Options you can assign to all textures, such as wrapping or repeating. Any other property of the [Texture](https://threejs.org/docs/#api/en/textures/Texture) can be set.                                                          |
+
+Returns a `keys` object that later you can use with `assets.getStandardMaterial()`.
 
 ### assets.load({ renderer })
 
@@ -316,15 +351,14 @@ Load all the assets previously queued.
 
 Load a single asset without having to pass through the queue. Useful if you want to lazy-load some assets after the application has started. Usually the assets that are not needed immediately.
 
-| Option            | Default      | Description                                                                                                                                                                                                                                                             |
-| ----------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `renderer`        |              | The WebGLRenderer of your application, exposed as `webgl.renderer`.                                                                                                                                                                                                     |
-| `url`             |              | The url of the asset relative to the `public/` folder.                                                                                                                                                                                                                  |
-| `type`            | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension.                                                                                                |
-| `equirectangular` | false        | Only if you set `type: 'env-map'`, you can pass `equirectangular: true` if you have a single [equirectangular image](https://www.google.com/search?q=equirectangular+image&tbm=isch) rather than the six squared subimages.                                             |
-| `pmrem`           | false        | Only if you set `type: 'env-map'`, you can pass `pmrem: true` to use the [PMREMGenerator](https://threejs.org/docs/#api/en/extras/PMREMGenerator) and prefilter for irradiance. This is often used when applying an envMap to an object rather than a scene background. |
-
-| ...others | | Other options that get passed to [loadEnvMap](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadEnvMap.js) or [loadTexture](https://github.com/marcofugaro/threejs-modern-app/blob/master/src/lib/loadTexture.js) when the type is either `env-map` or `texture`. |
+| Option     | Default      | Description                                                                                                                                                                                                                                                                                                            |
+| ---------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `renderer` |              | The WebGLRenderer of your application, exposed as `webgl.renderer`.                                                                                                                                                                                                                                                    |
+| `url`      |              | The url of the asset relative to the `public/` folder. Can be an array if `type: 'env-map'` and you're loading a [cube texture](https://github.com/mrdoob/three.js/tree/dev/examples/textures/cube).                                                                                                                   |
+| `type`     | autodetected | The type of the asset, can be either `gltf`, `image`, `svg`, `texture`, `env-map`, `json`, `audio` or `video`. If omitted it will be discerned from the asset extension.                                                                                                                                               |
+| `pmrem`    | false        | Only if you set `type: 'env-map'`, you can pass `pmrem: true` to use the [PMREMGenerator](https://threejs.org/docs/#api/en/extras/PMREMGenerator) and prefilter for irradiance. This is often used when applying an envMap to an object rather than a scene background.                                                |
+| `linear`   | false        | Only if you set `type: 'texture'` or `type: 'env-map'`. By default, the encoding of the texture is set to whatever the `renderer.outputEncoding` is. You can pass `linear: true` to disable this behaviour, useful when loading linear color data such as roughness maps or normal maps in a gamma corrected workflow. |
+| ...others  |              | Other options that can be assigned to a [Texture](https://threejs.org/docs/index.html#api/en/textures/Texture) when the type is either `env-map` or `texture`.                                                                                                                                                         |
 
 Returns a `key` that later you can use with `assets.get()`.
 
@@ -334,11 +368,26 @@ Pass a function that gets called each time an assets finishes downloading. The a
 
 ### assets.get(key)
 
-Retrieve an asset previously loaded with `assets.load()` or `assets.loadSingle()`.
+Retrieve an asset previously loaded with `assets.queue()` or `assets.loadSingle()`.
 
 | Option | Default | Description                                                                                              |
 | ------ | ------- | -------------------------------------------------------------------------------------------------------- |
 | `key`  |         | The key returned from `assets.queue()` or `assets.loadSingle()`. It corresponds to the url of the asset. |
+
+### assets.getStandardMaterial(keys)
+
+Retrieve an asset previously queued with `assets.queueStandardMaterial()`.
+
+It returns an object of the loaded textures that can be fed directly into [MeshStandardMaterial](https://threejs.org/docs/#api/en/materials/MeshStandardMaterial) like this:
+
+```js
+const textures = assets.getStandardMaterial(keys)
+const material = new THREE.MeshStandardMaterial({ ...textures })
+```
+
+| Option | Default | Description                                                     |
+| ------ | ------- | --------------------------------------------------------------- |
+| `keys` |         | The keys object returned from `assets.queueStandardMaterial()`. |
 
 ## Debug mode
 

@@ -445,8 +445,12 @@ export default class WebGLApp {
 
   start = () => {
     if (this.isRunning) return
-    this.renderer.setAnimationLoop(this.animate)
     this.isRunning = true
+
+    // draw immediately
+    this.draw()
+
+    this.renderer.setAnimationLoop(this.animate)
     return this
   }
 

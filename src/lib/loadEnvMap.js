@@ -1,80 +1,99 @@
 import * as THREE from 'three'
-import highestPowerOfTwo from 'highest-power-two'
+// TODO lazy load these, or put them in different files
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader'
 import { HDRCubeTextureLoader } from 'three/examples/jsm/loaders/HDRCubeTextureLoader'
-import loadTexture from './loadTexture'
 
-export default async function loadEnvMap(url, options) {
-  const renderer = options.renderer
-
+export default function loadEnvMap(url, { renderer, ...options }) {
   if (!renderer) {
     throw new Error(`Env map requires renderer to passed in the options for ${url}!`)
   }
 
-  if (options.equirectangular) {
-    const texture = await loadTexture(url, { renderer })
+  const isEquirectangular = !Array.isArray(url)
 
-    if (options.pmrem) {
-      return pmremEquirectangular(texture, renderer)
-    } else {
-      const size = highestPowerOfTwo(texture.image.naturalHeight)
-      const renderTarget = new THREE.WebGLCubeRenderTarget(size, {
-        generateMipmaps: true,
-        minFilter: THREE.LinearMipmapLinearFilter,
-        magFilter: THREE.LinearFilter,
-      })
+  let loader
+  if (isEquirectangular) {
+    const extension = url.slice(url.lastIndexOf('.') + 1)
 
-      const outTexture = renderTarget.fromEquirectangularTexture(renderer, texture).texture
-
-      texture.dispose() // dispose original texture
-      texture.image.data = null // remove image reference
-
-      return outTexture
+    switch (extension) {
+      case 'hdr': {
+        loader = new RGBELoader().setDataType(THREE.UnsignedByteType).loadAsync(url)
+        break
+      }
+      case 'exr': {
+        loader = new EXRLoader().setDataType(THREE.UnsignedByteType).loadAsync(url)
+        break
+      }
+      case 'png':
+      case 'jpg': {
+        loader = new THREE.TextureLoader().loadAsync(url).then((texture) => {
+          if (renderer.outputEncoding === THREE.sRGBEncoding && !options.linear) {
+            texture.encoding = THREE.sRGBEncoding
+          }
+          return texture
+        })
+        break
+      }
+      default: {
+        throw new Error(`Extension ${extension} not supported`)
+      }
     }
-  }
 
-  const basePath = url
-  const extension = options.extension || '.jpg'
-  const urls = generateCubeUrls(`${basePath.replace(/\/$/, '')}/`, extension)
+    loader = loader.then((texture) => {
+      if (options.pmrem) {
+        return equirectangularToPMREMCube(texture, renderer)
+      } else {
+        return equirectangularToCube(texture)
+      }
+    })
+  } else {
+    const extension = url[0].slice(url.lastIndexOf('.') + 1)
 
-  if (extension === '.hdr') {
-    // load a float HDR texture
-    return new Promise((resolve, reject) => {
-      new HDRCubeTextureLoader().load(
-        THREE.UnsignedByteType,
-        urls,
-        (cubeMap) => resolve(assignCubemapOptions(cubeMap, options)),
-        null,
-        () => reject(new Error(`Could not load env map: ${basePath}`))
-      )
+    switch (extension) {
+      case 'hdr': {
+        loader = new HDRCubeTextureLoader().setDataType(THREE.UnsignedByteType).loadAsync(url)
+        break
+      }
+      case 'png':
+      case 'jpg': {
+        loader = new THREE.CubeTextureLoader().loadAsync(url).then((texture) => {
+          if (renderer.outputEncoding === THREE.sRGBEncoding && !options.linear) {
+            texture.encoding = THREE.sRGBEncoding
+          }
+          return texture
+        })
+        break
+      }
+      default: {
+        throw new Error(`Extension ${extension} not supported`)
+      }
+    }
+
+    loader = loader.then((texture) => {
+      if (options.pmrem) {
+        return cubeToPMREMCube(texture, renderer)
+      } else {
+        return texture
+      }
     })
   }
 
-  // load a RGBM encoded texture
-  return new Promise((resolve, reject) => {
-    new THREE.CubeTextureLoader().load(
-      urls,
-      (cubeMap) => resolve(assignCubemapOptions(cubeMap, options)),
-      null,
-      () => reject(new Error(`Could not load env map: ${basePath}`))
-    )
+  // apply eventual texture options, such as wrap, repeat...
+  const textureOptions = Object.keys(options).filter(
+    (option) => !['pmrem', 'linear'].includes(option)
+  )
+  textureOptions.forEach((option) => {
+    loader = loader.then((texture) => {
+      texture[option] = options[option]
+      return texture
+    })
   })
+
+  return loader
 }
 
-function assignCubemapOptions(cubeMap, options) {
-  if (options.encoding) {
-    cubeMap.encoding = options.encoding
-  }
-  if (options.format) {
-    cubeMap.format = options.format
-  }
-  if (options.pmrem) {
-    cubeMap = pmremCubemap(cubeMap, options.renderer)
-  }
-  return cubeMap
-}
-
-// prefilter the environment map for irradiance
-function pmremEquirectangular(texture, renderer) {
+// prefilter the equirectangular environment map for irradiance
+function equirectangularToPMREMCube(texture, renderer) {
   const pmremGenerator = new THREE.PMREMGenerator(renderer)
   pmremGenerator.compileEquirectangularShader()
 
@@ -87,26 +106,23 @@ function pmremEquirectangular(texture, renderer) {
   return cubeRenderTarget.texture
 }
 
-// prefilter the environment map for irradiance
-function pmremCubemap(cubeMap, renderer) {
+// prefilter the cubemap environment map for irradiance
+function cubeToPMREMCube(texture, renderer) {
   const pmremGenerator = new THREE.PMREMGenerator(renderer)
   pmremGenerator.compileCubemapShader()
-  const renderTarget = pmremGenerator.fromCubemap(cubeMap)
+
+  const cubeRenderTarget = pmremGenerator.fromCubemap(texture)
 
   pmremGenerator.dispose() // dispose PMREMGenerator
-  cubeMap.dispose() // dispose original texture
-  cubeMap.image.data = null // remove image reference
+  texture.dispose() // dispose original texture
+  texture.image.data = null // remove image reference
 
-  return renderTarget.texture
+  return cubeRenderTarget.texture
 }
 
-function generateCubeUrls(prefix, postfix) {
-  return [
-    `${prefix}px${postfix}`,
-    `${prefix}nx${postfix}`,
-    `${prefix}py${postfix}`,
-    `${prefix}ny${postfix}`,
-    `${prefix}pz${postfix}`,
-    `${prefix}nz${postfix}`,
-  ]
+// transform an equirectangular texture to a cubetexture that
+// can be used as an envmap or scene background
+function equirectangularToCube(texture) {
+  texture.mapping = THREE.EquirectangularReflectionMapping
+  return texture
 }
