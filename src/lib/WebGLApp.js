@@ -435,7 +435,10 @@ export default class WebGLApp {
   }
 
   draw = () => {
-    if (this.composer) {
+    // postprocessing doesn't currently work in WebXR
+    const isXR = this.renderer.xr.enabled && this.renderer.xr.isPresenting
+
+    if (this.composer && !isXR) {
       this.composer.render(this.dt)
     } else {
       this.renderer.render(this.scene, this.camera)
