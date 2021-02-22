@@ -1,6 +1,6 @@
 const path = require('path')
 const { execSync } = require('child_process')
-const merge = require('webpack-merge')
+const { merge } = require('webpack-merge')
 const TerserJsPlugin = require('terser-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const openBrowser = require('react-dev-utils/openBrowser')
@@ -34,7 +34,7 @@ function beautifyTree(tree) {
   return beautify(tree)
 }
 
-module.exports = merge.smart(
+module.exports = merge(
   {
     module: {
       rules: [
@@ -71,11 +71,11 @@ module.exports = merge.smart(
     // turn off the default webpack bloat
     // TODO re-enable this when it will be more beautiful
     // https://github.com/webpack/webpack-cli/issues/575
-    stats: false,
+    // stats: false,
     // TODO temporary needed for ccapture.js
-    node: {
-      fs: 'empty',
-    },
+    // node: {
+    //   fs: 'empty',
+    // },
   },
   //
   //  $$$$$$\    $$$$$$$$\     $$$$$$\     $$$$$$$\    $$$$$$$$\
@@ -168,46 +168,44 @@ module.exports = merge.smart(
     plugins: [
       // TODO use webpack's api when it will be implemented
       // https://github.com/webpack/webpack-dev-server/issues/1509
-      new EventHooksPlugin({
-        compile() {
-          console.log('⏳  Compiling...')
-        },
-        done(stats) {
-          if (stats.hasErrors()) {
-            const statsJson = stats.toJson({ all: false, warnings: true, errors: true })
-            const messages = formatWebpackMessages(statsJson)
-            console.log(chalk.red('❌  Failed to compile.'))
-            console.log()
-            console.log(messages.errors[0])
-            return
-          }
-
-          console.log(chalk.green(`✅  Compiled successfully!`))
-          console.log(`The folder ${chalk.bold(`build/`)} is ready to be deployed`)
-          console.log()
-
-          try {
-            const tree = execSync('tree --du -h --dirsfirst build/').toString()
-            console.log(beautifyTree(tree))
-          } catch (e) {
-            console.log(
-              chalk.yellow(
-                `⚠️  Homerew and the tree package are required for the file tree output,`
-              ),
-              `please install them with the following command:`
-            )
-            console.log()
-            console.log(
-              chalk.cyan(
-                `  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && brew install tree`
-              )
-            )
-          }
-
-          console.log()
-        },
-      }),
+      // new EventHooksPlugin({
+      //   compile() {
+      //     console.log('⏳  Compiling...')
+      //   },
+      //   done(stats) {
+      //     if (stats.hasErrors()) {
+      //       const statsJson = stats.toJson({ all: false, warnings: true, errors: true })
+      //       const messages = formatWebpackMessages(statsJson)
+      //       console.log(chalk.red('❌  Failed to compile.'))
+      //       console.log()
+      //       console.log(messages.errors[0])
+      //       return
+      //     }
+      //     console.log(chalk.green(`✅  Compiled successfully!`))
+      //     console.log(`The folder ${chalk.bold(`build/`)} is ready to be deployed`)
+      //     console.log()
+      //     try {
+      //       const tree = execSync('tree --du -h --dirsfirst build/').toString()
+      //       console.log(beautifyTree(tree))
+      //     } catch (e) {
+      //       console.log(
+      //         chalk.yellow(
+      //           `⚠️  Homerew and the tree package are required for the file tree output,`
+      //         ),
+      //         `please install them with the following command:`
+      //       )
+      //       console.log()
+      //       console.log(
+      //         chalk.cyan(
+      //           `  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" && brew install tree`
+      //         )
+      //       )
+      //     }
+      //     console.log()
+      //   },
+      // }),
     ],
+
     optimization: {
       minimizer: [
         new TerserJsPlugin({
@@ -228,9 +226,11 @@ module.exports = merge.smart(
               // Turned on because emoji and regex is not minified properly using default
               // https://github.com/facebook/create-react-app/issues/2488
               ascii_only: true,
+              beautify: true,
             },
           },
-          sourceMap: true,
+
+          // sourceMap: true,
           // Don't generate the license.txt file
           extractComments: false,
         }),

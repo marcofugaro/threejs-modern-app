@@ -5,7 +5,7 @@ import Stats from 'stats.js'
 import { getGPUTier } from 'detect-gpu'
 import { EffectComposer, RenderPass } from 'postprocessing'
 import cannonDebugger from 'cannon-es-debugger'
-import CCapture from 'ccapture.js'
+// import CCapture from 'ccapture.js'
 import { initControls } from './Controls'
 
 export default class WebGLApp {
