@@ -44,7 +44,7 @@
     "p-map": "^4.0.0",
     "postprocessing": "marcofugaro/postprocessing#dev",
     "pretty-ms": "^7.0.1",
-    "stats.js": "^0.17.0",
+    "stats.js": "marcofugaro/stats.js",
     "three": "0.124.0"
   },
   "devDependencies": {

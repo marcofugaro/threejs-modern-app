@@ -209,7 +209,7 @@ export default class WebGLApp {
 
     // show the fps meter
     if (options.showFps) {
-      this.stats = new Stats()
+      this.stats = new Stats({ showMinMax: false, context: this.gl })
       this.stats.showPanel(0)
       document.body.appendChild(this.stats.dom)
     }
