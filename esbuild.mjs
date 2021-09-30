@@ -1,3 +1,4 @@
+import fs from 'fs/promises'
 import { execSync } from 'child_process'
 import esbuild from 'esbuild'
 import { glsl } from 'esbuild-plugin-glsl'
@@ -8,6 +9,7 @@ import openBrowser from 'react-dev-utils/openBrowser.js'
 import indentString from 'indent-string'
 import _ from 'lodash-es'
 import ora from 'ora'
+import compile from 'babel-plugin-glsl/lib/compile.js'
 
 const HTTPS = false // enable https here
 const PORT = '8080'
@@ -82,14 +84,14 @@ esbuild
         {
           outfile: 'build/app.js',
           minify: true,
-          plugins: [glsl({ minify: true }), prodLogger({ outDir: 'build/' })],
+          plugins: [glslify(), glsl({ minify: true }), prodLogger({ outDir: 'build/' })],
         }),
   })
   .catch(() => process.exit(1))
 
 function devLogger({ localUrl, networkUrl, onFisrtBuild = () => {} }) {
   return {
-    name: 'logger',
+    name: 'devLogger',
     setup(build) {
       let startTime
       let isFirstBuild = true
@@ -131,7 +133,7 @@ function devLogger({ localUrl, networkUrl, onFisrtBuild = () => {} }) {
 
 function prodLogger({ outDir }) {
   return {
-    name: 'logger',
+    name: 'prodLogger',
     setup(build) {
       const startTime = performance.now()
 
@@ -201,4 +203,39 @@ function beautifyTree(tree) {
   const beautify = _.flow([trimEnd, addByteUnit, replaceBrackets, boldFirstLine, colorIt, indent])
 
   return beautify(tree)
+}
+
+function glslify() {
+  return {
+    name: 'glslify',
+    setup(build) {
+      // https://medium.com/@chris_72272/what-is-the-fastest-node-js-hashing-algorithm-c15c1a0e164e
+      build.onLoad({ filter: /\.(js|jsx|ts)$/ }, async (args) => {
+        if (args.path.includes('/node_modules/')) {
+          return
+        }
+
+        let text = await fs.readFile(args.path, 'utf8')
+
+        if (!text.includes('#pragma glslify')) {
+          return
+        }
+
+        // remove the unnecessary import
+        text = text.replace(/import glsl from ('|")glslify('|");?/, '')
+
+        // remove the unnecessary glsl function call
+        text = text.replaceAll('glsl`', '`')
+
+        // resolve glslify imports
+        text = text.replace(/#pragma glslify(.*)/g, (match) => {
+          return compile(match)
+        })
+
+        return {
+          contents: text,
+        }
+      })
+    },
+  }
 }
