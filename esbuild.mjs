@@ -1,5 +1,6 @@
 import fs from 'fs/promises'
 import { execSync } from 'child_process'
+import { performance } from 'perf_hooks'
 import esbuild from 'esbuild'
 import { glsl } from 'esbuild-plugin-glsl'
 import browserSync from 'browser-sync'
@@ -88,7 +89,6 @@ esbuild
         }),
   })
   .catch((err) => {
-    console.error('Error in build:')
     console.error(err)
     process.exit(1)
   })
