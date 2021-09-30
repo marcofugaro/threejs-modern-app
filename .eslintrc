@@ -1,3 +1,3 @@
 {
-  "extends": "eslint-config-accurapp"
+  "extends": ["accurapp", "prettier"]
 }
