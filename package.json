@@ -16,8 +16,8 @@
     "start": "NODE_ENV=development node ./esbuild.mjs",
     "prebuild": "yarn clean; yarn copy-public",
     "build": "NODE_ENV=production node ./esbuild.mjs",
-    "clean": "rm -rf build",
-    "copy-public": "cp -r public build"
+    "clean": "rimraf build/; rimraf public/app.js; rimraf public/app.js.map",
+    "copy-public": "cpr public/ build/"
   },
   "browserslist": {
     "production": [
@@ -51,6 +51,7 @@
     "babel-plugin-glsl": "^1.0.0",
     "browser-sync": "^2.27.5",
     "chalk": "^4.1.0",
+    "cpr": "^3.0.1",
     "detect-port": "^1.3.0",
     "esbuild": "^0.12.28",
     "esbuild-plugin-glsl": "^1.0.5",
@@ -60,6 +61,7 @@
     "glslify-loader": "^2.0.0",
     "indent-string": "^4.0.0",
     "ora": "^6.0.1",
-    "react-dev-utils": "^11.0.1"
+    "react-dev-utils": "^11.0.1",
+    "rimraf": "^3.0.2"
   }
 }

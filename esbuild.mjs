@@ -228,8 +228,8 @@ function glslify() {
         text = text.replaceAll('glsl`', '`')
 
         // resolve glslify imports
-        text = text.replace(/#pragma glslify(.*)/g, (match) => {
-          return compile(match)
+        text = text.replace(/^(\s*)#pragma glslify(.*)/gm, (match) => {
+          return compile(match.trim())
         })
 
         return {
