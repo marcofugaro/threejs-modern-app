@@ -87,7 +87,11 @@ esbuild
           plugins: [glslify(), glsl({ minify: true }), prodLogger({ outDir: 'build/' })],
         }),
   })
-  .catch(() => process.exit(1))
+  .catch((err) => {
+    console.error('Error in build:')
+    console.error(err)
+    process.exit(1)
+  })
 
 function devLogger({ localUrl, networkUrl, onFisrtBuild = () => {} }) {
   return {
