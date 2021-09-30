@@ -23,7 +23,7 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 - [glslify](https://github.com/glslify/glslify) to import shaders from `node_modules`. [[Read more](#glslify)]
 - GPU tiering info using [detect-gpu](https://github.com/TimvanScherpenzeel/detect-gpu) [[Read more](#gpu-info)]
   <!-- - **Hot reload**. [[Read more](#hot-reload)] -->
-- Modern and customizable development tools such as webpack, babel, eslint, prettier and browserslist.
+- Modern and customizable development tools such as ⚡️**esbuild**⚡️, eslint, prettier and browserslist.
 - Beautiful console output:
 
 ![console screenshots](.github/screenshots/console.png)
@@ -37,7 +37,7 @@ Once you installed the dependencies running `yarn`, these are the available comm
 - `yarn start` starts a server locally
 - `yarn build` builds the project for production, ready to be deployed from the `build/` folder
 
-All the build tools logic is in the `package.json` and `webpack.config.js`.
+All the build tools logic is in the `package.json` and `esbuild.mjs`.
 
 ## WebGLApp
 
