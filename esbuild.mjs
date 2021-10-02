@@ -106,7 +106,7 @@ function glslify() {
     setup(build) {
       const cache = {}
 
-      build.onLoad({ filter: /\.(js|jsx|ts)$/ }, async (args) => {
+      build.onLoad({ filter: /\.(js|ts|jsx|tsx)$/ }, async (args) => {
         if (args.path.includes('/node_modules/')) {
           return
         }

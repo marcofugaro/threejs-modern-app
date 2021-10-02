@@ -19,18 +19,6 @@
     "clean": "rimraf build/; rimraf public/app.js; rimraf public/app.js.map",
     "copy-public": "cpr public/ build/"
   },
-  "browserslist": {
-    "production": [
-      ">0.25%",
-      "not ie 11",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 Chrome version",
-      "last 1 Firefox version",
-      "last 1 Safari version"
-    ]
-  },
   "dependencies": {
     "cannon-es": "^0.18.0",
     "cannon-es-debugger": "^0.1.4",

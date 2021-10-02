@@ -23,7 +23,7 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 - [glslify](https://github.com/glslify/glslify) to import shaders from `node_modules`. [[Read more](#glslify)]
 - GPU tiering info using [detect-gpu](https://github.com/TimvanScherpenzeel/detect-gpu) [[Read more](#gpu-info)]
   <!-- - **Hot reload**. [[Read more](#hot-reload)] -->
-- Modern and customizable development tools such as ⚡️**esbuild**⚡️, eslint, prettier and browserslist.
+- Modern and customizable development tools such as ⚡️**esbuild**⚡️, eslint, and prettier.
 - Beautiful console output:
 
 ![console screenshots](.github/screenshots/console.png)
