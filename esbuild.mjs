@@ -14,6 +14,7 @@ const isDevelopment = process.env.NODE_ENV === 'development'
 let local
 let external
 if (isDevelopment) {
+  // start the development server
   const server = browserSync.create()
   server.init({
     server: './public',
@@ -32,12 +33,11 @@ if (isDevelopment) {
   external = urlOptions.get('external')
 }
 
-esbuild
+const result = await esbuild
   .build({
     entryPoints: ['src/index.js'],
     bundle: true,
     format: 'iife',
-    metafile: true, // TODO
     logLevel: 'silent', // sssh...
     legalComments: 'none', // don't include licenses txt file
     sourcemap: true,
@@ -81,12 +81,24 @@ esbuild
           outfile: 'build/app.js',
           minify: true,
           plugins: [glslify(), glsl({ minify: true }), prodLogger({ outDir: 'build/' })],
+          metafile: true,
+          entryNames: '[name]-[hash]', // add the contenthash to the filename
         }),
   })
   .catch((err) => {
     console.error(err)
     process.exit(1)
   })
+
+if (!isDevelopment) {
+  // inject the hash into the index.html
+  const jsFilePath = Object.keys(result.metafile.outputs).find((o) => o.endsWith('.js'))
+  const jsFileName = jsFilePath.slice('build/'.length) // --> app-Y4WC7QZS.js
+
+  let indexHtml = await fs.readFile('./build/index.html', 'utf-8')
+  indexHtml = indexHtml.replace('src="app.js"', `src="${jsFileName}"`)
+  await fs.writeFile('./build/index.html', indexHtml)
+}
 
 function glslify() {
   return {
