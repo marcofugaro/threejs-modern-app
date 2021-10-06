@@ -1,9 +1,9 @@
 import fs from 'fs/promises'
 import esbuild from 'esbuild'
 import { glsl } from 'esbuild-plugin-glsl'
+import { glslifyInline } from 'esbuild-plugin-glslify-inline'
 import browserSync from 'browser-sync'
 import openBrowser from 'react-dev-utils/openBrowser.js'
-import compile from 'babel-plugin-glsl/lib/compile.js'
 import { devLogger, prodLogger } from './logging-utils.mjs'
 
 const HTTPS = false // enable https here
@@ -56,7 +56,7 @@ const result = await esbuild
           outfile: 'public/app.js',
           watch: true,
           plugins: [
-            glslify(),
+            glslifyInline(),
             glsl(),
             devLogger({
               localUrl: local,
@@ -80,7 +80,7 @@ const result = await esbuild
         {
           outfile: 'build/app.js',
           minify: true,
-          plugins: [glslify(), glsl({ minify: true }), prodLogger({ outDir: 'build/' })],
+          plugins: [glslifyInline(), glsl({ minify: true }), prodLogger({ outDir: 'build/' })],
           metafile: true,
           entryNames: '[name]-[hash]', // add the contenthash to the filename
         }),
@@ -98,48 +98,4 @@ if (!isDevelopment) {
   let indexHtml = await fs.readFile('./build/index.html', 'utf-8')
   indexHtml = indexHtml.replace('src="app.js"', `src="${jsFileName}"`)
   await fs.writeFile('./build/index.html', indexHtml)
-}
-
-function glslify() {
-  return {
-    name: 'glslify',
-    setup(build) {
-      const cache = {}
-
-      build.onLoad({ filter: /\.(js|ts|jsx|tsx)$/ }, async (args) => {
-        if (args.path.includes('/node_modules/')) {
-          return
-        }
-
-        let text = await fs.readFile(args.path, 'utf8')
-
-        if (!text.includes('#pragma glslify')) {
-          return
-        }
-
-        // remove the unnecessary import
-        text = text.replace(/import glsl from ('|")glslify('|");?/, '')
-
-        // remove the unnecessary glsl function call
-        text = text.replaceAll('glsl`', '`')
-
-        // resolve glslify imports
-        text = text.replace(/^(\s*)#pragma glslify(.*)/gm, (match) => {
-          const glslifyImport = match.trim()
-
-          if (cache[glslifyImport]) {
-            return cache[glslifyImport]
-          }
-
-          const contents = compile(glslifyImport)
-          cache[glslifyImport] = contents
-          return contents
-        })
-
-        return {
-          contents: text,
-        }
-      })
-    },
-  }
 }
