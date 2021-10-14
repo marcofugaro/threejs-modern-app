@@ -1492,17 +1492,19 @@ esbuild-openbsd-64@0.13.3:
   resolved "https://registry.yarnpkg.com/esbuild-openbsd-64/-/esbuild-openbsd-64-0.13.3.tgz#0cb15bd86d20eb19cb548b530f1a533197532cf9"
   integrity sha512-HVpkgpn4BQt4BPDAjTOpeMub6mzNWw6Y3gaLQJrpbO24pws6ZwYkY24OI3/Uo3LDCbH6856MM81JxECt92OWjA==
 
-esbuild-plugin-glsl@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/esbuild-plugin-glsl/-/esbuild-plugin-glsl-1.0.5.tgz#63edebf76333b786f13f610af5ef85ce60ceebdd"
-  integrity sha512-DSbYFO6nLTD77+wvSUB5anZ1e8l+UmPeCvES/nmnbCi+NcIB2KWeMTT21Sohy89FZA+7R/P4s8+cuMwEbgza3g==
-
 esbuild-plugin-glslify-inline@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/esbuild-plugin-glslify-inline/-/esbuild-plugin-glslify-inline-1.0.0.tgz#acc0aca2cb10b621b216bd012b195ed13528f4dc"
   integrity sha512-l/+cOyCyQJF8y8UCxJL3QeHxNVGfTDmVy2n8LZEeAI3MBAQcidjb/0OXHRCMj6WvXcVLgVfD4+1rdA/jhAReqA==
   dependencies:
     babel-plugin-glsl "^1.0.0"
+
+esbuild-plugin-glslify@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/esbuild-plugin-glslify/-/esbuild-plugin-glslify-1.0.1.tgz#3a545486928e805f711d231d535e5b59feb1dac1"
+  integrity sha512-hHLHnQELeB4tWe/vVx1omwTANN/nFgvZP4lt8DsObqTWrKB6SeV1c1UxPUZGolpVJL4PGqXwSpnhrwevtLFlNQ==
+  dependencies:
+    glslify "^7.1.1"
 
 esbuild-sunos-64@0.13.3:
   version "0.13.3"

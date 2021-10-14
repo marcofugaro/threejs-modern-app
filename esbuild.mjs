@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import esbuild from 'esbuild'
-import { glsl } from 'esbuild-plugin-glsl'
+import { glslify } from 'esbuild-plugin-glslify'
 import { glslifyInline } from 'esbuild-plugin-glslify-inline'
 import browserSync from 'browser-sync'
 import openBrowser from 'react-dev-utils/openBrowser.js'
@@ -56,8 +56,8 @@ const result = await esbuild
           outfile: 'public/app.js',
           watch: true,
           plugins: [
+            glslify(),
             glslifyInline(),
-            glsl(),
             devLogger({
               localUrl: local,
               networkUrl: external,
@@ -80,7 +80,11 @@ const result = await esbuild
         {
           outfile: 'build/app.js',
           minify: true,
-          plugins: [glslifyInline(), glsl({ minify: true }), prodLogger({ outDir: 'build/' })],
+          plugins: [
+            glslify({ compress: true }),
+            glslifyInline({ compress: true }),
+            prodLogger({ outDir: 'build/' }),
+          ],
           metafile: true,
           entryNames: '[name]-[hash]', // add the contenthash to the filename
         }),
