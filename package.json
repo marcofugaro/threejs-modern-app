@@ -33,15 +33,15 @@
     "postprocessing": "^6.23.0",
     "pretty-ms": "^7.0.1",
     "stats.js": "marcofugaro/stats.js",
-    "three": "0.133.0"
+    "three": "0.133.1"
   },
   "devDependencies": {
     "browser-sync": "^2.27.5",
     "chalk": "^4.1.2",
     "cpr": "^3.0.1",
-    "esbuild": "^0.13.3",
+    "esbuild": "^0.13.6",
     "esbuild-plugin-glslify": "^1.0.1",
-    "esbuild-plugin-glslify-inline": "^1.0.0",
+    "esbuild-plugin-glslify-inline": "^1.1.0",
     "eslint": "^7.32.0",
     "eslint-config-accurapp": "^5.1.0",
     "eslint-config-prettier": "^8.3.0",
