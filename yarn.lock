@@ -767,10 +767,6 @@ cannon-es@^0.18.0:
   resolved "https://registry.yarnpkg.com/cannon-es/-/cannon-es-0.18.0.tgz#ae831ff9df2352d5faabb269c11ea0f10bc35c7e"
   integrity sha512-GiQ1bd0etZsMVSnUhNc+p+FEh0R/cULpp8uRSAhEK4Kax+y/31Au03m6h1h1xdDivAMnFg8YDwevHgzLynOHlw==
 
-ccapture.js@Unsigno/ccapture.js:
-  version "1.0.9"
-  resolved "https://codeload.github.com/Unsigno/ccapture.js/tar.gz/27da814ef7d34a7099a5a1a06ab147e3f8dc664e"
-
 chalk@2.4.2, chalk@^2.0.0, chalk@^2.1.0, chalk@^2.4.1:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
@@ -3261,6 +3257,10 @@ mkdirp@^0.5.1, mkdirp@~0.5.1:
   integrity sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ==
   dependencies:
     minimist "^1.2.5"
+
+mp4-wasm@marcofugaro/mp4-wasm#build-embedded:
+  version "1.0.3"
+  resolved "https://codeload.github.com/marcofugaro/mp4-wasm/tar.gz/55014ea54dc3afa1b92f01e12688ecbf57a805df"
 
 ms@2.0.0:
   version "2.0.0"

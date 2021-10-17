@@ -5,13 +5,12 @@ import Stats from 'stats.js'
 import { getGPUTier } from 'detect-gpu'
 import { EffectComposer, RenderPass } from 'postprocessing'
 import cannonDebugger from 'cannon-es-debugger'
-// import CCapture from 'ccapture.js'
+import loadMP4Module, { isWebCodecsSupported } from 'mp4-wasm'
 import { initControls } from './Controls'
 
 export default class WebGLApp {
   #width
   #height
-  #capturer
   isRunning = false
   time = 0
   dt = 0
@@ -22,6 +21,10 @@ export default class WebGLApp {
   #pointerupListeners = []
   #startX
   #startY
+  #mp4
+  #mp4Encoder
+  #fileName
+  #frames = []
 
   get background() {
     return this.renderer.getClearColor(new THREE.Color())
@@ -40,7 +43,7 @@ export default class WebGLApp {
   }
 
   get isRecording() {
-    return Boolean(this.#capturer)
+    return Boolean(this.#mp4Encoder)
   }
 
   constructor({
@@ -228,6 +231,13 @@ export default class WebGLApp {
         fps: gpuTier.fps,
       }
     })
+
+    // initialize the mp4 recorder
+    if (isWebCodecsSupported()) {
+      loadMP4Module().then((mp4) => {
+        this.#mp4 = mp4
+      })
+    }
   }
 
   get width() {
@@ -284,7 +294,7 @@ export default class WebGLApp {
   }
 
   // convenience function to trigger a PNG download of the canvas
-  saveScreenshot = ({ width = 1920, height = 1080, fileName = 'Screenshot.png' } = {}) => {
+  saveScreenshot = ({ width = this.width, height = this.height, fileName = 'Screenshot' } = {}) => {
     // force a specific output size
     this.resize({ width, height, pixelRatio: 1 })
     this.draw()
@@ -296,47 +306,59 @@ export default class WebGLApp {
     this.draw()
 
     // save
-    saveDataURI(fileName, dataURI)
+    downloadFile(`${fileName}.png`, dataURIToBlob(dataURI))
   }
 
   // start recording of a gif or a video
   startRecording = ({
-    width = 1920,
-    height = 1080,
+    width = this.width,
+    height = this.height,
     fileName = 'Recording',
-    format = 'gif',
     ...options
   } = {}) => {
-    if (this.#capturer) {
+    if (!isWebCodecsSupported()) {
+      throw new Error('You need the WebCodecs API to use mp4-wasm')
+    }
+
+    if (this.isRecording) {
       return
     }
+
+    this.#fileName = fileName
 
     // force a specific output size
     this.resize({ width, height, pixelRatio: 1 })
     this.draw()
 
-    this.#capturer = new CCapture({
-      format,
-      name: fileName,
-      workersPath: '',
-      motionBlurFrames: 2,
+    this.#mp4Encoder = this.#mp4.createWebCodecsEncoder({
+      width,
+      height,
+      fps: 60,
       ...options,
     })
-    this.#capturer.start()
   }
 
-  stopRecording = () => {
-    if (!this.#capturer) {
+  stopRecording = async () => {
+    if (!this.isRecording) {
       return
     }
 
-    this.#capturer.stop()
-    this.#capturer.save()
-    this.#capturer = undefined
+    for (let frame of this.#frames) {
+      await this.#mp4Encoder.addFrame(frame)
+    }
+    const buffer = await this.#mp4Encoder.end()
+    const blob = new Blob([buffer])
+
+    this.#mp4Encoder = undefined
+    // dispose the graphical resources associated with the ImageBitmap
+    this.#frames.forEach((frame) => frame.close())
+    this.#frames.length = 0
 
     // reset to default size
     this.resize()
     this.draw()
+
+    downloadFile(`${this.#fileName}.mp4`, blob)
   }
 
   update = (dt, time, xrframe) => {
@@ -475,7 +497,13 @@ export default class WebGLApp {
     this.update(this.dt, this.time, xrframe)
     this.draw()
 
-    if (this.#capturer) this.#capturer.capture(this.canvas)
+    // save the bitmap of the canvas for the recorder
+    if (this.isRecording) {
+      const index = this.#frames.length
+      createImageBitmap(this.canvas).then((bitmap) => {
+        this.#frames[index] = bitmap
+      })
+    }
 
     if (this.stats) this.stats.end()
   }
@@ -493,17 +521,14 @@ export default class WebGLApp {
   }
 }
 
-function saveDataURI(name, dataURI) {
-  const blob = dataURIToBlob(dataURI)
-
-  // force download
+function downloadFile(name, blob) {
   const link = document.createElement('a')
   link.download = name
-  link.href = window.URL.createObjectURL(blob)
-  link.onclick = setTimeout(() => {
-    window.URL.revokeObjectURL(blob)
+  link.href = URL.createObjectURL(blob)
+  link.click()
+
+  setTimeout(() => {
+    URL.revokeObjectURL(blob)
     link.removeAttribute('href')
   }, 0)
-
-  link.click()
 }
