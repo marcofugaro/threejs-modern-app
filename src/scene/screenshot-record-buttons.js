@@ -33,7 +33,7 @@ export function addScreenshotButton(webgl) {
   screenshotButton.style.right = 0
 
   screenshotButton.textContent = '📸 Save screenshot'
-  screenshotButton.addEventListener('click', webgl.saveScreenshot)
+  screenshotButton.addEventListener('click', () => webgl.saveScreenshot())
 
   document.body.appendChild(screenshotButton)
 }

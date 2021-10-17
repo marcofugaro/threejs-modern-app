@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import dataURIToBlob from 'datauritoblob'
 import Stats from 'stats.js'
 import { getGPUTier } from 'detect-gpu'
 import { EffectComposer, RenderPass } from 'postprocessing'
@@ -294,19 +293,21 @@ export default class WebGLApp {
   }
 
   // convenience function to trigger a PNG download of the canvas
-  saveScreenshot = ({ width = this.width, height = this.height, fileName = 'Screenshot' } = {}) => {
+  saveScreenshot = async ({
+    width = this.width,
+    height = this.height,
+    fileName = 'Screenshot',
+  } = {}) => {
     // force a specific output size
     this.resize({ width, height, pixelRatio: 1 })
-    this.draw()
 
-    const dataURI = this.canvas.toDataURL('image/png')
+    const blob = await new Promise((resolve) => this.canvas.toBlob(resolve, 'image/png'))
 
     // reset to default size
     this.resize()
-    this.draw()
 
     // save
-    downloadFile(`${fileName}.png`, dataURIToBlob(dataURI))
+    downloadFile(`${fileName}.png`, blob)
   }
 
   // start recording of a gif or a video
