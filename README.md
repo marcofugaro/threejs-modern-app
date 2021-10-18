@@ -59,7 +59,7 @@ You can pass the class the options you would pass to the [THREE.WebGLRenderer](h
 | `backgroundAlpha`     | 1                            | The transparency of the background.                                                                                                                                                             |
 | `maxPixelRatio`       | 2                            | You can clamp the pixelRatio. Often the pixelRatio is clamped for performance reasons.                                                                                                          |
 | `width`               | `window.innerWidth`          | The canvas width.                                                                                                                                                                               |
-| `height`              | `window.innerHeight`         | The canvas height                                                                                                                                                                               |
+| `height`              | `window.innerHeight`         | The canvas height.                                                                                                                                                                              |
 | `orthographic`        | false                        | Use an [OrthographicCamera](https://threejs.org/docs/#api/en/cameras/PerspectiveCamera) instead of the default [PerspectiveCamera](https://threejs.org/docs/#api/en/cameras/PerspectiveCamera). |
 | `cameraPosition`      | `new THREE.Vector3(0, 0, 4)` | Set the initial camera position. The camera will always look at [0, 0, 0].                                                                                                                      |
 | `fov`                 | 45                           | The field of view of the PerspectiveCamera. It is ignored if the option `orthographic` is true.                                                                                                 |
@@ -69,7 +69,7 @@ You can pass the class the options you would pass to the [THREE.WebGLRenderer](h
 | `postprocessing`      | false                        | Enable the [postprocessing library](https://github.com/vanruesc/postprocessing). The composer gets exposed as `webgl.composer`.                                                                 |
 | `xr`                  | false                        | Enable three.js WebXR mode. The update function now will have a `xrframe` object passed as a third parameter.                                                                                   |
 | `gamma`               | false                        | Turn on gamma correction. Remember to turn on gamma corrections also for textures and colors as stated in [this guide](https://www.donmccurdy.com/2020/06/17/color-management-in-threejs/).     |
-| `showFps`             | false                        | Show the [stats.js](https://github.com/mrdoob/stats.js/) fps counter                                                                                                                            |
+| `showFps`             | false                        | Show the [stats.js](https://github.com/mrdoob/stats.js/) fps counter.                                                                                                                           |
 | `orbitControls`       | undefined                    | Set this to `true` to enable OrbitControls. You can also pass an object of [OrbitControls properties](https://threejs.org/docs/index.html#examples/en/controls/OrbitControls) to set.           |
 | `controls`            | undefined                    | Accepts an object with the [controls-gui](https://github.com/rreusser/controls-gui) configuration. Exposed ad `webgl.controls`.                                                                 |
 | `hideControls`        | false                        | Set this to `true` to hide the controls-gui panel.                                                                                                                                              |
@@ -104,11 +104,27 @@ onPointerMove(event, { x, y }) {
 
 Save a screenshot of the application as a png.
 
-| Option     | Default       | Description                    |
-| ---------- | ------------- | ------------------------------ |
-| `width`    | 2560          | The width of the screenshot    |
-| `height`   | 1440          | The height of the screenshot   |
-| `fileName` | `'image.png'` | The filename, can be only .png |
+| Option     | Default              | Description                       |
+| ---------- | -------------------- | --------------------------------- |
+| `width`    | `window.innerWidth`  | The width of the screenshot.      |
+| `height`   | `window.innerHeight` | The height of the screenshot.     |
+| `fileName` | `'Screenshot'`       | The name the .png file will have. |
+
+### webgl.startRecording({ ...options })
+
+Start the recording of a video using [mp4-wasm](https://github.com/mattdesl/mp4-wasm).
+
+| Option     | Default              | Description                                                                                                                   |
+| ---------- | -------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `width`    | `window.innerWidth`  | The width of the video.                                                                                                       |
+| `height`   | `window.innerHeight` | The height of the video.                                                                                                      |
+| `fileName` | `'Recording'`        | The name the .mp4 file will have.                                                                                             |
+| ...others  |                      | Other options that you can pass to the `createWebCodecsEncoder()` method of [mp4-wasm](https://github.com/mattdesl/mp4-wasm). |
+
+### webgl.stopRecording()
+
+Stop the recording and download the video.
+It returns a promise that is resolved once the processing is done.
 
 ### webgl.onUpdate((dt, time) => {})
 
