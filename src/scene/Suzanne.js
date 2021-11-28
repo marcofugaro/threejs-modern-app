@@ -132,10 +132,6 @@ export default class Suzanne extends THREE.Group {
     // mesh deformation in the vertex shader
   }
 
-  onPointerMove(event, { x, y }) {}
-
-  onPointerUp(event, { x, y }) {}
-
   update(dt, time) {
     this.material.uniforms.time.value += dt * this.webgl.controls.movement.speed
   }

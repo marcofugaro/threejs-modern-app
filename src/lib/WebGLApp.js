@@ -335,6 +335,7 @@ export default class WebGLApp {
       width,
       height,
       fps: 60,
+      bitrate: 120 * 1000 * 1000, // 120 Mbit/s
       ...options,
     })
   }
