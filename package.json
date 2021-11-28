@@ -10,8 +10,7 @@
     "url": "<%= website %>"
   },
   "scripts": {
-    "postinstall": "yarn install-tree; yarn clean-browsersync",
-    "install-tree": "hash brew && ! hash tree && brew install tree || true",
+    "postinstall": "yarn clean-browsersync",
     "clean-browsersync": "sed -i -e 's/sourceMappingURL/_/g' ./node_modules/browser-sync-client/dist/index.js",
     "start": "NODE_ENV=development node ./esbuild.mjs",
     "prebuild": "yarn clean; yarn copy-public",
@@ -48,6 +47,8 @@
     "indent-string": "^5.0.0",
     "ora": "^6.0.1",
     "react-dev-utils": "^11.0.4",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "tree-node-cli": "marcofugaro/tree-node-cli#sizes-option"
   }
 }
+

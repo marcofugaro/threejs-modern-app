@@ -5,6 +5,7 @@ import prettyMs from 'pretty-ms'
 import indentString from 'indent-string'
 import _ from 'lodash-es'
 import ora from 'ora'
+import tree from 'tree-node-cli'
 
 export function devLogger({ localUrl, networkUrl, onFisrtBuild = () => {} }) {
   return {
@@ -71,21 +72,8 @@ export function prodLogger({ outDir }) {
         console.log(`The folder ${chalk.bold(`${outDir}`)} is ready to be deployed`)
         console.log()
 
-        try {
-          const tree = execSync(`tree --du -h --dirsfirst ${outDir}`).toString()
-          console.log(beautifyTree(tree))
-        } catch (e) {
-          console.log(
-            chalk.yellow(`⚠️  Homerew and the tree package are required for the file tree output,`),
-            `please install them with the following command:`
-          )
-          console.log()
-          console.log(
-            chalk.cyan(
-              `  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" && brew install tree`
-            )
-          )
-        }
+        const fileTree = tree(outDir, { dirsFirst: true, sizes: true })
+        console.log(beautifyTree(fileTree))
 
         console.log()
       })
@@ -110,14 +98,14 @@ ${chalk.dim`    ${line} │ ${lineText}
 
 // make the console >tree command look pretty
 export function beautifyTree(tree) {
-  const trimEnd = (s) => s.slice(0, s.indexOf('\n\n'))
-  const addByteUnit = (s) => s.replace(/\[ *([0-9]+)\]/g, '[$1B]')
-  const replaceBrackets = (s) => s.replace(/\[(.+)\]/g, chalk.yellow('$1'))
+  const removeFolderSize = (s) => s.slice(s.indexOf(' ') + 1)
+  const colorFilesizes = (s) =>
+    s.replace(/ ([A-Za-z0-9.]+) ([A-Za-z0-9.-]+)$/gm, ` ${chalk.yellow('$1')} $2`)
   const boldFirstLine = (s) => s.replace(/^(.*\n)/g, chalk.bold('$1'))
   const colorIt = (s) => chalk.cyan(s)
   const indent = (s) => indentString(s, 2)
 
-  const beautify = _.flow([trimEnd, addByteUnit, replaceBrackets, boldFirstLine, colorIt, indent])
+  const beautify = _.flow([removeFolderSize, colorFilesizes, boldFirstLine, colorIt, indent])
 
   return beautify(tree)
 }

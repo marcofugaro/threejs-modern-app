@@ -26,8 +26,6 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 
 ![console screenshots](.github/screenshots/console.png)
 
-> **NOTE**: [brew](https://brew.sh/) is required for the build command output
-
 ## Usage
 
 Once you installed the dependencies running `yarn`, these are the available commands:
