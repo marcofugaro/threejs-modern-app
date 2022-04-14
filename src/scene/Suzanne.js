@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import glsl from 'glslify'
-import assets from '../lib/AssetManager'
-import { wireValue, wireUniform } from '../lib/Controls'
-import { addUniforms, customizeVertexShader } from '../lib/customizeShader'
+import assets from '../utils/AssetManager'
+import { wireValue, wireUniform } from '../utils/Controls'
+import { addUniforms, customizeVertexShader } from '../utils/customizeShader'
 
 // elaborated three.js component example
 // containing example usage of

@@ -1,6 +1,6 @@
 import { EffectPass, VignetteEffect } from 'postprocessing'
-import WebGLApp from './lib/WebGLApp'
-import assets from './lib/AssetManager'
+import WebGLApp from './utils/WebGLApp'
+import assets from './utils/AssetManager'
 import Suzanne from './scene/Suzanne'
 import { addNaturalLight } from './scene/lights'
 import { addScreenshotButton, addRecordButton } from './scene/screenshot-record-buttons'
