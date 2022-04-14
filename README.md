@@ -38,7 +38,7 @@ All the build tools logic is in the `package.json` and `esbuild.mjs`.
 ## WebGLApp
 
 ```js
-import WebGLApp from './lib/WebGLApp'
+import WebGLApp from './utils/WebGLApp'
 
 const webgl = new WebGLApp({ ...options })
 ```
@@ -272,7 +272,7 @@ https://github.com/marcofugaro/threejs-modern-app/blob/bd303c968c0b0ef56a40046e0
 In detail, first you queue the asset you want to preload in the component where you will use it
 
 ```js
-import assets from '../lib/AssetManager'
+import assets from '../utils/AssetManager'
 
 const key = assets.queue({
   url: 'assets/model.gltf',
@@ -504,13 +504,3 @@ Here is what the exposed `webgl.gpu` object contains:
 ⚠️ **WARNING**: `webgl.gpu` is set asyncronously since the benchmark data needs to be fetched. You might want to wait for the exposed promise `webgl.loadGPUTier`.
 
 More info on this approach also in [this great talk](http://www.youtube.com/watch?v=iNMD8Vr1tKg&t=32m4s) by [luruke](https://github.com/luruke)
-
-## Hot reload
-
-TODO
-
-(find some use cases, maybe only the hot shader reload?)
-
-Take a look at:
-https://github.com/mattdesl/canvas-sketch/blob/1cefbcdf2c5302e74a6a84ff803ddbb377e473f5/docs/hot-reloading.md
-https://github.com/mattdesl/shader-reload
