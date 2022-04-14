@@ -1,6 +1,6 @@
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader'
-import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
 
 export default function loadGLTF(url, options = {}) {
   return new Promise((resolve, reject) => {

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Stats from 'stats.js'
 import { getGPUTier } from 'detect-gpu'
 import { EffectComposer, RenderPass } from 'postprocessing'

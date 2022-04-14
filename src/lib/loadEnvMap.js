@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 // TODO lazy load these, or put them in different files
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader'
-import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader'
-import { HDRCubeTextureLoader } from 'three/examples/jsm/loaders/HDRCubeTextureLoader'
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
+import { HDRCubeTextureLoader } from 'three/examples/jsm/loaders/HDRCubeTextureLoader.js'
 
 export default function loadEnvMap(url, { renderer, ...options }) {
   if (!renderer) {
