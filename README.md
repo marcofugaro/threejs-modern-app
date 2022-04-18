@@ -8,10 +8,6 @@ It is inspired from [mattdesl](https://twitter.com/mattdesl)'s [threejs-app](htt
 
 ### [DEMO](https://marcofugaro.github.io/threejs-modern-app/?debug)
 
-### [Example of production scale project](https://github.com/marcofugaro/shrimpcat/)
-
-### [Yeoman Generator (CLI that generates a blank project without the example code)](https://github.com/marcofugaro/generator-treejs-modern-app)
-
 ## Features
 
 - All the **three.js boilerplate code is tucked away** in a file, the exported `WebGLApp` is easily configurable from the outside, for example you can enable [postprocessing](https://github.com/vanruesc/postprocessing), orbit controls, [FPS stats](https://github.com/marcofugaro/stats.js/), [Detect GPU](https://github.com/TimvanScherpenzeel/detect-gpu), a [controls-gui](https://github.com/rreusser/controls-gui) and use the save screenshot or record mp4 functionality. It also has built-in support for [cannon-es](https://github.com/pmndrs/cannon-es). [[Read more](#webglapp)]

@@ -17,9 +17,6 @@ const webgl = new WebGLApp({
   // set the scene background color
   background: '#111',
   backgroundAlpha: 1,
-  // enable gamma correction, read more about it here:
-  // https://www.donmccurdy.com/2020/06/17/color-management-in-threejs/
-  gamma: true,
   // enable postprocessing
   postprocessing: true,
   // show the fps counter from stats.js

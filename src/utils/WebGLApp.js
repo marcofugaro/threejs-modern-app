@@ -52,6 +52,8 @@ export default class WebGLApp {
     frustumSize = 3,
     near = 0.01,
     far = 100,
+    gamma = true,
+    physicallyCorrectLights = true,
     ...options
   } = {}) {
     this.renderer = new THREE.WebGLRenderer({
@@ -65,8 +67,13 @@ export default class WebGLApp {
     if (options.sortObjects !== undefined) {
       this.renderer.sortObjects = options.sortObjects
     }
-    if (options.gamma) {
+    if (gamma) {
+      // enable gamma correction, read more about it here:
+      // https://www.donmccurdy.com/2020/06/17/color-management-in-threejs/
       this.renderer.outputEncoding = THREE.sRGBEncoding
+    }
+    if (physicallyCorrectLights) {
+      this.renderer.physicallyCorrectLights = true
     }
     if (options.xr) {
       this.renderer.xr.enabled = true
@@ -180,7 +187,7 @@ export default class WebGLApp {
       const maxMultisampling = this.gl.getParameter(this.gl.MAX_SAMPLES)
       this.composer = new EffectComposer(this.renderer, {
         multisampling: Math.min(8, maxMultisampling),
-        frameBufferType: options.gamma ? THREE.HalfFloatType : undefined,
+        frameBufferType: gamma ? THREE.HalfFloatType : undefined,
         ...options,
       })
       this.composer.addPass(new RenderPass(this.scene, this.camera))
