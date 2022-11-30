@@ -19,35 +19,35 @@
     "copy-public": "cpr public/ build/"
   },
   "dependencies": {
-    "cannon-es": "^0.19.0",
+    "cannon-es": "^0.20.0",
     "cannon-es-debugger": "^1.0.0",
     "controls-gui": "^2.0.0",
     "controls-state": "^2.0.0",
-    "detect-gpu": "^4.0.17",
+    "detect-gpu": "^4.0.50",
     "image-promise": "^7.0.1",
     "lodash-es": "^4.17.21",
     "mp4-wasm": "marcofugaro/mp4-wasm#build-embedded",
-    "p-map": "^5.3.0",
-    "postprocessing": "^6.26.3",
-    "pretty-ms": "^7.0.1",
+    "p-map": "^5.5.0",
+    "postprocessing": "^6.29.1",
+    "pretty-ms": "^8.0.0",
     "stats.js": "marcofugaro/stats.js",
-    "three": "0.139.2"
+    "three": "0.147.0"
   },
   "devDependencies": {
     "browser-sync": "^2.27.9",
     "chalk": "4.1.2",
     "cpr": "^3.0.1",
-    "esbuild": "^0.14.36",
+    "esbuild": "^0.15.16",
     "esbuild-plugin-glslify": "^1.0.1",
     "esbuild-plugin-glslify-inline": "^1.1.0",
-    "eslint": "^8.13.0",
+    "eslint": "^8.28.0",
     "eslint-config-accurapp": "^5.1.0",
     "eslint-config-prettier": "^8.5.0",
     "glslify": "^7.1.1",
     "indent-string": "^5.0.0",
-    "ora": "^6.1.0",
+    "ora": "^6.1.2",
     "react-dev-utils": "^12.0.1",
     "rimraf": "^3.0.2",
-    "tree-node-cli": "^1.5.2"
+    "tree-node-cli": "^1.6.0"
   }
 }
