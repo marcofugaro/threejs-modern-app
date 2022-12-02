@@ -78,6 +78,7 @@ export function monkeyPatch(
     transformed,
     objectNormal,
     transformedNormal,
+    gl_Position,
     diffuse,
     emissive,
     gl_FragColor,
@@ -127,6 +128,15 @@ export function monkeyPatch(
     )
   }
 
+  if (gl_Position && patchedShader.includes('#include <project_vertex>')) {
+    patchedShader = patchedShader.replace(
+      '#include <project_vertex>',
+      `#include <project_vertex>
+      ${gl_Position}
+      `
+    )
+  }
+
   if (diffuse && patchedShader.includes('vec4 diffuseColor = vec4( diffuse, opacity );')) {
     patchedShader = patchedShader.replace(
       'vec4 diffuseColor = vec4( diffuse, opacity );',
@@ -149,15 +159,12 @@ export function monkeyPatch(
     )
   }
 
-  if (
-    gl_FragColor &&
-    patchedShader.includes('gl_FragColor = vec4( outgoingLight, diffuseColor.a );')
-  ) {
+  if (gl_FragColor && patchedShader.includes('#include <output_fragment>')) {
     patchedShader = patchedShader.replace(
-      'gl_FragColor = vec4( outgoingLight, diffuseColor.a );',
+      '#include <output_fragment>',
       `
-        gl_FragColor = vec4(outgoingLight, diffuseColor.a);
-        ${gl_FragColor}
+      #include <output_fragment>
+      ${gl_FragColor}
       `
     )
   }
