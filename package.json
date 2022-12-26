@@ -43,7 +43,6 @@
     "esbuild-plugin-glslify": "^1.0.1",
     "esbuild-plugin-glslify-inline": "^1.1.0",
     "eslint": "^8.30.0",
-    "eslint-config-accurapp": "^5.1.0",
     "eslint-config-prettier": "^8.5.0",
     "glslify": "^7.1.1",
     "indent-string": "^5.0.0",
