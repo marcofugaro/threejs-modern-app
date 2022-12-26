@@ -4,9 +4,10 @@ import { glslify } from 'esbuild-plugin-glslify'
 import { glslifyInline } from 'esbuild-plugin-glslify-inline'
 import browserSync from 'browser-sync'
 import openBrowser from 'react-dev-utils/openBrowser.js'
+import address from 'address'
 import { devLogger, prodLogger } from './logging-utils.js'
 
-const HTTPS = false // enable https here
+const HTTPS = process.argv.includes('--https')
 const PORT = '8080'
 
 const isDevelopment = process.env.NODE_ENV === 'development'
@@ -30,7 +31,7 @@ if (isDevelopment) {
 
   const urlOptions = server.instance.utils.getUrlOptions(server.instance.options)
   local = urlOptions.get('local')
-  external = urlOptions.get('external')
+  external = `${HTTPS ? 'https' : 'http'}://${address.ip()}:${PORT}`
 }
 
 const result = await esbuild

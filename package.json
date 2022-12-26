@@ -35,6 +35,7 @@
     "three": "0.148.0"
   },
   "devDependencies": {
+    "address": "^1.2.2",
     "browser-sync": "^2.27.11",
     "chalk": "4.1.2",
     "cpr": "^3.0.1",
@@ -52,4 +53,3 @@
     "tree-node-cli": "^1.6.0"
   }
 }
-
