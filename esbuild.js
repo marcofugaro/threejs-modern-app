@@ -4,7 +4,7 @@ import { glslify } from 'esbuild-plugin-glslify'
 import { glslifyInline } from 'esbuild-plugin-glslify-inline'
 import browserSync from 'browser-sync'
 import openBrowser from 'react-dev-utils/openBrowser.js'
-import { devLogger, prodLogger } from './logging-utils.mjs'
+import { devLogger, prodLogger } from './logging-utils.js'
 
 const HTTPS = false // enable https here
 const PORT = '8080'

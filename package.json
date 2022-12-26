@@ -1,20 +1,21 @@
 {
   "name": "",
   "version": "0.0.0",
-  "description": "<%= description %>",
+  "description": "",
   "license": "MIT",
-  "repository": "https://github.com/<%= githubUsername %>/<%= title %>",
+  "repository": "",
   "author": {
-    "name": "<%= name %>",
-    "email": "<%= email %>",
-    "url": "<%= website %>"
+    "name": "",
+    "email": "",
+    "url": ""
   },
+  "type": "module",
   "scripts": {
     "postinstall": "yarn clean-browsersync",
     "clean-browsersync": "sed -i -e 's/sourceMappingURL/_/g' ./node_modules/browser-sync-client/dist/index.js",
-    "start": "NODE_ENV=development node ./esbuild.mjs",
+    "start": "NODE_ENV=development node ./esbuild.js",
     "prebuild": "yarn clean; yarn copy-public",
-    "build": "NODE_ENV=production node ./esbuild.mjs",
+    "build": "NODE_ENV=production node ./esbuild.js",
     "clean": "rimraf build/; rimraf public/app.js; rimraf public/app.js.map",
     "copy-public": "cpr public/ build/"
   },
@@ -23,7 +24,7 @@
     "cannon-es-debugger": "^1.0.0",
     "controls-gui": "^2.0.0",
     "controls-state": "^2.0.0",
-    "detect-gpu": "^4.0.50",
+    "detect-gpu": "^5.0.4",
     "image-promise": "^7.0.1",
     "lodash-es": "^4.17.21",
     "mp4-wasm": "marcofugaro/mp4-wasm#build-embedded",
@@ -31,16 +32,16 @@
     "postprocessing": "^6.29.1",
     "pretty-ms": "^8.0.0",
     "stats.js": "marcofugaro/stats.js",
-    "three": "0.147.0"
+    "three": "0.148.0"
   },
   "devDependencies": {
-    "browser-sync": "^2.27.9",
+    "browser-sync": "^2.27.11",
     "chalk": "4.1.2",
     "cpr": "^3.0.1",
-    "esbuild": "^0.15.16",
+    "esbuild": "^0.16.10",
     "esbuild-plugin-glslify": "^1.0.1",
     "esbuild-plugin-glslify-inline": "^1.1.0",
-    "eslint": "^8.28.0",
+    "eslint": "^8.30.0",
     "eslint-config-accurapp": "^5.1.0",
     "eslint-config-prettier": "^8.5.0",
     "glslify": "^7.1.1",
@@ -51,3 +52,4 @@
     "tree-node-cli": "^1.6.0"
   }
 }
+
