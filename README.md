@@ -258,7 +258,11 @@ addLights(webgl)
 
 ## Asset Manager
 
-The Asset Manager handles the preloading of all the assets needed to run the scene, you use it like this:
+The Asset Manager handles the preloading of all the assets needed to run the scene.
+
+<img width="400" src=".github/screenshots/asset-manager.png" />
+
+You can use it like this:
 
 https://github.com/marcofugaro/threejs-modern-app/blob/bd303c968c0b0ef56a40046e054371ba4b8c7e54/src/scene/Suzanne.js#L15-L46
 

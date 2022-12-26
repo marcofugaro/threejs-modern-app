@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import Stats from 'stats.js'
 import { getGPUTier } from 'detect-gpu'
 import { EffectComposer, RenderPass } from 'postprocessing'
-import cannonDebugger from 'cannon-es-debugger'
+import CannonDebugger from 'cannon-es-debugger'
 import loadMP4Module, { isWebCodecsSupported } from 'mp4-wasm'
 import { initControls } from './Controls'
 
@@ -212,7 +212,7 @@ export default class WebGLApp {
     if (options.world) {
       this.world = options.world
       if (options.showWorldWireframes) {
-        this.cannonDebugger = cannonDebugger(this.scene, this.world.bodies, { autoUpdate: false })
+        this.cannonDebugger = new CannonDebugger(this.scene, this.world.bodies)
       }
     }
 
