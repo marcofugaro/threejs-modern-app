@@ -1,4 +1,3 @@
-import { execSync } from 'child_process'
 import { performance } from 'perf_hooks'
 import chalk from 'chalk'
 import prettyMs from 'pretty-ms'
