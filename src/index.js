@@ -3,7 +3,7 @@ import WebGLApp from './utils/WebGLApp'
 import assets from './utils/AssetManager'
 import Suzanne from './scene/Suzanne'
 import { addNaturalLight } from './scene/lights'
-import { addScreenshotButton, addRecordButton } from './scene/screenshot-record-buttons'
+import { addScreenshotButton, addRecordButton } from './screenshot-record-buttons'
 
 // true if the url has the `?debug` parameter, otherwise false
 window.DEBUG = window.location.search.includes('debug')
@@ -23,20 +23,8 @@ const webgl = new WebGLApp({
   showFps: window.DEBUG,
   // enable OrbitControls
   orbitControls: window.DEBUG,
-  // Add the controls pane inputs
-  controls: {
-    roughness: 0.5,
-    movement: {
-      speed: {
-        value: 1.5,
-        max: 100,
-        scale: 'exp',
-      },
-      frequency: { value: 0.5, max: 5 },
-      amplitude: { value: 0.7, max: 2 },
-    },
-  },
-  hideControls: !window.DEBUG,
+  // show the GUI
+  gui: window.DEBUG,
   // enable cannon-es
   // world: new CANNON.World(),
 })
@@ -50,29 +38,29 @@ if (window.DEBUG) {
 webgl.canvas.style.visibility = 'hidden'
 
 // load any queued assets
-assets.load({ renderer: webgl.renderer }).then(() => {
-  // add any "WebGL components" here...
-  // append them to the scene so you can
-  // use them from other components easily
-  webgl.scene.suzanne = new Suzanne(webgl)
-  webgl.scene.add(webgl.scene.suzanne)
+await assets.load({ renderer: webgl.renderer })
 
-  // lights and other scene related stuff
-  addNaturalLight(webgl)
+// add any "WebGL components" here...
+// append them to the scene so you can
+// use them from other components easily
+webgl.scene.suzanne = new Suzanne(webgl)
+webgl.scene.add(webgl.scene.suzanne)
 
-  // postprocessing
-  // add an existing effect from the postprocessing library
-  webgl.composer.addPass(new EffectPass(webgl.camera, new VignetteEffect()))
+// lights and other scene related stuff
+addNaturalLight(webgl)
 
-  // add the save screenshot and save gif buttons
-  if (window.DEBUG) {
-    addScreenshotButton(webgl)
-    addRecordButton(webgl)
-  }
+// postprocessing
+// add an existing effect from the postprocessing library
+webgl.composer.addPass(new EffectPass(webgl.camera, new VignetteEffect()))
 
-  // show canvas
-  webgl.canvas.style.visibility = ''
+// add the save screenshot and save gif buttons
+if (window.DEBUG) {
+  addScreenshotButton(webgl)
+  addRecordButton(webgl)
+}
 
-  // start animation loop
-  webgl.start()
-})
+// show canvas
+webgl.canvas.style.visibility = ''
+
+// start animation loop
+webgl.start()

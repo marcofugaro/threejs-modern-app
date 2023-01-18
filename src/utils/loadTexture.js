@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import { sRGBEncoding, TextureLoader } from 'three'
 
 export default function loadTexture(url, { renderer, ...options }) {
   if (!renderer) {
@@ -6,12 +6,12 @@ export default function loadTexture(url, { renderer, ...options }) {
   }
 
   return new Promise((resolve, reject) => {
-    new THREE.TextureLoader().load(
+    new TextureLoader().load(
       url,
       (texture) => {
         // apply eventual gamma encoding
-        if (renderer.outputEncoding === THREE.sRGBEncoding && !options.linear) {
-          texture.encoding = THREE.sRGBEncoding
+        if (renderer.outputEncoding === sRGBEncoding && !options.linear) {
+          texture.encoding = sRGBEncoding
         }
 
         // apply eventual texture options, such as wrap, repeat...

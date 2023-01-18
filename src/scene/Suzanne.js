@@ -1,7 +1,6 @@
-import * as THREE from 'three'
+import { Group, MeshStandardMaterial, Raycaster, Vector2 } from 'three'
 import glsl from 'glslify'
 import assets from '../utils/AssetManager'
-import { wireValue, wireUniform } from '../utils/Controls'
 import { addUniforms, customizeVertexShader } from '../utils/customizeShader'
 
 // elaborated three.js component example
@@ -45,7 +44,7 @@ const hdrKey = assets.queue({
   type: 'env-map',
 })
 
-export default class Suzanne extends THREE.Group {
+export default class Suzanne extends Group {
   constructor(webgl, options = {}) {
     super(options)
     this.webgl = webgl
@@ -55,26 +54,26 @@ export default class Suzanne extends THREE.Group {
     const suzanne = suzanneGltf.scene.clone()
 
     const envMap = assets.get(hdrKey)
-    const material = new THREE.MeshStandardMaterial({
+    const material = new MeshStandardMaterial({
       map: assets.get(albedoKey),
       metalnessMap: assets.get(metalnessKey),
       roughnessMap: assets.get(roughnessKey),
       normalMap: assets.get(normalKey),
-      normalScale: new THREE.Vector2(2, 2),
+      normalScale: new Vector2(2, 2),
       envMap,
-      roughness: webgl.controls.roughness,
+      roughness: 0.5,
       metalness: 1,
     })
+    webgl.gui?.addSmart(material, 'roughness')
     this.material = material
-
-    wireValue(material, () => webgl.controls.roughness)
 
     // add new unifroms and expose current uniforms
     addUniforms(material, {
       time: { value: 0 },
-      frequency: wireUniform(material, () => webgl.controls.movement.frequency),
-      amplitude: wireUniform(material, () => webgl.controls.movement.amplitude),
+      frequency: { value: 0.5 },
+      amplitude: { value: 0.7 },
     })
+    webgl.gui?.wireUniforms('movement', material.uniforms, { blacklist: ['time'] })
 
     customizeVertexShader(material, {
       head: glsl`
@@ -83,7 +82,7 @@ export default class Suzanne extends THREE.Group {
         uniform float amplitude;
 
         // you could import glsl packages like this
-        // #pragma glslify: noise = require(glsl-noise/simplex/3d)
+        // #pragma glslify: noise3d = require(glsl-noise/simplex/3d)
       `,
       main: glsl`
         float theta = sin(position.z * frequency + time) * amplitude;
@@ -111,6 +110,10 @@ export default class Suzanne extends THREE.Group {
     // make it a little bigger
     suzanne.scale.multiplyScalar(1.2)
 
+    // incremental speed, we can change it through the GUI
+    this.speed = 1.5
+    webgl.gui?.folders.find((f) => f._title === 'movement').addSmart(this, 'speed')
+
     this.add(suzanne)
 
     // set the background as the hdr
@@ -120,11 +123,11 @@ export default class Suzanne extends THREE.Group {
   onPointerDown(event, { x, y }) {
     // for example, check of we clicked on an
     // object with raycasting
-    const coords = new THREE.Vector2().set(
+    const coords = new Vector2().set(
       (x / this.webgl.width) * 2 - 1,
       (-y / this.webgl.height) * 2 + 1
     )
-    const raycaster = new THREE.Raycaster()
+    const raycaster = new Raycaster()
     raycaster.setFromCamera(coords, this.webgl.camera)
     const hits = raycaster.intersectObject(this, true)
     console.log(hits.length > 0 ? `Hit ${hits[0].object.name}!` : 'No hit')
@@ -133,6 +136,6 @@ export default class Suzanne extends THREE.Group {
   }
 
   update(dt, time) {
-    this.material.uniforms.time.value += dt * this.webgl.controls.movement.speed
+    this.material.uniforms.time.value += dt * this.speed
   }
 }

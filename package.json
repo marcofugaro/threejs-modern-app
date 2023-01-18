@@ -22,10 +22,9 @@
   "dependencies": {
     "cannon-es": "^0.20.0",
     "cannon-es-debugger": "^1.0.0",
-    "controls-gui": "^2.0.0",
-    "controls-state": "^2.0.0",
     "detect-gpu": "^5.0.4",
     "image-promise": "^7.0.1",
+    "lil-gui": "^0.17.0",
     "lodash-es": "^4.17.21",
     "mp4-wasm": "marcofugaro/mp4-wasm#build-embedded",
     "p-map": "^5.5.0",

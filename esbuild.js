@@ -38,7 +38,7 @@ const result = await esbuild
   .build({
     entryPoints: ['src/index.js'],
     bundle: true,
-    format: 'iife',
+    format: 'esm',
     logLevel: 'silent', // sssh...
     legalComments: 'none', // don't include licenses txt file
     sourcemap: true,

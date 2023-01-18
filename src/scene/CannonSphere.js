@@ -1,5 +1,5 @@
-import * as THREE from 'three'
-import * as CANNON from 'cannon-es'
+import { Group, Mesh, MeshStandardMaterial, SphereGeometry } from 'three'
+import { Body, Sphere } from 'cannon-es'
 
 // remember to add the body to the CANNON world and
 // the mesh to the three.js scene or to some component
@@ -8,8 +8,8 @@ import * as CANNON from 'cannon-es'
 //   webgl.world.addBody(sphere)
 //   webgl.scene.add(sphere.mesh)
 
-export default class CannonSphere extends CANNON.Body {
-  mesh = new THREE.Group()
+export default class CannonSphere extends Body {
+  mesh = new Group()
 
   constructor(webgl, options = {}) {
     super(options)
@@ -18,13 +18,13 @@ export default class CannonSphere extends CANNON.Body {
 
     const { radius = 1 } = this.options
 
-    this.addShape(new CANNON.Sphere(radius))
+    this.addShape(new Sphere(radius))
 
     // add corresponding geometry and material
     this.mesh.add(
-      new THREE.Mesh(
-        new THREE.SphereGeometry(radius, 32, 32),
-        new THREE.MeshStandardMaterial({ color: Math.random() * 0xffffff })
+      new Mesh(
+        new SphereGeometry(radius, 32, 32),
+        new MeshStandardMaterial({ color: Math.random() * 0xffffff })
       )
     )
 

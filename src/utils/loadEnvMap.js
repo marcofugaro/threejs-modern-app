@@ -1,8 +1,15 @@
-import * as THREE from 'three'
+import {
+  CubeTextureLoader,
+  EquirectangularReflectionMapping,
+  PMREMGenerator,
+  sRGBEncoding,
+  TextureLoader,
+  UnsignedByteType,
+} from 'three'
 // TODO lazy load these, or put them in different files
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
-import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js'
-import { HDRCubeTextureLoader } from 'three/examples/jsm/loaders/HDRCubeTextureLoader.js'
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js'
+import { EXRLoader } from 'three/addons/loaders/EXRLoader.js'
+import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js'
 
 export default function loadEnvMap(url, { renderer, ...options }) {
   if (!renderer) {
@@ -17,18 +24,18 @@ export default function loadEnvMap(url, { renderer, ...options }) {
 
     switch (extension) {
       case 'hdr': {
-        loader = new RGBELoader().setDataType(THREE.UnsignedByteType).loadAsync(url)
+        loader = new RGBELoader().setDataType(UnsignedByteType).loadAsync(url)
         break
       }
       case 'exr': {
-        loader = new EXRLoader().setDataType(THREE.UnsignedByteType).loadAsync(url)
+        loader = new EXRLoader().setDataType(UnsignedByteType).loadAsync(url)
         break
       }
       case 'png':
       case 'jpg': {
-        loader = new THREE.TextureLoader().loadAsync(url).then((texture) => {
-          if (renderer.outputEncoding === THREE.sRGBEncoding && !options.linear) {
-            texture.encoding = THREE.sRGBEncoding
+        loader = new TextureLoader().loadAsync(url).then((texture) => {
+          if (renderer.outputEncoding === sRGBEncoding && !options.linear) {
+            texture.encoding = sRGBEncoding
           }
           return texture
         })
@@ -51,14 +58,14 @@ export default function loadEnvMap(url, { renderer, ...options }) {
 
     switch (extension) {
       case 'hdr': {
-        loader = new HDRCubeTextureLoader().setDataType(THREE.UnsignedByteType).loadAsync(url)
+        loader = new HDRCubeTextureLoader().setDataType(UnsignedByteType).loadAsync(url)
         break
       }
       case 'png':
       case 'jpg': {
-        loader = new THREE.CubeTextureLoader().loadAsync(url).then((texture) => {
-          if (renderer.outputEncoding === THREE.sRGBEncoding && !options.linear) {
-            texture.encoding = THREE.sRGBEncoding
+        loader = new CubeTextureLoader().loadAsync(url).then((texture) => {
+          if (renderer.outputEncoding === sRGBEncoding && !options.linear) {
+            texture.encoding = sRGBEncoding
           }
           return texture
         })
@@ -94,7 +101,7 @@ export default function loadEnvMap(url, { renderer, ...options }) {
 
 // prefilter the equirectangular environment map for irradiance
 function equirectangularToPMREMCube(texture, renderer) {
-  const pmremGenerator = new THREE.PMREMGenerator(renderer)
+  const pmremGenerator = new PMREMGenerator(renderer)
   pmremGenerator.compileEquirectangularShader()
 
   const cubeRenderTarget = pmremGenerator.fromEquirectangular(texture)
@@ -108,7 +115,7 @@ function equirectangularToPMREMCube(texture, renderer) {
 
 // prefilter the cubemap environment map for irradiance
 function cubeToPMREMCube(texture, renderer) {
-  const pmremGenerator = new THREE.PMREMGenerator(renderer)
+  const pmremGenerator = new PMREMGenerator(renderer)
   pmremGenerator.compileCubemapShader()
 
   const cubeRenderTarget = pmremGenerator.fromCubemap(texture)
@@ -123,6 +130,6 @@ function cubeToPMREMCube(texture, renderer) {
 // transform an equirectangular texture to a cubetexture that
 // can be used as an envmap or scene background
 function equirectangularToCube(texture) {
-  texture.mapping = THREE.EquirectangularReflectionMapping
+  texture.mapping = EquirectangularReflectionMapping
   return texture
 }

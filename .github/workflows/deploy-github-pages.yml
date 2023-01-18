@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -16,9 +16,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-
-      - name: Cache node_modules
-        uses: c-hive/gha-yarn-cache@v2
+          cache: 'yarn'
 
       - name: Install Dependencies
         run: yarn

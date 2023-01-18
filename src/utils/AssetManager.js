@@ -5,6 +5,7 @@ import omit from 'lodash/omit'
 import loadTexture from './loadTexture'
 import loadEnvMap from './loadEnvMap'
 import loadGLTF from './loadGLTF'
+import { mapValues } from 'lodash-es'
 
 class AssetManager {
   #queue = []
@@ -42,6 +43,46 @@ class AssetManager {
     return url
   }
 
+  // Add a MeshStandardMaterial to be queued,
+  // input: { map, metalnessMap, roughnessMap, normalMap, ... }
+  queueStandardMaterial(maps, options = {}) {
+    const keys = {}
+
+    // These textures are non-color and they don't
+    // need gamma correction
+    const linearTextures = [
+      'pbrMap',
+      'alphaMap',
+      'aoMap',
+      'bumpMap',
+      'displacementMap',
+      'lightMap',
+      'metalnessMap',
+      'normalMap',
+      'roughnessMap',
+      'clearcoatMap',
+      'clearcoatNormalMap',
+      'clearcoatRoughnessMap',
+      'sheenRoughnessMap',
+      'sheenColorMap',
+      'specularIntensityMap',
+      'specularColorMap',
+      'thicknessMap',
+      'transmissionMap',
+    ]
+
+    Object.keys(maps).forEach((map) => {
+      keys[map] = this.queue({
+        url: maps[map],
+        type: 'texture',
+        ...options,
+        ...(linearTextures.includes(map) && { linear: true }),
+      })
+    })
+
+    return keys
+  }
+
   _getQueued(url) {
     return this.#queue.find((item) => item.url === url)
   }
@@ -72,6 +113,11 @@ class AssetManager {
     if (!key) throw new TypeError('Must specify an URL for AssetManager.get()')
 
     return this.#loaded[key]
+  }
+
+  // Fetch a loaded MeshStandardMaterial object
+  getStandardMaterial = (keys) => {
+    return mapValues(keys, (key) => this.get(key))
   }
 
   // Loads a single asset on demand.
