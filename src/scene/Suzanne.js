@@ -73,7 +73,7 @@ export default class Suzanne extends Group {
       frequency: { value: 0.5 },
       amplitude: { value: 0.7 },
     })
-    webgl.gui?.wireUniforms('movement', material.uniforms, { blacklist: ['time'] })
+    webgl.gui?.wireUniforms('Movement', material.uniforms, { blacklist: ['time'] })
 
     customizeVertexShader(material, {
       head: glsl`
@@ -112,7 +112,7 @@ export default class Suzanne extends Group {
 
     // incremental speed, we can change it through the GUI
     this.speed = 1.5
-    webgl.gui?.folders.find((f) => f._title === 'movement').addSmart(this, 'speed')
+    webgl.gui?.folders.find((f) => f._title === 'Movement').addSmart(this, 'speed')
 
     this.add(suzanne)
 

@@ -59,7 +59,7 @@ export class ExponentialNumberController extends NumberController {
     const setValueFromX = (clientX) => {
       const rect = this.$slider.getBoundingClientRect()
       let value = map(clientX, rect.left, rect.right, min, max)
-      this.setValue(mapping(clamp(this._snap(value))))
+      this.setValue(this._snap(mapping(clamp(this._snap(value)))))
     }
 
     const mouseDown = (e) => {

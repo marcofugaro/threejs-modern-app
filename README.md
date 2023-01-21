@@ -44,7 +44,7 @@ The WebGLApp class contains all the code needed for three.js to run a scene, it 
 
 You can see an example configuration here:
 
-https://github.com/marcofugaro/threejs-modern-app/blob/bd303c968c0b0ef56a40046e054371ba4b8c7e54/src/index.js#L14-L45
+https://github.com/marcofugaro/threejs-modern-app/blob/3f9d43d2ad790a20b0c9a0b62db7095bac6cef82/src/index.js#L14-L30
 
 You can pass the class the options you would pass to the [THREE.WebGLRenderer](https://threejs.org/docs/#api/en/renderers/WebGLRenderer), and also some more options:
 
@@ -282,11 +282,11 @@ The Asset Manager handles the preloading of all the assets needed to run the sce
 
 You can use it like this:
 
-https://github.com/marcofugaro/threejs-modern-app/blob/bd303c968c0b0ef56a40046e054371ba4b8c7e54/src/scene/Suzanne.js#L15-L46
+https://github.com/marcofugaro/threejs-modern-app/blob/3f9d43d2ad790a20b0c9a0b62db7095bac6cef82/src/scene/Suzanne.js#L14-L45
 
-https://github.com/marcofugaro/threejs-modern-app/blob/bd303c968c0b0ef56a40046e054371ba4b8c7e54/src/index.js#L56
+https://github.com/marcofugaro/threejs-modern-app/blob/3f9d43d2ad790a20b0c9a0b62db7095bac6cef82/src/index.js#L41
 
-https://github.com/marcofugaro/threejs-modern-app/blob/bd303c968c0b0ef56a40046e054371ba4b8c7e54/src/scene/Suzanne.js#L54
+https://github.com/marcofugaro/threejs-modern-app/blob/3f9d43d2ad790a20b0c9a0b62db7095bac6cef82/src/scene/Suzanne.js#L53
 
 In detail, first you queue the asset you want to preload in the component where you will use it
 
@@ -426,7 +426,7 @@ Often you want to show the fps count or debug helpers such as the [SpotLightHelp
 
 A really manageable way is to have a global `window.DEBUG` constant which is true only if you append `?debug` to your url, for example `http://localhost:8080/?debug` or even in production like `https://example.com/?debug`.
 
-This is done [here](https://github.com/marcofugaro/threejs-modern-app/blob/bd303c968c0b0ef56a40046e054371ba4b8c7e54/src/index.js#L9) in just one line:
+This is done [here](https://github.com/marcofugaro/threejs-modern-app/blob/3f9d43d2ad790a20b0c9a0b62db7095bac6cef82/src/index.js#L9) in just one line:
 
 ```js
 window.DEBUG = window.location.search.includes('debug')
