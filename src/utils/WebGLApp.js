@@ -403,11 +403,16 @@ export default class WebGLApp {
     this.resize({ width, height, pixelRatio: 1 })
     this.draw()
 
+    const fps = 60
     this.#mp4Encoder = this.#mp4.createWebCodecsEncoder({
-      width,
-      height,
-      fps: 60,
+      width: roundEven(width),
+      height: roundEven(height),
+      fps,
       bitrate: 120 * 1000 * 1000, // 120 Mbit/s
+      encoderOptions: {
+        // https://github.com/mattdesl/mp4-wasm/blob/d266bc08edef719158a5163a9b483bd065476c73/src/extern-post.js#L111
+        framerate: Math.min(30, fps),
+      },
       ...options,
     })
   }
@@ -605,4 +610,9 @@ function downloadFile(name, blob) {
     URL.revokeObjectURL(blob)
     link.removeAttribute('href')
   }, 0)
+}
+
+// Rounds to the closest even number
+function roundEven(n) {
+  return Math.round(n / 2) * 2
 }
