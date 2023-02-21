@@ -13,9 +13,9 @@
   "scripts": {
     "postinstall": "yarn clean-browsersync",
     "clean-browsersync": "sed -i -e 's/sourceMappingURL/_/g' ./node_modules/browser-sync-client/dist/index.js",
-    "start": "NODE_ENV=development node ./esbuild.js",
+    "start": "cross-env NODE_ENV=development node ./esbuild.js",
     "prebuild": "yarn clean; yarn copy-public",
-    "build": "NODE_ENV=production node ./esbuild.js",
+    "build": "cross-env NODE_ENV=production node ./esbuild.js",
     "clean": "rimraf build/; rimraf public/app.js; rimraf public/app.js.map",
     "copy-public": "cpr public/ build/"
   },
@@ -38,6 +38,7 @@
     "browser-sync": "^2.27.11",
     "chalk": "4.1.2",
     "cpr": "^3.0.1",
+    "cross-env": "^7.0.3",
     "esbuild": "^0.16.10",
     "esbuild-plugin-glslify": "^1.0.1",
     "esbuild-plugin-glslify-inline": "^1.1.0",
