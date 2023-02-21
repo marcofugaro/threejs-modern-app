@@ -14,8 +14,10 @@
     "postinstall": "yarn clean-browsersync",
     "clean-browsersync": "sed -i -e 's/sourceMappingURL/_/g' ./node_modules/browser-sync-client/dist/index.js",
     "start": "NODE_ENV=development node ./esbuild.js",
+    "start-windows": "set NODE_ENV=development&& node ./esbuild.js",
     "prebuild": "yarn clean; yarn copy-public",
     "build": "NODE_ENV=production node ./esbuild.js",
+    "build-windows": "set NODE_ENV=production&& node ./esbuild.js",
     "clean": "rimraf build/; rimraf public/app.js; rimraf public/app.js.map",
     "copy-public": "cpr public/ build/"
   },
