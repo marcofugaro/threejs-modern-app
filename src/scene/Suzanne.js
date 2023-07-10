@@ -21,27 +21,26 @@ const suzanneKey = assets.queue({
 const albedoKey = assets.queue({
   url: 'assets/spotty-metal/albedo.jpg',
   type: 'texture',
+  gamma: true, // use gamma correction
 })
 const metalnessKey = assets.queue({
   url: 'assets/spotty-metal/metalness.jpg',
   type: 'texture',
-  linear: true, // don't use gamma correction
 })
 const roughnessKey = assets.queue({
   url: 'assets/spotty-metal/roughness.jpg',
   type: 'texture',
-  linear: true, // don't use gamma correction
 })
 const normalKey = assets.queue({
   url: 'assets/spotty-metal/normal.jpg',
   type: 'texture',
-  linear: true, // don't use gamma correction
 })
 
 // preload the environment map
 const hdrKey = assets.queue({
   url: 'assets/ouside-afternoon-blurred-hdr.jpg',
   type: 'env-map',
+  gamma: true, // use gamma correction
 })
 
 export default class Suzanne extends Group {

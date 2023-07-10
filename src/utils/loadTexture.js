@@ -1,4 +1,4 @@
-import { sRGBEncoding, TextureLoader } from 'three'
+import { SRGBColorSpace, TextureLoader } from 'three'
 
 export default function loadTexture(url, { renderer, ...options }) {
   if (!renderer) {
@@ -10,8 +10,8 @@ export default function loadTexture(url, { renderer, ...options }) {
       url,
       (texture) => {
         // apply eventual gamma encoding
-        if (renderer.outputEncoding === sRGBEncoding && !options.linear) {
-          texture.encoding = sRGBEncoding
+        if (renderer.outputColorSpace === SRGBColorSpace && options.gamma) {
+          texture.colorSpace = SRGBColorSpace
         }
 
         // apply eventual texture options, such as wrap, repeat...

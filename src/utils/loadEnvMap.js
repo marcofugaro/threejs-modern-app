@@ -2,7 +2,7 @@ import {
   CubeTextureLoader,
   EquirectangularReflectionMapping,
   PMREMGenerator,
-  sRGBEncoding,
+  SRGBColorSpace,
   TextureLoader,
   UnsignedByteType,
 } from 'three'
@@ -34,8 +34,8 @@ export default function loadEnvMap(url, { renderer, ...options }) {
       case 'png':
       case 'jpg': {
         loader = new TextureLoader().loadAsync(url).then((texture) => {
-          if (renderer.outputEncoding === sRGBEncoding && !options.linear) {
-            texture.encoding = sRGBEncoding
+          if (renderer.outputColorSpace === SRGBColorSpace && options.gamma) {
+            texture.colorSpace = SRGBColorSpace
           }
           return texture
         })
@@ -64,8 +64,8 @@ export default function loadEnvMap(url, { renderer, ...options }) {
       case 'png':
       case 'jpg': {
         loader = new CubeTextureLoader().loadAsync(url).then((texture) => {
-          if (renderer.outputEncoding === sRGBEncoding && !options.linear) {
-            texture.encoding = sRGBEncoding
+          if (renderer.outputColorSpace === SRGBColorSpace && options.gamma) {
+            texture.colorSpace = SRGBColorSpace
           }
           return texture
         })

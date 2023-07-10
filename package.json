@@ -11,8 +11,6 @@
   },
   "type": "module",
   "scripts": {
-    "postinstall": "yarn clean-browsersync",
-    "clean-browsersync": "sed -i -e 's/sourceMappingURL/_/g' ./node_modules/browser-sync-client/dist/index.js",
     "start": "cross-env NODE_ENV=development node ./esbuild.js",
     "prebuild": "yarn clean; yarn copy-public",
     "build": "cross-env NODE_ENV=production node ./esbuild.js",
@@ -22,33 +20,33 @@
   "dependencies": {
     "cannon-es": "^0.20.0",
     "cannon-es-debugger": "^1.0.0",
-    "detect-gpu": "^5.0.4",
+    "detect-gpu": "^5.0.32",
     "image-promise": "^7.0.1",
-    "lil-gui": "^0.17.0",
+    "lil-gui": "^0.18.2",
     "lodash-es": "^4.17.21",
     "mp4-wasm": "marcofugaro/mp4-wasm#build-embedded",
-    "p-map": "^5.5.0",
-    "postprocessing": "^6.29.1",
+    "p-map": "^6.0.0",
+    "postprocessing": "^6.32.2",
     "pretty-ms": "^8.0.0",
     "stats.js": "marcofugaro/stats.js",
-    "three": "0.148.0"
+    "three": "0.154.0"
   },
   "devDependencies": {
     "address": "^1.2.2",
-    "browser-sync": "^2.27.11",
+    "browser-sync": "^2.29.3",
     "chalk": "4.1.2",
     "cpr": "^3.0.1",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.16.10",
+    "esbuild": "0.16.17",
     "esbuild-plugin-glslify": "^1.0.1",
     "esbuild-plugin-glslify-inline": "^1.1.0",
-    "eslint": "^8.30.0",
-    "eslint-config-prettier": "^8.5.0",
+    "eslint": "^8.44.0",
+    "eslint-config-prettier": "^8.8.0",
     "glslify": "^7.1.1",
     "indent-string": "^5.0.0",
-    "ora": "^6.1.2",
+    "ora": "^6.3.1",
     "react-dev-utils": "^12.0.1",
-    "rimraf": "^3.0.2",
+    "rimraf": "^5.0.1",
     "tree-node-cli": "^1.6.0"
   }
 }

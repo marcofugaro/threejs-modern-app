@@ -76,7 +76,7 @@ class AssetManager {
         url: maps[map],
         type: 'texture',
         ...options,
-        ...(linearTextures.includes(map) && { linear: true }),
+        ...(!linearTextures.includes(map) && { gamma: true }),
       })
     })
 

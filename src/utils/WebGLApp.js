@@ -4,7 +4,6 @@ import {
   OrthographicCamera,
   PerspectiveCamera,
   Scene,
-  sRGBEncoding,
   Vector3,
   WebGLRenderer,
 } from 'three'
@@ -72,12 +71,9 @@ export default class WebGLApp {
       preserveDrawingBuffer: true,
       ...options,
     })
-    // enable gamma correction, read more about it here:
-    // https://www.donmccurdy.com/2020/06/17/color-management-in-threejs/
-    this.renderer.outputEncoding = sRGBEncoding
     // this will be the default in the future
     // https://github.com/mrdoob/three.js/issues/23614
-    this.renderer.physicallyCorrectLights = true
+    this.renderer.useLegacyLights = false
 
     if (options.sortObjects !== undefined) {
       this.renderer.sortObjects = options.sortObjects
