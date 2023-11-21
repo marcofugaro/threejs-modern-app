@@ -32,7 +32,7 @@
     "three": "0.158.0"
   },
   "devDependencies": {
-    "address": "^1.2.2",
+    "address": "^2.0.1",
     "browser-sync": "^2.29.3",
     "chalk": "4.1.2",
     "cpr": "^3.0.1",
@@ -40,13 +40,13 @@
     "esbuild": "0.16.17",
     "esbuild-plugin-glslify": "^1.0.1",
     "esbuild-plugin-glslify-inline": "^1.1.0",
-    "eslint": "^8.44.0",
-    "eslint-config-prettier": "^8.8.0",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
     "glslify": "^7.1.1",
     "indent-string": "^5.0.0",
-    "ora": "^6.3.1",
+    "ora": "^7.0.1",
     "react-dev-utils": "^12.0.1",
-    "rimraf": "^5.0.1",
+    "rimraf": "^5.0.5",
     "tree-node-cli": "^1.6.0"
   }
 }
