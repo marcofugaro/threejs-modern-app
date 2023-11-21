@@ -71,9 +71,6 @@ export default class WebGLApp {
       preserveDrawingBuffer: true,
       ...options,
     })
-    // this will be the default in the future
-    // https://github.com/mrdoob/three.js/issues/23614
-    this.renderer.useLegacyLights = false
 
     if (options.sortObjects !== undefined) {
       this.renderer.sortObjects = options.sortObjects
